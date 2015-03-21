@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Constant {
 	
-	public static String userName = "2";//用户名
-	public static String detail="我现在在这里";//
-	public static String receiver;
-	public static String userPassword;
+	public static String ID="0";
+    //0==看得见，手操作
+    //1==看不见，语音操作
+    //2==看得见，手语操作
 	
 }
