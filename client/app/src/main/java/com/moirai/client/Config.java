@@ -5,12 +5,13 @@ public interface Config {
 	public static final int REQUEST_LOGIN = BASE + 1;
 	public static final int REQUEST_REGISTER = BASE + 2;
 	public static final int REQUEST_EXIT = BASE + 3;
-	public static final int REQUEST_DOWNLOAD = BASE + 4;
-	public static final int REQUEST_PATHINFO = BASE + 5;
-	public static final int REQUEST_SENDREQUEST = BASE + 6;
-	public static final int REQUEST_SETREQUESTINFO = BASE + 7;
-	public static final int REQUEST_SAVEHISTORY = BASE + 8;
-	public static final int REQUEST_GATHISTORY = BASE + 9;
+	public static final int REQUEST_DOWNLOAD_INFO = BASE + 4;
+	public static final int REQUEST_SET_INFO = BASE + 5;
+	public static final int REQUEST_REQUIRE_FRIEND = BASE + 6;
+	public static final int REQUEST_DOWNLOAD_FRIEND = BASE + 7;
+	public static final int REQUEST_ADDFRIEND = BASE + 8;
+	public static final int REQUEST_DOWNLOAD_MOMENTS = BASE + 9;
+    public static final int REQUEST_IPLOAD_MOMENTS = BASE + 10;
 	
 	public static final int CON_SUCCESS = 2002;
 	public static final int SUCCESS = 2000;  

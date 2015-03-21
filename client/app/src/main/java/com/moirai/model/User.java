@@ -5,24 +5,6 @@ public class User {
 	private String username;//用户�?
 	private String password;//密码
 	private int state; //在不在线的状�?
-	private String recevier;
-	private String detail;
-	
-	public String getRecevier() {
-		return recevier;
-	}
-
-	public void setRecevier(String recevier) {
-		this.recevier = recevier;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
 
 	public int getState() {
 		return state;

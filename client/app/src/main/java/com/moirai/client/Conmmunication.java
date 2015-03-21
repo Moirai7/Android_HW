@@ -24,36 +24,73 @@ public class Conmmunication {
 
 	/**
 	 * 登录
+     * 服务器要设置状态
 	 */
 	public void login(String userName, String password) {
-		netWorker.login(userName, password);
+
 	}
 
 	/**
 	 * 注册
 	 */
-	public void register(String userName, String password) {
-		netWorker.register(userName, password);
+	public void register(String userName, String password,String type) {
+
 	}
 
 	/**
-	 * 下载
+	 * 下载消息
+     *
 	 */
-	public void download(){
-		netWorker.download();
+	public void downloadInfo(String userName){
+
 	}
 	/**
-	 * 查询一个点
+	 * 设置消息状态
 	 */
-	public void pathInfo(String point){
-		netWorker.pathInfo(point);
+	public void setInfo(String infoID){
+
 	}
+
+    /**
+     * 确认联系人
+     */
+    public void requireFriend(String ID1,String ID2){
+        netWorker.download();
+    }
+    /**
+     * 下载朋友
+     */
+    public void downloadFriend(String userName){
+
+    }
 	/**
-	 * 设置info
+	 *  添加朋友
 	 */
-	public void setRequestInfo(String username,String reciver,String detail){
-		netWorker.setRequestInfo(username,reciver,detail);
+	public void addFriend(String username,String otherID){
+
 	}
+
+    /**
+     * 下载朋友圈
+     */
+    public void downloadMoments(String username){
+
+    }
+
+    /**
+     * 刷新朋友圈
+     */
+    public void queryMoments(String userName,String start,String end){
+
+    }
+
+    /**
+     * 上传朋友圈
+     */
+    public void uploadMoments(String userName,String detail){
+
+    }
+
 	// 发送退出游戏请求
 	public void exitGame() {
 		netWorker.exitGame();
@@ -68,19 +105,6 @@ public class Conmmunication {
 	}
 	public void sendOffLine(String userName) {
 		netWorker.sendOffLine(userName);
-	}
-	
-	/**
-	 * 下载历史
-	 */
-	public void getHistory(String username){
-		netWorker.getHistory(username);
-	}
-	/**
-	 * 下载历史
-	 */
-	public void setHistory(String userid,String pointID,String time){
-		netWorker.saveHistory(userid,pointID,time);
 	}
 
 }

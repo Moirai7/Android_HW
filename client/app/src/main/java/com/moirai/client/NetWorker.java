@@ -104,24 +104,27 @@ public class NetWorker extends Thread {
 			msg.what = num;
 			BaseActivity.sendMessage(msg);
 			break;
-		case Config.REQUEST_DOWNLOAD:
+		case Config.REQUEST_DOWNLOAD_INFO:
 			handDownload();//OK
 			break;
-		case Config.REQUEST_PATHINFO:
+		case Config.REQUEST_SET_INFO:
 			handPathInfo();//OK
 			break;
-		case Config.REQUEST_SENDREQUEST:
+		case Config.REQUEST_REQUIRE_FRIEND:
 			handSendRequest();//OK
 			break;
-		case Config.REQUEST_SETREQUESTINFO:
+		case Config.REQUEST_DOWNLOAD_FRIEND:
 			handSetRequestInfo();//OK
 			break;
-		case Config.REQUEST_SAVEHISTORY:
+		case Config.REQUEST_ADDFRIEND:
 			handSaveHistory();//OK
 			break;
-		case Config.REQUEST_GATHISTORY:
+		case Config.REQUEST_DOWNLOAD_MOMENTS:
 			handGetHistory();
 			break;
+        case Config.REQUEST_IPLOAD_MOMENTS:
+            //handGetHistory();
+            break;
 		case Config.CON_SUCCESS:
 			handCon();
 			break;

@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.moirai.client.R;
 
-public class MainActivity extends BaseActivity {
+public class FriendActivity extends BaseActivity {
 
     @Override
     public void processMessage(Message message) {
@@ -31,7 +31,6 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_friend);
     }
-
 }

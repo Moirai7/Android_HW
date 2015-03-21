@@ -121,19 +121,6 @@ public abstract class BaseActivity extends Activity {
 
 		menu.add(Menu.NONE, Menu.FIRST + 2, 2, "修改信息").setIcon(//(包括联系人，detail)
 				android.R.drawable.ic_menu_edit);
-
-//		menu.add(Menu.NONE, Menu.FIRST + 3, 6, "帮助").setIcon(
-//				android.R.drawable.ic_menu_help);
-//
-//		menu.add(Menu.NONE, Menu.FIRST + 4, 1, "添加").setIcon(
-//				android.R.drawable.ic_menu_add);
-//
-//		menu.add(Menu.NONE, Menu.FIRST + 5, 4, "详细").setIcon(
-//				android.R.drawable.ic_menu_info_details);
-//
-//		menu.add(Menu.NONE, Menu.FIRST + 6, 3, "发送").setIcon(
-//				android.R.drawable.ic_menu_send);
-
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -141,23 +128,11 @@ public abstract class BaseActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case Menu.FIRST + 1:
-			con.download();
+
 			break;
 		case Menu.FIRST + 2:
 			//TODO 跳转到修改联系人的界面
 			break;
-//		case Menu.FIRST + 3:
-//			Toast.makeText(this, "帮助菜单被点击了", Toast.LENGTH_LONG).show();
-//			break;
-//		case Menu.FIRST + 4:
-//			Toast.makeText(this, "添加菜单被点击了", Toast.LENGTH_LONG).show();
-//			break;
-//		case Menu.FIRST + 5:
-//			Toast.makeText(this, "详细菜单被点击了", Toast.LENGTH_LONG).show();
-//			break;
-//		case Menu.FIRST + 6:
-//			Toast.makeText(this, "发送菜单被点击了", Toast.LENGTH_LONG).show();
-//			break;
 		}
 		return false;
 	}
