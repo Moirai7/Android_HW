@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.moirai.client.Constant;
+import com.moirai.model.Info;
 import com.moirai.model.User;
 
 import android.annotation.SuppressLint;
@@ -68,14 +69,15 @@ public class Database {
         return false;
     }
 
-	public boolean saveInfo(String sendID, String detail) {
-		ContentValues values = new ContentValues();
-		values.put("receiver", sendID);
-		values.put("detail", detail);
-        Date time = new Date();
-        values.put("",time.toString());
-	//	db.update("Info", values, "username=?",
-	//			new String[] { Constant.ID });
+	public boolean saveDownloadInfo(List<Info> list) {
+        for (int i = 0; i < list.size(); i++) {
+            ContentValues values = new ContentValues();
+            Info path = list.get(i);
+            values.put("pointID", path.getReceiver());
+            values.put("streetID", path.getDetail());
+            values.put("pointName", path.getTime());
+            db.insert("PathInfo", null, values);
+        }
 		return true;
 	}
 
