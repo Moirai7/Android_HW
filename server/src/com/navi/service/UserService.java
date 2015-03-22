@@ -5,12 +5,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.navi.constant.Config;
-import com.navi.dao.PathDao;
 import com.navi.dao.UserDao;
 import com.navi.model.User;
 
 public class UserService {
-	//处理登录
+	//login
 	public boolean login(String username, String password){
 		UserDao UserDao = new UserDao();
 		User user = UserDao.findByUsernameAndPassword(username, password);
@@ -21,12 +20,11 @@ public class UserService {
 			return true;
 		}
 	}
-	//处理注册
+	//register
 	public boolean register(User user){
 		UserDao UserDao = new UserDao();
 		if(UserDao.findByUsernameAndPassword(user.getUsername(), user.getPassword()) == null){
-			UserDao.save(user);
-			
+			UserDao.save(user);	
 			return true;
 		}else{
 			return false;
@@ -48,21 +46,4 @@ public class UserService {
 		return UserDao.getState(username);
 	}
 	
-	
-	public JSONArray sendRequest(String username,String point) {
-		JSONArray arr = new PathService().getPathInfo(point);
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("detail", new UserDao().getDetail(username));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		arr.put(obj);
-		return arr;
-	}
-	
-	public void setRequestInfo(String username,String recevier,String detail){
-		UserDao userdao = new UserDao();
-		userdao.setInfo(username, recevier, detail);
-	}
 }

@@ -1,35 +1,17 @@
 package com.navi.model;
 
-//这是�?��实体�?
+//杩欐槸锟�锟斤拷瀹炰綋锟�
 public class User {
-	private String username;//用户�?
-	private String password;//密码
-	private int state; //在不在线的状�?
-	private String recevier;
-	private String detail;
-	
-	public String getRecevier() {
-		return recevier;
+	private String username;//鐢ㄦ埛锟�
+	private String password;//瀵嗙爜
+	private String type; //鍦ㄤ笉鍦ㄧ嚎鐨勭姸锟�
+
+	public String getType() {
+		return type;
 	}
 
-	public void setRecevier(String recevier) {
-		this.recevier = recevier;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	public int getState() {
-		return state;
-	}
-
-	public void setState(int state) {
-		this.state = state;
+	public void setType(String state) {
+		this.type = state;
 	}
 
 	public String getUsername() {

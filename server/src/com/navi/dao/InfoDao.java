@@ -5,18 +5,20 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import com.navi.model.History;
+import com.navi.model.Info;
 import com.navi.util.DaoUtil;
 
-public class HistoryDao {
-
+public class InfoDao {
 	// 成员变量
 	Connection conn = null;
 	Statement stmt = null;
 	ResultSet rs = null;
+	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 	// 驱动名
 	final String driver = "oracle.jdbc.driver.OracleDriver";
 	final String uri = "jdbc:oracle:" + "thin:@127.0.0.1:1521:XE";
@@ -33,11 +35,18 @@ public class HistoryDao {
 			e.printStackTrace();
 		}
 	}
-	
-	public boolean saveHistory(History history) {
+
+	public boolean saveHistory(Info history) {
 		getConnection();
-		String sql = "insert into historyInfo (historyid,userid, pointid, time) values (S_S_Depart.Nextval, '"
-				+ history.getUserID() + "', '" + history.getPointID() + "','" + history.getTime() + "')";
+		String sql = "insert into historyInfo (id,sendid,receid, detail, time,status) values (S_S_Depart.Nextval, '"
+				+ history.getSendUser()
+				+ "', '"
+				+ history.getReceiver()
+				+ "','"
+				+ history.getDetail()
+				+ "','"
+				+ df.format(new Date())
+				+ "',-1)";
 		try {
 			conn.setAutoCommit(false);
 			stmt.execute(sql);
@@ -59,19 +68,26 @@ public class HistoryDao {
 	}
 
 	// 获取请求
-	public List<History> getHistory(String userid) {
-		List<History> chengyus = new ArrayList<History>();
+	public List<Info> getNews(String userid) {
+		List<Info> chengyus = new ArrayList<Info>();
 		getConnection();
-		String sql = "select * from historyInfo where rownum <= 17 and userid = '" + userid  + "' order by historyid" ;
+		String sql = "select * from historyInfo where userid = '" + userid
+				+ "' and status = -1 order by infoid";
+		String sql2 = "update historyInfo set status = 1 where userid = '"
+				+ userid + "'";
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				History history = new History();
-				history.setPointID(rs.getString("pointid"));
+				Info history = new Info();
+				history.setSendUser(rs.getString("senduser"));
+				history.setReceiver(rs.getString("receiver"));
+				history.setDetail(rs.getString("detail"));
 				history.setTime(rs.getString("time"));
-				history.setUserID(rs.getString("userid"));
-				chengyus.add(history );
+				chengyus.add(history);
 			}
+			conn.setAutoCommit(false);
+			stmt.execute(sql2);
+			conn.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

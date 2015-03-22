@@ -35,8 +35,8 @@ public class UserDao {
 
 	public void save(User user) {
 		getConnection();
-		String sql = "insert into USERINFO (username, password, state) values ('"
-				+ user.getUsername() + "', '" + user.getPassword() + "',"
+		String sql = "insert into USERINFO (id,username, password, type) values (S_S_Depart.Nextval,'"
+				+ user.getUsername() + "', '" + user.getPassword() + "', '" + user.getType() + "',"
 				+ Config.USER_STATE_NON_ONLINE + ")";
 		try {
 			conn.setAutoCommit(false);
@@ -69,7 +69,7 @@ public class UserDao {
 			} else {
 				user.setUsername(rs.getString("username"));
 				user.setPassword(rs.getString("password"));
-				user.setState(rs.getInt("state"));
+				user.setType(rs.getString("type"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -137,14 +137,14 @@ public class UserDao {
 		}
 	}
 	
-	public String getDetail(String username){
+	public String getType(String username){
 		getConnection();
 		String detail = null;
-		String sql = "select detail from USERINFO where username="+"'"+username+"'";
+		String sql = "select type from USERINFO where username="+"'"+username+"'";
 		try {
 			rs=stmt.executeQuery(sql);
 			while(rs.next()){
-				detail = rs.getString("detail");
+				detail = rs.getString("type");
 			}
 			return detail;
 		} catch (SQLException e) {
@@ -153,54 +153,9 @@ public class UserDao {
 		return detail ;
 	}
 	
-	public void setInfo(String username,String Receiver, String detail){
+	public void setType(String username,String type){
 		getConnection();
-		String sql = "update USERINFO set Receiver = '" + Receiver + "' and detail = '"+detail +"' where username='"
-				+ username + "'";
-		try {
-			conn.setAutoCommit(false);
-			stmt.execute(sql);
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-			}
-		} finally {
-			DaoUtil.closeConnection(conn, stmt, rs);
-		}
-	}
-	
-	public void setReceiver(String Receiver, String username) {
-		getConnection();
-		String sql = "update USERINFO set Receiver = '" + Receiver + "' where username='"
-				+ username + "'";
-		try {
-			conn.setAutoCommit(false);
-			stmt.execute(sql);
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			if (conn != null) {
-				try {
-					conn.rollback();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-			}
-		} finally {
-			DaoUtil.closeConnection(conn, stmt, rs);
-		}
-	}
-	
-	
-	public void setDetail(String Detail, String username) {
-		getConnection();
-		String sql = "update USERINFO set Detail = '" + Detail + "' where username='"
+		String sql = "update USERINFO set type = " + type + " where username='"
 				+ username + "'";
 		try {
 			conn.setAutoCommit(false);

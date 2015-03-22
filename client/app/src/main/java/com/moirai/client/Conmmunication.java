@@ -27,7 +27,7 @@ public class Conmmunication {
      * 服务器要设置状态
 	 */
 	public void login(String userName, String password) {
-
+	
 	}
 
 	/**

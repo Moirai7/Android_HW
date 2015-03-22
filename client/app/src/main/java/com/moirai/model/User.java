@@ -4,14 +4,14 @@ package com.moirai.model;
 public class User {
 	private String username;//用户�?
 	private String password;//密码
-	private int state; //在不在线的状�?
+	private int type; //鍦ㄤ笉鍦ㄧ嚎鐨勭姸锟�
 
-	public int getState() {
-		return state;
+	public int getType() {
+		return type;
 	}
 
-	public void setState(int state) {
-		this.state = state;
+	public void setType(int state) {
+		this.type = state;
 	}
 
 	public String getUsername() {
