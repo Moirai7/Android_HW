@@ -9,8 +9,8 @@ import com.iflytek.speech.SpeechConstant;
 import com.iflytek.speech.SpeechRecognizer;
 import com.iflytek.speech.SpeechSynthesizer;
 import com.iflytek.speech.SynthesizerListener;
-import com.navi.blind.BaseActivity;
-import com.navi.client.Config;
+import com.moirai.view.BaseActivity;
+import com.moirai.client.Config;
 
 import android.app.Service;
 import android.content.Context;
@@ -63,16 +63,16 @@ public class VoiceService extends Service {
 			}
 			
 			switch(msg.what){
-			case Config.ACK_SERVICE:
-				// broad cast
-				Log.v(TAG, (String) msg.obj);
-				try {
-					SendServiceBroadCast((String)msg.obj);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				break;
+//			case Config.ACK_SERVICE:
+//				// broad cast
+//				Log.v(TAG, (String) msg.obj);
+//				try {
+//					SendServiceBroadCast((String)msg.obj);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				break;
 			default:
 				break;
 			}
@@ -120,14 +120,14 @@ public class VoiceService extends Service {
     	public void setBinderFlagOn(){
     		flag_binder = true;
     		Message msg = Message.obtain();
-    		msg.what = Config.ACK_NONE;
+    		//msg.what = Config.ACK_NONE;
 			handler.sendMessage(msg);   		
     	}
   
     	/**
     	 * 开始语音录入
     	 * 
-    	 * @param ack
+    	 * @param
     	 */
     	public void StartListen() {
 
@@ -152,7 +152,7 @@ public class VoiceService extends Service {
     	 * 
     	 * @param content
     	 *            播报内容
-    	 * @param ack
+    	 * @param
     	 */
     	public void StartRead(String content) {
 
@@ -186,7 +186,7 @@ public class VoiceService extends Service {
 				flag_iat = true;
 
 				Message msg = Message.obtain();
-				msg.what = Config.ACK_MAIN_WELCOME;
+				//msg.what = Config.ACK_MAIN_WELCOME;
 				handler.sendMessage(msg);
 
 			}
@@ -257,7 +257,7 @@ public class VoiceService extends Service {
 				flag_tts = true;
 
 				Message msg = Message.obtain();
-				msg.what = Config.ACK_NONE;
+				//msg.what = Config.ACK_NONE;
 				handler.sendMessage(msg);
 			}
 		}
@@ -325,7 +325,7 @@ public class VoiceService extends Service {
 	/**
 	 * 参数设置
 	 * 
-	 * @param param
+	 * @param
 	 * @return
 	 */
 	public void setParam_Iat() {

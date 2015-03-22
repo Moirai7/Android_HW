@@ -1,8 +1,6 @@
 package com.moirai.voice;
 
 
-import com.moirai.view.R;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;

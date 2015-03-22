@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.moirai.client.Config;
+import com.moirai.client.Conmmunication;
 import com.moirai.client.R;
 import com.moirai.model.User;
 

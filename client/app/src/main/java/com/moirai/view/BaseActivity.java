@@ -34,6 +34,7 @@ public abstract class BaseActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        con = Conmmunication.newInstance();
 		// 判断该Activity是否在LinkedList中，没有在的话就添加上
 		if (!queue.contains(this)) {
 			queue.add(this);

@@ -17,7 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.moirai.client.Constant;
-import com.moirai.model.Path;
 import com.moirai.model.User;
 
 import android.annotation.SuppressLint;
