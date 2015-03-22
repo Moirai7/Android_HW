@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import android.os.Message;
 import android.util.Log;
 
+import com.moirai.model.Info;
 import com.moirai.model.User;
 import com.moirai.view.BaseActivity;
 
@@ -106,7 +107,7 @@ public class NetWorker extends Thread {
 			BaseActivity.sendMessage(msg);
 			break;
 		case Config.REQUEST_DOWNLOAD_INFO:
-			//handDownload();//OK
+			handDownloadInfo();//OK
 			break;
 		case Config.REQUEST_SET_INFO:
 			//handPathInfo();//OK
@@ -350,50 +351,45 @@ public class NetWorker extends Thread {
 //		}
 //	}
 //
-//	// 下载
-//	public void download() {
-//
-//		System.out.println("发送下载的请求ddd");
-//		// JSOn
-//		JSONObject jo = new JSONObject();
-//		try {
-//			jo.put("requestType", Config.REQUEST_DOWNLOAD);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//		Log.i(Config.TAG, "发送单个点的请求为：" + jo.toString());
-//
-//		out.println(jo.toString());
-//	}
+	// 下载
+	public void downloadInfo(String username) {
+
+		System.out.println("发送下载Info的请求");
+		// JSOn
+		JSONObject jo = new JSONObject();
+		try {
+			jo.put("requestType", Config.REQUEST_DOWNLOAD_INFO);
+            jo.put("username",username);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		Log.i(Config.TAG, "发送单个点的请求为：" + jo.toString());
+
+		out.println(jo.toString());
+	}
 //	//传递下载
-//	public void handDownload() {
-//		Log.i(Config.TAG, "传递从服务器端返回的下载的请求");
-//		System.out.println("传递从服务器端返回的下载的请求");
-//		// JSOn
-//		JSONArray jo = null;
-//		List<Path> list = new ArrayList<Path>();
-//		try {
-//			jo = jsonObject.optJSONArray("list");
-//			for(int i = 0 ; i < jo.length() ; i++){
-//				Path path = new Path();
-//				path.setPointID(jo.getJSONObject(i).getString("pointID"));
-//				path.setStreetID(jo.getJSONObject(i).getString("streetID"));
-//				path.setPointname(jo.getJSONObject(i).getString("pointname"));
-//				path.setPointSurroundingInfo(jo.getJSONObject(i).getString("pointSurroundingInfo"));
-//				path.setPointSurroundingStreet(jo.getJSONObject(i).getString("pointSurroundingStreet"));
-//				path.setPointLongitude(jo.getJSONObject(i).getString("pointLongitude"));
-//				path.setPointLatitude(jo.getJSONObject(i).getString("pointLatitude"));
-//				path.setType(jo.getJSONObject(i).getString("type"));
-//				list.add(path);
-//			}
-//			Message msg = new Message();
-//			msg.obj = list;
-//			msg.what = Config.REQUEST_DOWNLOAD;
-//			BaseActivity.sendMessage(msg);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	public void handDownloadInfo() {
+		Log.i(Config.TAG, "传递从服务器端返回的下载Info的请求");
+		// JSOn
+		JSONArray jo = null;
+		List<Info> list = new ArrayList<Info>();
+		try {
+			jo = jsonObject.optJSONArray("list");
+			for(int i = 0 ; i < jo.length() ; i++){
+				Info path = new Info();
+                path.setSendUser(jo.getJSONObject(i).getString("sendUser"));
+                path.setDetail(jo.getJSONObject(i).getString("detail"));
+				path.setTime(jo.getJSONObject(i).getString("time"));
+				list.add(path);
+			}
+			Message msg = new Message();
+			msg.obj = list;
+			msg.what = Config.REQUEST_DOWNLOAD_INFO;
+			BaseActivity.sendMessage(msg);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 
 	// 登录
 	public void login(String userName, String password) {

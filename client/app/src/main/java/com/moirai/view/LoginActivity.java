@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.moirai.client.Config;
 import com.moirai.client.Constant;
 import com.moirai.client.R;
+import com.moirai.model.User;
 
 public class LoginActivity extends BaseActivity {
 
@@ -26,10 +27,12 @@ public class LoginActivity extends BaseActivity {
                     //db.setUserInfo(Constant.USERNAME,Constant.PASSWORD);
 
                     Toast.makeText(LoginActivity.this, "用户" + Constant.USERNAME + "登陆成功", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent();
-                    intent.setClass(LoginActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    finish();
+//                    Intent intent = new Intent();
+//                    intent.setClass(LoginActivity.this,MainActivity.class);
+//                    startActivity(intent);
+//                    finish();
+                }else{
+                    Toast.makeText(LoginActivity.this, "用户" + Constant.USERNAME + "登陆失败", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -40,6 +43,12 @@ public class LoginActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //TODO 得到编辑框里的值
+        //TODO 使用USER创建并调用login();
+        User user = new User();
+        user.setUsername("lanlan");
+        user.setPassword("123");
+        con.login(user);
     }
 
 }

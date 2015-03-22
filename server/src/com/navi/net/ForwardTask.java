@@ -308,7 +308,7 @@ public class ForwardTask extends Task{
 	private void handDownloadInfo() {
 		try {
 			System.out.println(ip+"check in");
-			
+			String name = message.getString("username");
 			JSONObject obj = new JSONObject();
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_INFO);
 			

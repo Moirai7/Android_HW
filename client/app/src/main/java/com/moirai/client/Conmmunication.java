@@ -27,7 +27,8 @@ public class Conmmunication {
     /**
      * 登录 服务器要设置状态
      */
-    public void login(String userName, String password) {
+    public void login(User user) {
+        netWorker.login(user.getUsername(),user.getPassword());
     }
 
     /**
@@ -42,7 +43,7 @@ public class Conmmunication {
      *
      */
     public void downloadInfo(String userName) {
-
+        netWorker.downloadInfo();
     }
 
     /**
