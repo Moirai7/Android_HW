@@ -9,6 +9,15 @@ public class Info {
     private String detail;
     private String time;
 
+    public Info(){
+    	
+    }
+    
+    public Info(String send,String rece,String detail){
+    	this.receiver=rece;
+    	this.sendUser=send;
+    	this.detail=detail;
+    }
     public String getSendUser() {
         return sendUser;
     }

@@ -5,7 +5,23 @@ package com.moirai.model;
  */
 public class Moments {
     private String sendUser;
-    private String time;
+    private String reciver;
+    public Moments(){
+    	
+    }
+    public Moments(String s,String r){
+    	this.sendUser=s;
+    	this.reciver=r;
+    }
+    public String getReciver() {
+		return reciver;
+	}
+
+	public void setReciver(String reciver) {
+		this.reciver = reciver;
+	}
+
+	private String time;
     private String detail;
 
     public String getSendUser() {

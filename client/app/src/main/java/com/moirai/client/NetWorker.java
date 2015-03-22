@@ -16,11 +16,12 @@ import org.json.JSONObject;
 import android.os.Message;
 import android.util.Log;
 
+import com.moirai.model.User;
 import com.moirai.view.BaseActivity;
 
 public class NetWorker extends Thread {
 	// Context context;
-	private static final String IP = "172.24.9.0";
+	private static final String IP = "172.24.25.215";
 	private static final int PORT = 6666;
 
 	private Socket socket = null;
@@ -105,22 +106,22 @@ public class NetWorker extends Thread {
 			BaseActivity.sendMessage(msg);
 			break;
 		case Config.REQUEST_DOWNLOAD_INFO:
-			handDownload();//OK
+			//handDownload();//OK
 			break;
 		case Config.REQUEST_SET_INFO:
-			handPathInfo();//OK
+			//handPathInfo();//OK
 			break;
 		case Config.REQUEST_REQUIRE_FRIEND:
-			handSendRequest();//OK
+			//handSendRequest();//OK
 			break;
 		case Config.REQUEST_DOWNLOAD_FRIEND:
-			handSetRequestInfo();//OK
+			//handSetRequestInfo();//OK
 			break;
 		case Config.REQUEST_ADDFRIEND:
-			handSaveHistory();//OK
+			//handSaveHistory();//OK
 			break;
 		case Config.REQUEST_DOWNLOAD_MOMENTS:
-			handGetHistory();
+			//handGetHistory();
 			break;
         case Config.REQUEST_IPLOAD_MOMENTS:
             //handGetHistory();
@@ -142,257 +143,257 @@ public class NetWorker extends Thread {
 		BaseActivity.sendMessage(msg);
 	}
 
-	//得到位置
-	public void getHistory(String userid){
-		System.out.println("发送位置的请求ddd");
-		// JSOn
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("requestType", Config.REQUEST_GATHISTORY);
-			jo.put("userid", userid);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.i(Config.TAG, "发送位置的请求为：" + jo.toString());
-
-		out.println(jo.toString());
-	}
-	//传递得到位置
-	public void handGetHistory() {
-		Log.i(Config.TAG, "传递从服务器端返回的位置的请求");
-		System.out.println("传递从服务器端返回的位置的请求");
-		// JSOn
-		JSONArray jo = null;
-		List<History> list = new ArrayList<History>();
-		try {
-			jo = jsonObject.optJSONArray("list");
-			for(int i = 0 ; i < jo.length() ; i++){
-				History path = new History();
-				path.setPointID(jo.getJSONObject(i).getString("pointID"));
-				path.setUserID(jo.getJSONObject(i).getString("userID"));
-				path.setTime(jo.getJSONObject(i).getString("time"));
-				list.add(path);
-			}
-			Message msg = new Message();
-			msg.obj = list;
-			msg.what = Config.REQUEST_GATHISTORY;
-			BaseActivity.sendMessage(msg);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//保存位置
-	public void saveHistory(String userid,String pointID,String time) {
-		System.out.println("发送位置的请求ddd");
-		// JSOn
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("requestType", Config.REQUEST_SAVEHISTORY);
-			jo.put("userid", userid);
-			jo.put("pointID", pointID);
-			jo.put("time", time);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.i(Config.TAG, "发送位置的请求为：" + jo.toString());
-
-		out.println(jo.toString());
-	}
-	//传递保存位置
-	public void handSaveHistory() {
-		Log.i(Config.TAG, "传递从服务器端返回的位置的请求");
-		System.out.println("传递从服务器端返回的位置的请求");
-		int result = 0;
-		try {
-			result = jsonObject.getInt("result");
-			Message msg = new Message();
-			msg.arg1 = result;
-			msg.what = Config.REQUEST_SAVEHISTORY;
-			BaseActivity.sendMessage(msg);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		
-	}
-
-	//修改内容
-	public void setRequestInfo(String username,String reciver,String detail){
-		System.out.println("发送修改的请求ddd");
-		// JSOn
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("requestType", Config.REQUEST_SETREQUESTINFO);
-			jo.put("username", username);
-			jo.put("reciver", reciver);
-			jo.put("detail", detail);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.i(Config.TAG, "发送修改的请求为：" + jo.toString());
-
-		out.println(jo.toString());
-	}
-	//传递修改内容
-	public void handSetRequestInfo() {
-		Log.i(Config.TAG, "传递从服务器端返回的修改的请求");
-		System.out.println("传递从服务器端返回的修改的请求");
-		int result = 0;
-		try {
-			result = jsonObject.getInt("result");
-			Message msg = new Message();
-			msg.arg1 = result;
-			msg.what = Config.REQUEST_SETREQUESTINFO;
-			BaseActivity.sendMessage(msg);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//发消息
-	public void sendRequest(String username,String reciver,String pointid){
-		System.out.println("发送消息的请求ddd");
-		// JSOn
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("requestType", Config.REQUEST_SENDREQUEST);
-			jo.put("username", username);
-			jo.put("reciver", reciver);
-			jo.put("pointid", pointid);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.i(Config.TAG, "发送消息的请求为：" + jo.toString());
-
-		out.println(jo.toString());
-	}
-	
-	//传递发消息
-	public void handSendRequest() {
-		Log.i(Config.TAG, "传递从服务器端返回的消息的请求");
-		System.out.println("传递从服务器端返回的消息的请求");
-		// JSOn
-		JSONArray jo = null;
-		try {
-			jo = jsonObject.optJSONArray("info");
-
-			Path path = new Path();
-			path.setPointID(jo.getJSONObject(0).getString("pointID"));
-			path.setStreetID(jo.getJSONObject(0).getString("streetID"));
-			path.setPointname(jo.getJSONObject(0).getString("pointname"));
-			path.setPointSurroundingInfo(jo.getJSONObject(0).getString(
-					"pointSurroundingInfo"));
-			path.setPointSurroundingStreet(jo.getJSONObject(0).getString(
-					"pointSurroundingStreet"));
-			path.setPointLongitude(jo.getJSONObject(0).getString(
-					"pointLongitude"));
-			path.setPointLatitude(jo.getJSONObject(0)
-					.getString("pointLatitude"));
-			path.setType(jo.getJSONObject(0)
-					.getString("type"));
-			Constant.detail =  jo.getJSONObject(1).getString("detail");
-
-			Message msg = new Message();
-			msg.obj = path;
-			msg.what = Config.REQUEST_SENDREQUEST;
-			BaseActivity.sendMessage(msg);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	//单个点
-	public void pathInfo(String pointid) {
-
-		System.out.println("发送消息的请求ddd");
-		// JSOn
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("requestType", Config.REQUEST_PATHINFO);
-			jo.put("pointid", pointid);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.i(Config.TAG, "发送登录的请求为：" + jo.toString());
-
-		out.println(jo.toString());
-	}
-	//传递单个点
-	public void handPathInfo() {
-		Log.i(Config.TAG, "传递从服务器端返回的单个点的请求");
-		System.out.println("传递从服务器端返回的单个点的请求");
-		// JSOn
-		JSONArray jo = null;
-		try {
-			jo = jsonObject.optJSONArray("list");
-
-			Path path = new Path();
-			path.setPointID(jo.getJSONObject(0).getString("pointID"));
-			path.setStreetID(jo.getJSONObject(0).getString("streetID"));
-			path.setPointname(jo.getJSONObject(0).getString("pointname"));
-			path.setPointSurroundingInfo(jo.getJSONObject(0).getString(
-					"pointSurroundingInfo"));
-			path.setPointSurroundingStreet(jo.getJSONObject(0).getString(
-					"pointSurroundingStreet"));
-			path.setPointLongitude(jo.getJSONObject(0).getString(
-					"pointLongitude"));
-			path.setPointLatitude(jo.getJSONObject(0)
-					.getString("pointLatitude"));
-			path.setType(jo.getJSONObject(0)
-					.getString("type"));
-			Message msg = new Message();
-			msg.obj = path;
-			msg.what = Config.REQUEST_PATHINFO;
-			BaseActivity.sendMessage(msg);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	// 下载
-	public void download() {
-
-		System.out.println("发送下载的请求ddd");
-		// JSOn
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("requestType", Config.REQUEST_DOWNLOAD);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.i(Config.TAG, "发送单个点的请求为：" + jo.toString());
-
-		out.println(jo.toString());
-	}
-	//传递下载
-	public void handDownload() {
-		Log.i(Config.TAG, "传递从服务器端返回的下载的请求");
-		System.out.println("传递从服务器端返回的下载的请求");
-		// JSOn
-		JSONArray jo = null;
-		List<Path> list = new ArrayList<Path>();
-		try {
-			jo = jsonObject.optJSONArray("list");
-			for(int i = 0 ; i < jo.length() ; i++){
-				Path path = new Path();
-				path.setPointID(jo.getJSONObject(i).getString("pointID"));
-				path.setStreetID(jo.getJSONObject(i).getString("streetID"));
-				path.setPointname(jo.getJSONObject(i).getString("pointname"));
-				path.setPointSurroundingInfo(jo.getJSONObject(i).getString("pointSurroundingInfo"));
-				path.setPointSurroundingStreet(jo.getJSONObject(i).getString("pointSurroundingStreet"));
-				path.setPointLongitude(jo.getJSONObject(i).getString("pointLongitude"));
-				path.setPointLatitude(jo.getJSONObject(i).getString("pointLatitude"));
-				path.setType(jo.getJSONObject(i).getString("type"));
-				list.add(path);
-			}
-			Message msg = new Message();
-			msg.obj = list;
-			msg.what = Config.REQUEST_DOWNLOAD;
-			BaseActivity.sendMessage(msg);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+//	//得到位置
+//	public void getHistory(String userid){
+//		System.out.println("发送位置的请求ddd");
+//		// JSOn
+//		JSONObject jo = new JSONObject();
+//		try {
+//			jo.put("requestType", Config.REQUEST_GATHISTORY);
+//			jo.put("userid", userid);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		Log.i(Config.TAG, "发送位置的请求为：" + jo.toString());
+//
+//		out.println(jo.toString());
+//	}
+//	//传递得到位置
+//	public void handGetHistory() {
+//		Log.i(Config.TAG, "传递从服务器端返回的位置的请求");
+//		System.out.println("传递从服务器端返回的位置的请求");
+//		// JSOn
+//		JSONArray jo = null;
+//		List<History> list = new ArrayList<History>();
+//		try {
+//			jo = jsonObject.optJSONArray("list");
+//			for(int i = 0 ; i < jo.length() ; i++){
+//				History path = new History();
+//				path.setPointID(jo.getJSONObject(i).getString("pointID"));
+//				path.setUserID(jo.getJSONObject(i).getString("userID"));
+//				path.setTime(jo.getJSONObject(i).getString("time"));
+//				list.add(path);
+//			}
+//			Message msg = new Message();
+//			msg.obj = list;
+//			msg.what = Config.REQUEST_GATHISTORY;
+//			BaseActivity.sendMessage(msg);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	//保存位置
+//	public void saveHistory(String userid,String pointID,String time) {
+//		System.out.println("发送位置的请求ddd");
+//		// JSOn
+//		JSONObject jo = new JSONObject();
+//		try {
+//			jo.put("requestType", Config.REQUEST_SAVEHISTORY);
+//			jo.put("userid", userid);
+//			jo.put("pointID", pointID);
+//			jo.put("time", time);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		Log.i(Config.TAG, "发送位置的请求为：" + jo.toString());
+//
+//		out.println(jo.toString());
+//	}
+//	//传递保存位置
+//	public void handSaveHistory() {
+//		Log.i(Config.TAG, "传递从服务器端返回的位置的请求");
+//		System.out.println("传递从服务器端返回的位置的请求");
+//		int result = 0;
+//		try {
+//			result = jsonObject.getInt("result");
+//			Message msg = new Message();
+//			msg.arg1 = result;
+//			msg.what = Config.REQUEST_SAVEHISTORY;
+//			BaseActivity.sendMessage(msg);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
+//
+//	//修改内容
+//	public void setRequestInfo(String username,String reciver,String detail){
+//		System.out.println("发送修改的请求ddd");
+//		// JSOn
+//		JSONObject jo = new JSONObject();
+//		try {
+//			jo.put("requestType", Config.REQUEST_SETREQUESTINFO);
+//			jo.put("username", username);
+//			jo.put("reciver", reciver);
+//			jo.put("detail", detail);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		Log.i(Config.TAG, "发送修改的请求为：" + jo.toString());
+//
+//		out.println(jo.toString());
+//	}
+//	//传递修改内容
+//	public void handSetRequestInfo() {
+//		Log.i(Config.TAG, "传递从服务器端返回的修改的请求");
+//		System.out.println("传递从服务器端返回的修改的请求");
+//		int result = 0;
+//		try {
+//			result = jsonObject.getInt("result");
+//			Message msg = new Message();
+//			msg.arg1 = result;
+//			msg.what = Config.REQUEST_SETREQUESTINFO;
+//			BaseActivity.sendMessage(msg);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	//发消息
+//	public void sendRequest(String username,String reciver,String pointid){
+//		System.out.println("发送消息的请求ddd");
+//		// JSOn
+//		JSONObject jo = new JSONObject();
+//		try {
+//			jo.put("requestType", Config.REQUEST_SENDREQUEST);
+//			jo.put("username", username);
+//			jo.put("reciver", reciver);
+//			jo.put("pointid", pointid);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		Log.i(Config.TAG, "发送消息的请求为：" + jo.toString());
+//
+//		out.println(jo.toString());
+//	}
+//
+//	//传递发消息
+//	public void handSendRequest() {
+//		Log.i(Config.TAG, "传递从服务器端返回的消息的请求");
+//		System.out.println("传递从服务器端返回的消息的请求");
+//		// JSOn
+//		JSONArray jo = null;
+//		try {
+//			jo = jsonObject.optJSONArray("info");
+//
+//			Path path = new Path();
+//			path.setPointID(jo.getJSONObject(0).getString("pointID"));
+//			path.setStreetID(jo.getJSONObject(0).getString("streetID"));
+//			path.setPointname(jo.getJSONObject(0).getString("pointname"));
+//			path.setPointSurroundingInfo(jo.getJSONObject(0).getString(
+//					"pointSurroundingInfo"));
+//			path.setPointSurroundingStreet(jo.getJSONObject(0).getString(
+//					"pointSurroundingStreet"));
+//			path.setPointLongitude(jo.getJSONObject(0).getString(
+//					"pointLongitude"));
+//			path.setPointLatitude(jo.getJSONObject(0)
+//					.getString("pointLatitude"));
+//			path.setType(jo.getJSONObject(0)
+//					.getString("type"));
+//			Constant.detail =  jo.getJSONObject(1).getString("detail");
+//
+//			Message msg = new Message();
+//			msg.obj = path;
+//			msg.what = Config.REQUEST_SENDREQUEST;
+//			BaseActivity.sendMessage(msg);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	//单个点
+//	public void pathInfo(String pointid) {
+//
+//		System.out.println("发送消息的请求ddd");
+//		// JSOn
+//		JSONObject jo = new JSONObject();
+//		try {
+//			jo.put("requestType", Config.REQUEST_PATHINFO);
+//			jo.put("pointid", pointid);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		Log.i(Config.TAG, "发送登录的请求为：" + jo.toString());
+//
+//		out.println(jo.toString());
+//	}
+//	//传递单个点
+//	public void handPathInfo() {
+//		Log.i(Config.TAG, "传递从服务器端返回的单个点的请求");
+//		System.out.println("传递从服务器端返回的单个点的请求");
+//		// JSOn
+//		JSONArray jo = null;
+//		try {
+//			jo = jsonObject.optJSONArray("list");
+//
+//			Path path = new Path();
+//			path.setPointID(jo.getJSONObject(0).getString("pointID"));
+//			path.setStreetID(jo.getJSONObject(0).getString("streetID"));
+//			path.setPointname(jo.getJSONObject(0).getString("pointname"));
+//			path.setPointSurroundingInfo(jo.getJSONObject(0).getString(
+//					"pointSurroundingInfo"));
+//			path.setPointSurroundingStreet(jo.getJSONObject(0).getString(
+//					"pointSurroundingStreet"));
+//			path.setPointLongitude(jo.getJSONObject(0).getString(
+//					"pointLongitude"));
+//			path.setPointLatitude(jo.getJSONObject(0)
+//					.getString("pointLatitude"));
+//			path.setType(jo.getJSONObject(0)
+//					.getString("type"));
+//			Message msg = new Message();
+//			msg.obj = path;
+//			msg.what = Config.REQUEST_PATHINFO;
+//			BaseActivity.sendMessage(msg);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	// 下载
+//	public void download() {
+//
+//		System.out.println("发送下载的请求ddd");
+//		// JSOn
+//		JSONObject jo = new JSONObject();
+//		try {
+//			jo.put("requestType", Config.REQUEST_DOWNLOAD);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//		Log.i(Config.TAG, "发送单个点的请求为：" + jo.toString());
+//
+//		out.println(jo.toString());
+//	}
+//	//传递下载
+//	public void handDownload() {
+//		Log.i(Config.TAG, "传递从服务器端返回的下载的请求");
+//		System.out.println("传递从服务器端返回的下载的请求");
+//		// JSOn
+//		JSONArray jo = null;
+//		List<Path> list = new ArrayList<Path>();
+//		try {
+//			jo = jsonObject.optJSONArray("list");
+//			for(int i = 0 ; i < jo.length() ; i++){
+//				Path path = new Path();
+//				path.setPointID(jo.getJSONObject(i).getString("pointID"));
+//				path.setStreetID(jo.getJSONObject(i).getString("streetID"));
+//				path.setPointname(jo.getJSONObject(i).getString("pointname"));
+//				path.setPointSurroundingInfo(jo.getJSONObject(i).getString("pointSurroundingInfo"));
+//				path.setPointSurroundingStreet(jo.getJSONObject(i).getString("pointSurroundingStreet"));
+//				path.setPointLongitude(jo.getJSONObject(i).getString("pointLongitude"));
+//				path.setPointLatitude(jo.getJSONObject(i).getString("pointLatitude"));
+//				path.setType(jo.getJSONObject(i).getString("type"));
+//				list.add(path);
+//			}
+//			Message msg = new Message();
+//			msg.obj = list;
+//			msg.what = Config.REQUEST_DOWNLOAD;
+//			BaseActivity.sendMessage(msg);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	// 登录
 	public void login(String userName, String password) {
@@ -429,14 +430,15 @@ public class NetWorker extends Thread {
 	}
 
 	// 注册
-	public void register(String userName, String password) {
+	public void register(User user) {
 		Log.i(Config.TAG, "发送注册的请求dd");
 		System.out.println("发送注册的请求dd");
 		JSONObject jo = new JSONObject();
 		try {
 			jo.put("requestType", Config.REQUEST_REGISTER);
-			jo.put("username", userName);
-			jo.put("password", password);
+			jo.put("username", user.getUsername());
+			jo.put("password", user.getPassword());
+            jo.put("type", user.getType());
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -467,7 +469,7 @@ public class NetWorker extends Thread {
 		System.out.println("发送退出游戏的请求");
 		JSONObject jo = new JSONObject();
 		try {
-			jo.put("username", Constant.userName);
+			jo.put("username", Constant.USERNAME);
 			jo.put("requestType", Config.REQUEST_EXIT);
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -485,7 +487,7 @@ public class NetWorker extends Thread {
 		JSONObject jo = new JSONObject();
 		try {
 
-			jo.put("userName", Constant.userName);
+			jo.put("userName", Constant.USERNAME);
 			jo.put("requestType", Config.REQUEST_EXIT);
 
 		} catch (JSONException e) {

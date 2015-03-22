@@ -24,8 +24,8 @@ public class UserDao {
 	private void getConnection() {
 		try {
 			Class.forName(driver);
-			String user = "blind";// 用户名,系统默认的账户名
-			String password = "123";// 你安装时选设置的密码
+			String user = "androidHW";// 用户名,系统默认的账户名
+			String password = "123456";// 你安装时选设置的密码
 			conn = DriverManager.getConnection(uri, user, password);
 			stmt = conn.createStatement();
 		} catch (Exception e) {
@@ -35,7 +35,7 @@ public class UserDao {
 
 	public void save(User user) {
 		getConnection();
-		String sql = "insert into USERINFO (id,username, password, type) values (S_S_Depart.Nextval,'"
+		String sql = "insert into userInfo (id,username, password, type,state) values (S_S_USER.Nextval,'"
 				+ user.getUsername() + "', '" + user.getPassword() + "', '" + user.getType() + "',"
 				+ Config.USER_STATE_NON_ONLINE + ")";
 		try {
@@ -60,7 +60,7 @@ public class UserDao {
 	public User findByUsernameAndPassword(String username, String password) {
 		getConnection();
 		User user = new User();
-		String sql = "select * from USERINFO where username = '" + username
+		String sql = "select * from userInfo where username = '" + username
 				+ "' and password = '" + password + "'";
 		try {
 			rs = stmt.executeQuery(sql);
@@ -84,7 +84,7 @@ public class UserDao {
 		List<String> list = new ArrayList<String>();
 
 		try {
-			String sql = "select * from USERINFO where state="
+			String sql = "select * from userInfo where state="
 					+ Config.USER_STATE_ONLINE + "";
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -102,7 +102,7 @@ public class UserDao {
 	public int getState(String username){
 		getConnection();
 		int state =0;
-		String sql = "select state from USERINFO where username="+"'"+username+"'";
+		String sql = "select state from userInfo where username="+"'"+username+"'";
 		try {
 			rs=stmt.executeQuery(sql);
 			while(rs.next()){
@@ -117,7 +117,7 @@ public class UserDao {
 
 	public void setState(int state, String username) {
 		getConnection();
-		String sql = "update USERINFO set state = " + state + " where username='"
+		String sql = "update userInfo set state = " + state + " where username='"
 				+ username + "'";
 		try {
 			conn.setAutoCommit(false);
@@ -140,7 +140,7 @@ public class UserDao {
 	public String getType(String username){
 		getConnection();
 		String detail = null;
-		String sql = "select type from USERINFO where username="+"'"+username+"'";
+		String sql = "select type from userInfo where username="+"'"+username+"'";
 		try {
 			rs=stmt.executeQuery(sql);
 			while(rs.next()){
@@ -155,7 +155,7 @@ public class UserDao {
 	
 	public void setType(String username,String type){
 		getConnection();
-		String sql = "update USERINFO set type = " + type + " where username='"
+		String sql = "update userInfo set type = " + type + " where username='"
 				+ username + "'";
 		try {
 			conn.setAutoCommit(false);

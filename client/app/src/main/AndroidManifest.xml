@@ -21,20 +21,7 @@
         <activity
             android:name="com.moirai.view.LoadingActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:parentActivityName="com.moirai.view.BaseActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.moirai.view.BaseActivity" />
         </activity>
 
         <meta-data
@@ -44,6 +31,11 @@
         <activity
             android:name="com.moirai.view.RegisterActivity"
             android:label="@string/title_activity_register" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.moirai.view.LoginActivity"

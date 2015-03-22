@@ -1,16 +1,16 @@
 package com.moirai.model;
 
-//这是�?��实体�?
+//杩欐槸锟�锟斤拷瀹炰綋锟�
 public class User {
-	private String username;//用户�?
-	private String password;//密码
-	private int type; //鍦ㄤ笉鍦ㄧ嚎鐨勭姸锟�
+	private String username;//鐢ㄦ埛锟�
+	private String password;//瀵嗙爜
+	private String type; //鍦ㄤ笉鍦ㄧ嚎鐨勭姸锟�
 
-	public int getType() {
+	public String getType() {
 		return type;
 	}
 
-	public void setType(int state) {
+	public void setType(String state) {
 		this.type = state;
 	}
 

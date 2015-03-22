@@ -25,12 +25,11 @@ public class MomentsDao {
 	final String driver = "oracle.jdbc.driver.OracleDriver";
 	final String uri = "jdbc:oracle:" + "thin:@127.0.0.1:1521:XE";
 
-	// 获取连接
 	private void getConnection() {
 		try {
 			Class.forName(driver);
-			String user = "blind";// 用户名,系统默认的账户名
-			String password = "123";// 你安装时选设置的密码
+			String user = "androidHW";// 用户名,系统默认的账户名
+			String password = "123456";// 你安装时选设置的密码
 			conn = DriverManager.getConnection(uri, user, password);
 			stmt = conn.createStatement();
 		} catch (Exception e) {
