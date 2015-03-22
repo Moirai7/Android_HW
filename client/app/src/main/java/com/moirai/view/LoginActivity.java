@@ -49,6 +49,12 @@ public class LoginActivity extends BaseActivity {
         user.setUsername("lanlan");
         user.setPassword("123");
         con.login(user);
+        //TODO 自动登录方法
+        db.getUserInfo();
+        User user1 = new User();
+        user.setUsername(Constant.USERNAME);
+        user.setPassword(Constant.PASSWORD);
+        con.login(user1);
     }
 
 }

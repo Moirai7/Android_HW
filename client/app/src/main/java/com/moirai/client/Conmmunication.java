@@ -43,7 +43,7 @@ public class Conmmunication {
      *
      */
     public void downloadInfo(String userName) {
-        netWorker.downloadInfo();
+        netWorker.downloadInfo(userName);
     }
 
     /**

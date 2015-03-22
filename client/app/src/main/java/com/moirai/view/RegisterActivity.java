@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.moirai.client.Config;
 import com.moirai.client.Conmmunication;
+import com.moirai.client.Constant;
 import com.moirai.client.R;
 import com.moirai.model.User;
 
@@ -20,6 +21,8 @@ public class RegisterActivity extends BaseActivity {
             case Config.REQUEST_REGISTER:
                 int result = message.arg1;
                 if(result == Config.SUCCESS){
+                    //TODO 成功要得到name等值并写到数据库
+                    db.setUserInfo(Constant.USERNAME,Constant.PASSWORD,Constant.ID);
                     Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                 }
                 else{
