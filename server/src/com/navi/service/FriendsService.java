@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.navi.constant.Config;
 import com.navi.dao.FriendsDao;
 import com.navi.dao.InfoDao;
 import com.navi.model.Friends;
@@ -19,7 +20,7 @@ public class FriendsService {
 	}
 	public boolean setState(Friends history){
 		FriendsDao friendsDao = new FriendsDao();
-		if(history.getState()==-1){
+		if(history.getState()==Config.FAIl){
 			friendsDao.deleteFriend(history);
 		}else{
 			friendsDao.saveState(history);

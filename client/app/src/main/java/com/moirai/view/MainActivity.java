@@ -23,7 +23,7 @@ public class MainActivity extends BaseActivity {
         switch(message.what){
             case Config.REQUEST_DOWNLOAD_INFO:
                 list = (List<Info>) message.obj;
-                db.saveDownloadInfo(list);
+                //db.saveDownloadInfo(list);
                 break;
             default:
                 break;
