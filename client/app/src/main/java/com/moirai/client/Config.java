@@ -2,6 +2,7 @@ package com.moirai.client;
 
 public interface Config {
 	static final int BASE = 7000;
+
 	public static final int REQUEST_LOGIN = BASE + 1;
 	public static final int REQUEST_REGISTER = BASE + 2;
 	public static final int REQUEST_EXIT = BASE + 3;
@@ -24,4 +25,6 @@ public interface Config {
 	public static final String REQUEST_TYPE = "requestType";
 
     public static final String TAG = "lanlan";
+
+
 }
