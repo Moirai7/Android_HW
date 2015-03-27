@@ -27,6 +27,7 @@
     <string name="message2_shake_confirm">to be your friend ?</string>
     <string name="yes_shake_confirm">Yes</string>
     <string name="no_shake_confirm">No</string>
+    <string name="no_shake_friend_tip">No friend</string>
 
     <string name="tip_gesture_textView">Click return</string>
 </resources>

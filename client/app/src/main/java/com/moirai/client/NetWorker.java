@@ -59,7 +59,7 @@ public class NetWorker extends Thread {
 		}
 	}
 
-	private void connect() {
+    private void connect() {
 		try {
 			System.out.println("ganma ne ");
 			socket = new Socket(IP, PORT);
