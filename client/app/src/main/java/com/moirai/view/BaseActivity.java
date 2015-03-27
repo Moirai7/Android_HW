@@ -2,31 +2,73 @@ package com.moirai.view;
 
 import java.util.LinkedList;
 
+import com.iflytek.speech.SpeechRecognizer;
+import com.iflytek.speech.SpeechSynthesizer;
+import com.moirai.client.Config;
 import com.moirai.client.Conmmunication;
 import com.moirai.util.Database;
+import com.moirai.voice.VoiceService;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends FragmentActivity {
 	// 将生成的Activity都放到LinkList集合中
 	protected static LinkedList<BaseActivity> queue = new LinkedList<BaseActivity>();
 	public static Conmmunication con;
 	public static Database db;
+    // 语音识别对象。
+    private SpeechRecognizer mIat;
+    private Toast mToast;
+    private static final String ACTION_INPUT = "com.iflytek.speech.action.voiceinput";
+    // 语音合成对象
+    private SpeechSynthesizer mTts;
+    private SharedPreferences mSharedPreferences;
+    // private Intent intent_main_service;
+    private VoiceService.MyBinder voice_binder;
+    public static boolean voice_flag= false;
+
+    public ServiceConnection connection_voice = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            voice_flag = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            voice_binder = (VoiceService.MyBinder) service;
+            voice_flag = true;
+            Log.v("tag", "bind");
+
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_NONE;
+            BaseActivity.sendMessage(msg);
+
+            //if (path_flag)
+            //StartRead("请根据提示说出终点", Config.ACK_SAY_END);
+        }
+    };
 
 	// 监听home键
 	HomeKeyEventBroadCastReceiver receiver;
@@ -34,22 +76,39 @@ public abstract class BaseActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        con = Conmmunication.newInstance();
-        db = Database.getInstance();
+        //con = Conmmunication.newInstance();
+        //db = Database.getInstance();
 		// 判断该Activity是否在LinkedList中，没有在的话就添加上
+        Intent intent_voice_service = new Intent(this, VoiceService.class);
+        startService(intent_voice_service);
+        bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
+
 		if (!queue.contains(this)) {
 			queue.add(this);
 			System.out.println("将" + queue.getLast() + "添加到list中去");
 		}
 
 		// 监听home键
-		
-		
 		receiver = new HomeKeyEventBroadCastReceiver();
 		registerReceiver(receiver, new IntentFilter(
 				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
 	}
+
+    protected void StopListen() {
+        voice_binder.StopListen();
+    }
+
+    protected void StartListen(int ackSayEnd) {
+        voice_binder.SetACK(ackSayEnd);
+        voice_binder.StartListen();
+
+    }
+
+    protected void StartRead(String string, int ackListenStart) {
+        voice_binder.SetACK(ackListenStart);
+        voice_binder.StartRead(string);
+    }
 
 	public abstract void processMessage(Message message);
 
@@ -114,7 +173,7 @@ public abstract class BaseActivity extends Activity {
 		super.onDestroy();
 		unregisterReceiver(receiver);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		//TODO ICON
@@ -139,49 +198,34 @@ public abstract class BaseActivity extends Activity {
 		return false;
 	}
 
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Builder dialog = new AlertDialog.Builder(BaseActivity.this)
-					.setTitle("提示")
-					.setMessage("您是否要退出？")
-					.setPositiveButton("确定",
-							new DialogInterface.OnClickListener() {
+    /**
+     * 响应触屏事件
+     */
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-                                    con.exitGame();
-									con.clear();
-									finish();
-									int siz = BaseActivity.queue.size();
-									for (int i = 0; i < siz; i++) {
-										if (BaseActivity.queue.get(i) != null) {
-											System.out
-													.println((Activity) BaseActivity.queue
-															.get(i) + "退出程序");
-											((Activity) BaseActivity.queue
-													.get(i)).finish();
-										}
-									}
-								}
-							})
-					.setNegativeButton("取消",
-							new DialogInterface.OnClickListener() {
+        switch (e.getAction() & MotionEvent.ACTION_MASK) {// &
+            // MotionEvent.ACTION_MASK 多点
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_UP:
+                // RayPickRenderer.flag = !RayPickRenderer.flag;
+                long start = e.getEventTime();
+                long end = e.getDownTime();
+                long total = start - end;
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									
+                if (total < 100) {
+                    StopListen();
+                }
+                break;
+            case MotionEvent.ACTION_CANCEL:
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                finish();
+                break;
+        }
 
-								}
-							});
-			dialog.create().show();
+        return true;
 
-			return true;
-		}
-
-		else
-			return false;
-
-	}
+    }
 }

@@ -24,4 +24,9 @@ public interface Config {
 	public static final String REQUEST_TYPE = "requestType";
 
     public static final String TAG = "lanlan";
+
+    public static final int ACK_SERVICE = 120;
+    public static final int ACK_NONE = 109;
+    public static final int ACK_MAIN_WELCOME = 113;
+    public static final int ACK_SAY_END = 102;
 }

@@ -51,14 +51,6 @@
             android:label="@string/title_activity_talk" >
         </activity>
         <activity
-            android:name="com.moirai.view.FriendActivity"
-            android:label="@string/title_activity_friend" >
-        </activity>
-        <activity
-            android:name="com.moirai.view.MomentsActivity"
-            android:label="@string/title_activity_moments" >
-        </activity>
-        <activity
             android:name="com.moirai.view.SettingActivity"
             android:label="@string/title_activity_setting" >
         </activity>
@@ -70,6 +62,8 @@
             android:name="com.moirai.view.GestureActivity"
             android:label="@string/title_activity_gesture" >
         </activity>
+        <service android:name="com.moirai.voice.VoiceService" >
+        </service>
     </application>
 
 </manifest>

@@ -45,7 +45,6 @@ public class VoiceService extends Service {
     private Handler handler = new Handler(){
     	@Override
     	public void handleMessage(Message msg) {
-    		// TODO Auto-generated method stub
 			if(flag_iat && flag_tts && flag_binder){
 				//mBinder.StartRead("语音启动");
 				flag_iat = false;
@@ -56,23 +55,21 @@ public class VoiceService extends Service {
 				try {
 					SendServiceBroadCast("语音启动");
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
 			}
 			
 			switch(msg.what){
-//			case Config.ACK_SERVICE:
-//				// broad cast
-//				Log.v(TAG, (String) msg.obj);
-//				try {
-//					SendServiceBroadCast((String)msg.obj);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				break;
+			case Config.ACK_SERVICE:
+				// broad cast
+				Log.v(TAG, (String) msg.obj);
+				try {
+					SendServiceBroadCast((String)msg.obj);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				break;
 			default:
 				break;
 			}
@@ -120,14 +117,14 @@ public class VoiceService extends Service {
     	public void setBinderFlagOn(){
     		flag_binder = true;
     		Message msg = Message.obtain();
-    		//msg.what = Config.ACK_NONE;
+    		msg.what = Config.ACK_NONE;
 			handler.sendMessage(msg);   		
     	}
   
     	/**
     	 * 开始语音录入
     	 * 
-    	 * @param
+    	 *
     	 */
     	public void StartListen() {
 
@@ -152,7 +149,7 @@ public class VoiceService extends Service {
     	 * 
     	 * @param content
     	 *            播报内容
-    	 * @param
+    	 *
     	 */
     	public void StartRead(String content) {
 
@@ -186,7 +183,7 @@ public class VoiceService extends Service {
 				flag_iat = true;
 
 				Message msg = Message.obtain();
-				//msg.what = Config.ACK_MAIN_WELCOME;
+				msg.what = Config.ACK_MAIN_WELCOME;
 				handler.sendMessage(msg);
 
 			}
@@ -257,7 +254,7 @@ public class VoiceService extends Service {
 				flag_tts = true;
 
 				Message msg = Message.obtain();
-				//msg.what = Config.ACK_NONE;
+				msg.what = Config.ACK_NONE;
 				handler.sendMessage(msg);
 			}
 		}
