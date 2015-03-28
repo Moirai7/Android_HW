@@ -1,7 +1,6 @@
 package com.moirai.view;
 
 import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,11 +43,11 @@ public class RegisterActivity extends BaseActivity {
 
         //TODO 得到编辑框里的值
         //TODO 使用USER创建并调用register();
-        User user = new User();
+        /*User user = new User();
         user.setUsername("lanlan");
         user.setPassword("123");
         user.setType("1");
-        con.register(user);
+        con.register(user);*/
     }
 
 }

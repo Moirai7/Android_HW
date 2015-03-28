@@ -12,4 +12,9 @@
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_camera">CameraActivity</string>
     <string name="title_activity_gesture">GestureActivity</string>
+    <string name="reminder">Choose voice reminder?</string>
+    <string name="choice1">YES</string>
+    <string name="choice2">NO</string>
+    <string name="takePhoto">Start</string>
+    <string name="login">Login</string>
 </resources>

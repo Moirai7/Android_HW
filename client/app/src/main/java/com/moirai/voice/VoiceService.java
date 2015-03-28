@@ -1,3 +1,4 @@
+/*
 package com.moirai.voice;
 
 import com.iflytek.speech.ErrorCode;
@@ -124,11 +125,12 @@ public class VoiceService extends Service {
 			handler.sendMessage(msg);   		
     	}
   
-    	/**
+*
     	 * 开始语音录入
     	 * 
     	 * @param
-    	 */
+
+
     	public void StartListen() {
 
     		// GLOBAL_MS = ack;
@@ -140,20 +142,22 @@ public class VoiceService extends Service {
     		mIat.startListening(mRecognizerListener);
     	}
 
-    	/**
+*
     	 * 停止语音录入
-    	 */
+
+
     	public void StopListen() {
     		mIat.stopListening(mRecognizerListener);
     	}
 
-    	/**
+*
     	 * 开始语音播报
     	 * 
     	 * @param content
     	 *            播报内容
     	 * @param
-    	 */
+
+
     	public void StartRead(String content) {
 
     		// GLOBAL_MS = ack;
@@ -173,9 +177,10 @@ public class VoiceService extends Service {
     	}
     }  
     
-	/**
+*
 	 * 初期化监听器。
-	 */
+
+
 	private InitListener mInitListener = new InitListener() {
 
 		@Override
@@ -193,9 +198,10 @@ public class VoiceService extends Service {
 		}
 	};
 
-	/**
+*
 	 * 识别回调。
-	 */
+
+
 	private RecognizerListener mRecognizerListener = new RecognizerListener.Stub() {
 
 		String finalresult = "";
@@ -244,9 +250,10 @@ public class VoiceService extends Service {
 		}
 	};
 
-	/**
+*
 	 * 初期化监听。
-	 */
+
+
 	private InitListener mTtsInitListener = new InitListener() {
 
 		@Override
@@ -263,9 +270,10 @@ public class VoiceService extends Service {
 		}
 	};
 
-	/**
+*
 	 * 合成回调监听。
-	 */
+
+
 	private SynthesizerListener mTtsListener = new SynthesizerListener.Stub() {
 		@Override
 		public void onBufferProgress(int progress) throws RemoteException {
@@ -322,12 +330,13 @@ public class VoiceService extends Service {
 //		});
 	}
 
-	/**
+*
 	 * 参数设置
 	 * 
 	 * @param
 	 * @return
-	 */
+
+
 	public void setParam_Iat() {
 
 		mIat.setParameter(SpeechConstant.LANGUAGE, mSharedPreferences
@@ -382,4 +391,5 @@ public class VoiceService extends Service {
         //Toast.makeText( VoiceService.this, "Sent! Did you receive?", Toast.LENGTH_SHORT).show();
     }
   
-}  
+}
+*/
