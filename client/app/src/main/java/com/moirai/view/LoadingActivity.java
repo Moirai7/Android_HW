@@ -13,10 +13,14 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 
+import com.moirai.client.Config;
 import com.moirai.client.R;
+import com.moirai.model.Info;
+
+import java.util.List;
 
 
-public class LoadingActivity extends Activity {
+public class LoadingActivity extends BaseActivity {
     private Button yes_btn;
     private Button no_btn;
     private String choice;//0-语音，1-文字
@@ -52,6 +56,17 @@ public class LoadingActivity extends Activity {
                 redirectToRegister();
             }
         });
+    }
+
+    @Override
+    public void processMessage(Message message) {
+        switch(message.what){
+            case Config.ACK_CON_SUCCESS:
+                StartRead("是否启用语音，是，请单击屏幕，不是，请长按屏幕",Config.ACK_NONE);
+                break;
+            default:
+                break;
+        }
     }
 
     /**

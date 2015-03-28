@@ -27,7 +27,13 @@ public interface Config {
 
     public static final int ACK_SERVICE = 120;
     public static final int ACK_CON_SUCCESS = 101;
-    public static final int ACK_SAY_END = 102;
+    public static final int ACK_DOUBLE_CLICK = 102;
+    public static final int ACK_LONG_CLICK = 103;
+    public static final int ACK_CLICK = 104;
+    public static final int ACK_TOP = 105;
+    public static final int ACK_LEFT = 106;
+    public static final int ACK_RIGHT = 107;
+    public static final int ACK_DOWN = 108;
     public static final int ACK_NONE = 109;
     public static final int ACK_MAIN_WELCOME = 113;
 }

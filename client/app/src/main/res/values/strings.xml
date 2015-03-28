@@ -30,4 +30,10 @@
     <string name="no_shake_friend_tip">No friend</string>
 
     <string name="tip_gesture_textView">Click return</string>
+	
+	<string name="reminder">Choose voice reminder?</string>
+    <string name="choice1">YES</string>
+    <string name="choice2">NO</string>
+    <string name="takePhoto">Start</string>
+    <string name="login">Login</string>
 </resources>

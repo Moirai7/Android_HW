@@ -9,6 +9,7 @@ import com.moirai.client.Conmmunication;
 import com.moirai.util.Database;
 import com.moirai.voice.VoiceService;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -22,12 +23,14 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity  {
 	// 将生成的Activity都放到LinkList集合中
 	protected static LinkedList<BaseActivity> queue = new LinkedList<BaseActivity>();
 	public static Conmmunication con;
@@ -61,10 +64,13 @@ public abstract class BaseActivity extends FragmentActivity {
             BaseActivity.sendMessage(msg);
         }
     };
-
+    private GestureDetector mGesturedetector = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        mGesture gesture = new mGesture();
+        mGesturedetector = new GestureDetector(this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+        mGesturedetector.setIsLongpressEnabled(true);
         //con = Conmmunication.newInstance();
         //db = Database.getInstance();
 		// 判断该Activity是否在LinkedList中，没有在的话就添加上
@@ -72,8 +78,12 @@ public abstract class BaseActivity extends FragmentActivity {
 			queue.add(this);
 			System.out.println("将" + queue.getLast() + "添加到list中去");
 		}
-
 	}
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // OnGestureListener will analyzes the given motion event
+        return mGesturedetector.onTouchEvent(event);
+    }
 
     protected void StopListen() {
         voice_binder.StopListen();
@@ -151,34 +161,78 @@ public abstract class BaseActivity extends FragmentActivity {
 		return false;
 	}
 
-    /**
-     * 响应触屏事件
-     */
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-
-        switch (e.getAction() & MotionEvent.ACTION_MASK) {// &
-            // MotionEvent.ACTION_MASK 多点
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_UP:
-                // RayPickRenderer.flag = !RayPickRenderer.flag;
-                long start = e.getEventTime();
-                long end = e.getDownTime();
-                long total = start - end;
-
-                if (total < 100) {
-                    StopListen();
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                finish();
-                break;
+    class mGesture  extends GestureDetector.SimpleOnGestureListener {
+        // 双击的第二下Touch down时触发
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_DOUBLE_CLICK;
+            BaseActivity.sendMessage(msg);
+            Log.i("lanlan","double click");
+            return super.onDoubleTap(e);
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_CLICK;
+            BaseActivity.sendMessage(msg);
+            Log.i("lanlan","1 click");
+            return false;
         }
 
-        return true;
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
 
+        @Override
+        public boolean onDown(MotionEvent e) {
+
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_LONG_CLICK;
+            BaseActivity.sendMessage(msg);
+            Log.i("lanlan","long click");
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (e1.getX() - e2.getX() > 120) {
+                Message msg = Message.obtain();
+                msg.what = Config.ACK_LEFT;
+                BaseActivity.sendMessage(msg);
+                Log.i("lanlan","left");
+                return true;
+            } else if (e1.getX() - e2.getX() < -120) {
+                Message msg = Message.obtain();
+                msg.what = Config.ACK_RIGHT;
+                BaseActivity.sendMessage(msg);
+                Log.i("lanlan","right");
+                return true;
+            }
+            if(e1.getY() - e2.getY() >120){
+                Message msg = Message.obtain();
+                msg.what = Config.ACK_TOP;
+                BaseActivity.sendMessage(msg);
+                Log.i("lanlan","left");
+                return true;
+            }else if(e1.getY() - e2.getY() <-120){
+                Message msg = Message.obtain();
+                msg.what = Config.ACK_DOWN;
+                BaseActivity.sendMessage(msg);
+                Log.i("lanlan","right");
+                return true;
+            }
+            return false;
+        }
     }
 }
