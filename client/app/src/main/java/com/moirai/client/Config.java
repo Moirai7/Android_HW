@@ -26,7 +26,8 @@ public interface Config {
     public static final String TAG = "lanlan";
 
     public static final int ACK_SERVICE = 120;
+    public static final int ACK_CON_SUCCESS = 101;
+    public static final int ACK_SAY_END = 102;
     public static final int ACK_NONE = 109;
     public static final int ACK_MAIN_WELCOME = 113;
-    public static final int ACK_SAY_END = 102;
 }

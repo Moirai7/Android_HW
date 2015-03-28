@@ -58,28 +58,6 @@ public class ShakeActivity extends BaseActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_shake, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
     public void upStartAnim() {
          // 定义摇一摇动画动画上部分图片移动
         animUp = new AnimationSet(true);
@@ -196,7 +174,7 @@ public class ShakeActivity extends BaseActivity
                     //Todo 语音提示： 您已添加 userName 为好友
                     //con.addFriend(userName);
                     Intent intent = new Intent();
-                    intent.setClass(ShakeActivity.this, FriendActivity.class);
+                    intent.setClass(ShakeActivity.this, MainActivity.class);
                     startActivity(intent);
                     ShakeActivity.this.finish();
                  }

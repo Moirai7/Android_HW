@@ -9,13 +9,9 @@ import com.moirai.client.Conmmunication;
 import com.moirai.util.Database;
 import com.moirai.voice.VoiceService;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -26,7 +22,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -62,16 +57,10 @@ public abstract class BaseActivity extends FragmentActivity {
             Log.v("tag", "bind");
 
             Message msg = Message.obtain();
-            msg.what = Config.ACK_NONE;
+            msg.what = Config.ACK_CON_SUCCESS;
             BaseActivity.sendMessage(msg);
-
-            //if (path_flag)
-            //StartRead("请根据提示说出终点", Config.ACK_SAY_END);
         }
     };
-
-	// 监听home键
-	HomeKeyEventBroadCastReceiver receiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,19 +68,10 @@ public abstract class BaseActivity extends FragmentActivity {
         //con = Conmmunication.newInstance();
         //db = Database.getInstance();
 		// 判断该Activity是否在LinkedList中，没有在的话就添加上
-        Intent intent_voice_service = new Intent(this, VoiceService.class);
-        startService(intent_voice_service);
-        bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
-
 		if (!queue.contains(this)) {
 			queue.add(this);
 			System.out.println("将" + queue.getLast() + "添加到list中去");
 		}
-
-		// 监听home键
-		receiver = new HomeKeyEventBroadCastReceiver();
-		registerReceiver(receiver, new IntentFilter(
-				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
 
 	}
 
@@ -132,28 +112,6 @@ public abstract class BaseActivity extends FragmentActivity {
 		handler.sendMessage(msg);
 	}
 
-	class HomeKeyEventBroadCastReceiver extends BroadcastReceiver {
-		static final String SYSTEM_REASON = "reason";
-		static final String SYSTEM_HOME_KEY = "homekey";// home key
-		static final String SYSTEM_RECENT_APPS = "recentapps";// long home key
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
-				String reason = intent.getStringExtra(SYSTEM_REASON);
-				if (reason != null) {
-					if (reason.equals(SYSTEM_HOME_KEY)) {
-						// home key处理点
-
-					} else if (reason.equals(SYSTEM_RECENT_APPS)) {
-
-					}
-				}
-			}
-		}
-	}
-
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -162,16 +120,11 @@ public abstract class BaseActivity extends FragmentActivity {
 	@Override
 	protected void onRestart() {
 		super.onResume();
-
-		// Toast.makeText(BaseActivity.this, "i'm back",
-		// Toast.LENGTH_SHORT).show();
-
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		unregisterReceiver(receiver);
 	}
 
 	@Override

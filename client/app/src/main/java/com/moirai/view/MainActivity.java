@@ -4,22 +4,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Message;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import com.moirai.client.Config;
-import com.moirai.client.Constant;
 import com.moirai.client.R;
 import com.moirai.model.Info;
-import com.moirai.model.User;
+import com.moirai.voice.VoiceService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +38,9 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 list = (List<Info>) message.obj;
                 //db.saveDownloadInfo(list);
                 break;
+            case Config.ACK_CON_SUCCESS:
+                StartRead("漂漂的岚岚姐",Config.ACK_NONE);
+                break;
             default:
                 break;
         }
@@ -50,6 +49,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //TODO 得到编辑框里的值
         //TODO 使用USER创建并调用downInfo();
        // con.downloadInfo("lanlan");
@@ -90,22 +90,6 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             }
         });
     }
-
-    @Override
-    public void onMainFragmentInteraction(int position) {
-
-    }
-
-    @Override
-    public void onContactFragmentInteraction(int position) {
-
-    }
-
-    @Override
-    public void onShareFragmentInteraction(int position) {
-
-    }
-
     @Override
     public void onBackPressed(){
         FragmentManager fm = getFragmentManager();
@@ -118,6 +102,14 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     }
     // ADDED to set up the ListFragment
     public SimpleAdapter getAdapter(){return adapter;}
+
+    @Override
+    protected void onStart() {
+        Intent intent_voice_service = new Intent(this, VoiceService.class);
+        startService(intent_voice_service);
+        bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
+        super.onStart();
+    }
 
     private List<Map<String, Object>> getData() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -139,6 +131,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
         return list;
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this)
@@ -182,6 +175,22 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
         else
             return false;
+
+    }
+
+
+    @Override
+    public void onMainFragmentInteraction(int position) {
+
+    }
+
+    @Override
+    public void onContactFragmentInteraction(int position) {
+
+    }
+
+    @Override
+    public void onShareFragmentInteraction(int position) {
 
     }
 }
