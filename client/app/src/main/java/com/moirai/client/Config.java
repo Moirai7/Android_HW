@@ -55,4 +55,5 @@ public interface Config {
     public static final int ACK_SHAKE_test = 212;
     public static final int ACK_SHAKE_TIP_CANCEL = 213;
     public static final int ACK_SHAKE_ANSWER = 214;
+    public static final int ACK_LIST_READ = 300;
 }

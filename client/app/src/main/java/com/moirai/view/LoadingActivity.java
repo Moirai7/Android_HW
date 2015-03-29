@@ -60,6 +60,12 @@ public class LoadingActivity extends BaseActivity {
                 Constant.ID="1";
                 redirectToRegister();
                 break;
+            case Config.ACK_DOUBLE_CLICK:
+                Constant.ID="1";
+                StopRead();
+                Intent intent = new Intent(LoadingActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();//结束这个activity
             default:
                 break;
         }
@@ -69,6 +75,7 @@ public class LoadingActivity extends BaseActivity {
      * 跳转到注册界面
      */
     public void redirectToRegister(){
+        StopRead();
         Intent intent = new Intent(LoadingActivity.this,RegisterActivity.class);
         //Intent intent = new Intent(LoadingActivity.this,LoginActivity.class);
         startActivity(intent);

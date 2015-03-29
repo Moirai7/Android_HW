@@ -170,7 +170,7 @@ public class VoiceService extends Service {
             // GLOBAL_MS = ack;
             //
             // setParam_Tts();
-            // 设置参数
+            // 设置参数，
             int code = mTts.stopSpeaking(mTtsListener);
             if (code != 0) {
                 showTip("start speak error : " + code);

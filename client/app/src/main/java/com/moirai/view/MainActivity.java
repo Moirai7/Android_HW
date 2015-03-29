@@ -9,9 +9,13 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 
@@ -34,6 +38,8 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
      */
     private RadioGroup rgs;
     public List<Fragment> fragments = new ArrayList<Fragment>();
+    private int theFragment=0;
+    private int theInfoId=0;
 
     @Override
     public void processMessage(Message message) {
@@ -45,14 +51,100 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             case Config.ACK_CON_SUCCESS:
                 StartRead("漂漂的岚岚姐",Config.ACK_NONE);
                 break;
+            case Config.ACK_DOWN:
+                theInfoId++;
+                if(theInfoId>=data.size())
+                    theInfoId=0;
+                StartListRead();
+                break;
+            case Config.ACK_TOP:
+                theInfoId--;
+                if(theInfoId<0)
+                    theInfoId=0;
+                StartListRead();
+                break;
+            case Config.ACK_LEFT:
+                if((theFragment-1)%3==0)
+                    theFragment = 3;
+                tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment-1)%3,(theFragment-1)%3);
+                break;
+            case Config.ACK_RIGHT:
+                tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+1)%3,(theFragment+1)%3);
+                break;
+            case Config.ACK_LONG_CLICK:
+                if(theFragment==0){
+                    Intent intent = new Intent();
+                    //设置传递方向
+                    intent.setClass(MainActivity.this,TalkActivity.class);
+                    intent.putExtra("username",(String)data.get(theInfoId).get("title"));
+                    this.startActivity(intent);
+                }
+                break;
+            case Config.ACK_LIST_READ:
+                StartRead((String)data.get(theInfoId).get("title"),Config.ACK_NONE);
+                break;
             default:
                 break;
         }
+    }
+    private List<Map<String, Object>> data=null;
+    FragmentTabAdapter.OnRgsExtraCheckedChangedListener tabListener= new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
+        @Override
+        public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
+            theInfoId=0;
+            switch (index) {
+                case 0:
+                    theFragment = 0;
+                    data = getData();
+                    // create ArrayAdapter and use it to bind tags to the ListView
+                    adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+                            new String[]{"title", "img"},
+                            new int[]{R.id.nameView, R.id.photoView});
+                    break;
+                case 1:
+                    theFragment = 1;
+                    data = getData2();
+                    adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+                            new String[]{"title", "img"},
+                            new int[]{R.id.nameView, R.id.photoView});
+                    break;
+                case 2:
+                    theFragment = 2;
+                    data = getData3();
+                    adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+                            new String[]{"title", "img"},
+                            new int[]{R.id.nameView, R.id.photoView});
+                    break;
+            }
+            StartListRead();
+            System.out.println("Extra---- " + index + " checked!!! ");
+        }
+    };
+    private void StartListRead(){
+        StopRead();
+        Message msg = Message.obtain();
+        msg.what = Config.ACK_LIST_READ;
+        BaseActivity.sendMessage(msg);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(Constant.ID.equals("1")){
+            //设置事件监听，要修改ImageView的值
+            final GestureDetectorCompat mGesturedetector;
+            mGesture gesture = new mGesture();
+            mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+            ImageView iv = (ImageView)findViewById(R.id.llblindView);
+            iv.setVisibility(View.VISIBLE);
+            iv.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mGesturedetector.onTouchEvent(event);
+                    return true;
+                }
+            });
+        }
 
         //TODO 得到编辑框里的值
         //TODO 使用USER创建并调用downInfo();
@@ -63,36 +155,15 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         fragments.add(new ShareFragment());
 
         rgs = (RadioGroup) findViewById(R.id.tabs_rg);
-
-        adapter = new SimpleAdapter(this,getData(),R.layout.list_item,
-                new String[]{"title","img"},
-                new int[]{R.id.nameView,R.id.photoView});
+//        theFragment = 0;
+//        data = getData();
+//        adapter = new SimpleAdapter(this,data,R.layout.list_item,
+//                new String[]{"title","img"},
+//                new int[]{R.id.nameView,R.id.photoView});
 
         FragmentTabAdapter tabAdapter = new FragmentTabAdapter(this, fragments, R.id.tab_content, rgs);
-        tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
-            @Override
-            public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
-                switch (index) {
-                    case 0:
-                        // create ArrayAdapter and use it to bind tags to the ListView
-                        adapter = new SimpleAdapter(getApplicationContext(), getData(), R.layout.list_item,
-                                new String[]{"title", "img"},
-                                new int[]{R.id.nameView, R.id.photoView});
-                        break;
-                    case 1:
-                        adapter = new SimpleAdapter(getApplicationContext(), getData(), R.layout.list_item,
-                                new String[]{"title", "img"},
-                                new int[]{R.id.nameView, R.id.photoView});
-                        break;
-                    case 2:
-                        adapter = new SimpleAdapter(getApplicationContext(), getData(), R.layout.list_item,
-                                new String[]{"title", "img"},
-                                new int[]{R.id.nameView, R.id.photoView});
-                        break;
-                }
-                System.out.println("Extra---- " + index + " checked!!! ");
-            }
-        });
+
+        tabAdapter.setOnRgsExtraCheckedChangedListener(tabListener);
         ActionBar actionBar = getActionBar();
         if(!queue.getLast().toString().contains("MainActivity")){
             actionBar.setIcon(null);
@@ -104,6 +175,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             //  actionBar.setIcon(R.drawable.tabchat_selected);
             actionBar.setIcon(null);
         }
+        tabListener.OnRgsExtraCheckedChanged(rgs,0,0);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,14 +218,6 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     // ADDED to set up the ListFragment
     public SimpleAdapter getAdapter(){return adapter;}
 
-    @Override
-    protected void onStart() {
-        Intent intent_voice_service = new Intent(this, VoiceService.class);
-        startService(intent_voice_service);
-        bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
-        super.onStart();
-    }
-
     private List<Map<String, Object>> getData() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
@@ -169,6 +233,48 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
         map = new HashMap<String, Object>();
         map.put("title", "G3");
+        map.put("img", R.drawable.tablatestalert);
+        list.add(map);
+
+        return list;
+    }
+
+    private List<Map<String, Object>> getData2() {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("title", "G12");
+        map.put("img", R.drawable.tababoutus);
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", "G22");
+        map.put("img", R.drawable.tabconfigicon);
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", "G32");
+        map.put("img", R.drawable.tablatestalert);
+        list.add(map);
+
+        return list;
+    }
+
+    private List<Map<String, Object>> getData3() {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("title", "G13");
+        map.put("img", R.drawable.tababoutus);
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", "G23");
+        map.put("img", R.drawable.tabconfigicon);
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", "G33");
         map.put("img", R.drawable.tablatestalert);
         list.add(map);
 
@@ -224,7 +330,10 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
     @Override
     public void onMainFragmentInteraction(int position) {
-
+        Message msg = Message.obtain();
+        msg.what = Config.ACK_LONG_CLICK;
+        theInfoId=position;
+        BaseActivity.sendMessage(msg);
     }
 
     @Override

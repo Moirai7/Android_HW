@@ -95,7 +95,7 @@ public class RegisterActivity extends BaseActivity {
                 }
                 break;
             case Config.ACK_LONG_CLICK:
-
+                StopRead();
                 Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
                 startActivity(intent);
                 finish();
@@ -158,6 +158,7 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void gotoLogin(){
+        StopRead();
         Intent intent = new Intent();
         intent.setClass(RegisterActivity.this, MainActivity.class);
         startActivity(intent);

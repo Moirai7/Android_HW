@@ -41,7 +41,7 @@ public class LoginActivity extends BaseActivity {
                     }else {
                         Toast.makeText(LoginActivity.this, USERNAME + getResources().getString(R.string.login_success),
                                 Toast.LENGTH_SHORT).show();
-
+                        StopRead();
                         Intent intent = new Intent();
                         intent.setClass(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -87,13 +87,14 @@ public class LoginActivity extends BaseActivity {
                 //con.login(user);
                 break;
             case Config.ACK_LOGIN_SUCCESS_RETURN:
-
+                StopRead();
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
                 break;
             case Config.ACK_LONG_CLICK:
+                StopRead();
                 Intent mintent = new Intent(LoginActivity.this,RegisterActivity.class);
                 startActivity(mintent);
                 finish();

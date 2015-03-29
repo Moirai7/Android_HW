@@ -95,7 +95,8 @@ public abstract class BaseActivity extends FragmentActivity  {
     }
 
     protected void StopRead(){
-        voice_binder.StopRead();
+        if(voice_binder!=null)
+           voice_binder.StopRead();
     }
 
     protected void StartRead(String string, int ackListenStart) {
@@ -126,6 +127,10 @@ public abstract class BaseActivity extends FragmentActivity  {
 	}
     @Override
     protected void onDestroy() {
+        if (queue.contains(this)) {
+            queue.remove(this);
+            System.out.println("将" + this + "移出list");
+        }
         if(connection_voice!=null)
             unbindService(connection_voice);
         super.onDestroy();
