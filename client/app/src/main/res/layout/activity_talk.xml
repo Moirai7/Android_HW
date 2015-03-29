@@ -1,12 +1,82 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     tools:context="com.moirai.view.TalkActivity">
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/talk_jblind"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        android:background="@mipmap/blind_background"/>
 
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:dividerHeight="5dp"
+        android:scrollbars="none"
+        android:background="#ffffff"
+        android:layout_below="@id/talk_jblind"
+        android:layout_above="@+id/talk_btn_layout"
+        android:cacheColorHint="#00000000"/>
+
+    <TextView
+        android:layout_below="@id/talk_jblind"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/talk_btn_layout"
+        android:layout_alignTop="@+id/talk_btn_layout"
+        android:background="#C0C0C0"/>
+    <LinearLayout
+        android:id="@+id/talk_btn_layout"
+        android:layout_below="@id/talk_jblind"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        >
+        <ImageButton
+            android:id="@+id/talk_cameraIbtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/camera"/>
+        <ImageButton
+            android:id="@+id/talk_text_voice_imageBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/tabchat_selected"
+            android:layout_gravity="center_vertical"
+            />
+        <EditText
+            android:id="@+id/talk_editView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/talk_editview"
+            android:layout_marginLeft="5dp"
+            android:paddingLeft="5dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="#818181"
+            android:textCursorDrawable="@null"
+            />
+        <Button
+            android:id="@+id/talk_sendBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/talk_send_btn"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="3dp"
+            android:textColor="#818181"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:text="@string/talk_send_message"/>
+    </LinearLayout>
 </RelativeLayout>
