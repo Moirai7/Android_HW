@@ -69,7 +69,8 @@ public class LoadingActivity extends BaseActivity {
      * 跳转到注册界面
      */
     public void redirectToRegister(){
-        Intent intent = new Intent(LoadingActivity.this,RegisterActivity.class);
+        //Intent intent = new Intent(LoadingActivity.this,RegisterActivity.class);
+        Intent intent = new Intent(LoadingActivity.this,LoginActivity.class);
         startActivity(intent);
         finish();//结束这个activity
     }

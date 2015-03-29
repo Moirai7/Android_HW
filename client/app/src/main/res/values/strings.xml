@@ -45,6 +45,12 @@
     <string name="choice1">YES</string>
     <string name="choice2">NO</string>
     <string name="takePhoto">Start</string>
-    <string name="login">Login</string>
     <string name="loading">"Do you want to use the voice service?YES,click the screen.No,long press the screen"</string>
+	<!--Login function-->
+    <string name="login">Login</string>
+    <string name="username">Please tell us the username</string>
+    <string name="password">Please tell us the password</string>
+    <string name="confirm">the username and password you input are</string>
+    <string name="login_success">Login successfully</string>
+    <string name="login_failure">username or password is wrong.Input again</string>
 </resources>

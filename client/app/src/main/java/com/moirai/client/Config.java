@@ -36,4 +36,9 @@ public interface Config {
     public static final int ACK_DOWN = 108;
     public static final int ACK_NONE = 109;
     public static final int ACK_MAIN_WELCOME = 113;
+    public static final int ACK_TALK_USERNAME = 120;
+    public static final int ACK_LISTEN_USERNAME = 121;
+    public static final int ACK_TALK_PASSWORD = 122;
+    public static final int ACK_LISTEN_PASSWORD = 123;
+    public static final int ACK_LOGIN_SUCCESS_RETURN = 124;
 }
