@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 //db.saveDownloadInfo(list);
                 break;
             case Config.ACK_CON_SUCCESS:
-                StartRead("漂漂的岚岚姐",Config.ACK_NONE);
+                StartRead("漂漂的岚岚姐",Config.ACK_NONE);//欢迎
                 break;
             case Config.ACK_DOWN:
                 theInfoId++;
@@ -67,16 +67,24 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     theInfoId=0;
                 StartListRead();
                 break;
-            case Config.ACK_LEFT:
-                if((theFragment-1)%3==0)
-                    theFragment = 3;
-                tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment-1)%3,(theFragment-1)%3);
+            case Config.ACK_LEFT://0是首页，1是contact，2是朋友圈
+                tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+2)%3,(theFragment+2)%3);
+                switch ((theFragment+2)%3){
+                   case 0:StartRead(getResources().getString(R.string.main_mainPage),Config.ACK_NONE);break;
+                   case 1:StartRead(getResources().getString(R.string.main_contactPage),Config.ACK_NONE);break;
+                   case 2:StartRead(getResources().getString(R.string.main_sharePage),Config.ACK_NONE);break;
+                }
                 break;
-            case Config.ACK_RIGHT:
+            case Config.ACK_RIGHT://0是首页，1是contact，2是朋友圈
                 tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+1)%3,(theFragment+1)%3);
+                switch ((theFragment+1)%3){
+                    case 0:StartRead(getResources().getString(R.string.main_mainPage),Config.ACK_NONE);break;
+                    case 1:StartRead(getResources().getString(R.string.main_contactPage),Config.ACK_NONE);break;
+                    case 2:StartRead(getResources().getString(R.string.main_sharePage),Config.ACK_NONE);break;
+                }
                 break;
             case Config.ACK_LONG_CLICK:
-                if(theFragment==0){
+                if(theFragment==0||theFragment==1){
                     Intent intent = new Intent();
                     //设置传递方向
                     intent.setClass(MainActivity.this,TalkActivity.class);
@@ -86,6 +94,19 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 break;
             case Config.ACK_LIST_READ:
                 StartRead((String)data.get(theInfoId).get("title"),Config.ACK_NONE);
+                break;
+            case Config.ACK_DOUBLE_CLICK:
+                if(theFragment==0){
+                    Intent intent = new Intent();
+                    intent.setClass(queue.getLast(),SettingActivity.class);
+                    startActivity(intent);
+                    Constant.isSetting = true;
+                }else if(theFragment==1){
+                    Intent intent = new Intent();
+                    intent.setClass(queue.getLast(),ShakeActivity.class);
+                    startActivity(intent);
+                    Constant.isSetting = true;
+                }
                 break;
             default:
                 break;
@@ -274,64 +295,64 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     }
     // ADDED to set up the ListFragment
     public SimpleAdapter getAdapter(){return adapter;}
-
+//聊天
     private List<Map<String, Object>> getData() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", "G1");
+        map.put("title", getResources().getString(R.string.main_message1));//String
         map.put("img", R.drawable.tababoutus);
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", "G2");
+        map.put("title", getResources().getString(R.string.main_message2));
         map.put("img", R.drawable.tabconfigicon);
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", "G3");
+        map.put("title", getResources().getString(R.string.main_message3));
         map.put("img", R.drawable.tablatestalert);
         list.add(map);
 
         return list;
     }
-
+//contact
     private List<Map<String, Object>> getData2() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", "G12");
+        map.put("title", getResources().getString(R.string.main_contact1));
         map.put("img", R.drawable.tababoutus);
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", "G22");
+        map.put("title", getResources().getString(R.string.main_contact2));
         map.put("img", R.drawable.tabconfigicon);
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", "G32");
+        map.put("title", getResources().getString(R.string.main_contact3));
         map.put("img", R.drawable.tablatestalert);
         list.add(map);
 
         return list;
     }
-
+//share
     private List<Map<String, Object>> getData3() {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", "G13");
+        map.put("title", getResources().getString(R.string.main_share1));
         map.put("img", R.drawable.tababoutus);
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", "G23");
+        map.put("title",getResources().getString(R.string.main_share2));
         map.put("img", R.drawable.tabconfigicon);
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", "G33");
+        map.put("title", getResources().getString(R.string.main_share3));
         map.put("img", R.drawable.tablatestalert);
         list.add(map);
 
