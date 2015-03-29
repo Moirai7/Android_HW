@@ -25,6 +25,7 @@ public class LoginActivity extends BaseActivity {
    private EditText username_edit;
    private EditText password_edit;
    private Button login_btn;
+    private Button retriveToRegister;
     @Override
     public void processMessage(Message message) {
         switch(message.what){
@@ -57,7 +58,11 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case Config.ACK_CON_SUCCESS:
+                StartRead(getResources().getString(R.string.loginStart),Config.ACK_NONE);
                 //请说出用户名
+               // StartRead(getResources().getString(R.string.username),Config.ACK_TALK_USERNAME);
+                break;
+            case Config.ACK_CLICK:
                 StartRead(getResources().getString(R.string.username),Config.ACK_TALK_USERNAME);
                 break;
             case Config.ACK_TALK_USERNAME:
@@ -128,6 +133,7 @@ public class LoginActivity extends BaseActivity {
         username_edit = (EditText)findViewById(R.id.username_edit);
         password_edit = (EditText)findViewById(R.id.password_edit);
         login_btn = (Button)findViewById(R.id.login_btn);
+        retriveToRegister = (Button)findViewById(R.id.retrieveToRegister);
         //TODO 使用USER创建并调用login();
        login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +154,15 @@ public class LoginActivity extends BaseActivity {
                     user.setPassword(Constant.PASSWORD);
                    con.login(user1);*/
                 }
+            }
+        });
+
+        retriveToRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mintent = new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(mintent);
+                finish();
             }
         });
     }
