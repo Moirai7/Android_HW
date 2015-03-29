@@ -46,4 +46,5 @@
     <string name="choice2">NO</string>
     <string name="takePhoto">Start</string>
     <string name="login">Login</string>
+    <string name="loading">"Do you want to use the voice service?YES,click the screen.No,long press the screen"</string>
 </resources>

@@ -42,32 +42,34 @@ public abstract class BaseActivity extends FragmentActivity  {
     private SharedPreferences mSharedPreferences;
     private Intent intent_main_service;
     private VoiceService.MyBinder voice_binder;
-    public static boolean voice_flag= false;
+    public static boolean voice_flag = false;
 
 
-    public ServiceConnection connection_voice = new ServiceConnection() {
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            voice_flag = false;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            voice_binder = (VoiceService.MyBinder) service;
-            voice_flag = true;
-            Log.v("tag", "bind");
-
-            Message msg = Message.obtain();
-            msg.what = Config.ACK_CON_SUCCESS;
-            BaseActivity.sendMessage(msg);
-        }
-    };
+    public ServiceConnection connection_voice = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        if(Constant.ID=="1"&&!voice_flag){
+        if(Constant.ID=="1"){
+            connection_voice = new ServiceConnection() {
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    voice_flag = false;
+                }
+
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    voice_binder = (VoiceService.MyBinder) service;
+                    voice_flag = true;
+                    Log.v("tag", "bind");
+
+                    Message msg = Message.obtain();
+                    msg.what = Config.ACK_CON_SUCCESS;
+                    BaseActivity.sendMessage(msg);
+                }
+            };
+
             Intent intent_voice_service = new Intent(this, VoiceService.class);
             startService(intent_voice_service);
             bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
@@ -80,24 +82,7 @@ public abstract class BaseActivity extends FragmentActivity  {
 			queue.add(this);
 			System.out.println("将" + queue.getLast() + "添加到list中去");
 		}
-
-        ActionBar actionBar = getActionBar();
-        if(!queue.getLast().toString().contains("MainActivity")){
-            actionBar.setIcon(null);
-            actionBar.setDisplayShowHomeEnabled(false);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }else{
-            actionBar.setDisplayHomeAsUpEnabled(false);
-            actionBar.setDisplayShowHomeEnabled(false);
-          //  actionBar.setIcon(R.drawable.tabchat_selected);
-            actionBar.setIcon(null);
-        }
 	}
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        // OnGestureListener will analyzes the given motion event
-        return mGesturedetector.onTouchEvent(event);
-    }
 
     protected void StopListen() {
         voice_binder.StopListen();
@@ -112,35 +97,6 @@ public abstract class BaseActivity extends FragmentActivity  {
     protected void StartRead(String string, int ackListenStart) {
         voice_binder.SetACK(ackListenStart);
         voice_binder.StartRead(string);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //TODO ICON
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        //当点击不同的menu item 是执行不同的操作
-        switch (id) {
-            case R.id.action_settings:
-                if(!Constant.isSetting){
-                    Intent intent = new Intent();
-                    intent.setClass(queue.getLast(),SettingActivity.class);
-                    startActivity(intent);
-                    Constant.isSetting = true;
-                }
-                break;
-            case android.R.id.home:
-                queue.getLast().finish();
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 	public abstract void processMessage(Message message);
@@ -164,7 +120,12 @@ public abstract class BaseActivity extends FragmentActivity  {
 	public static void sendMessage(Message msg) {
 		handler.sendMessage(msg);
 	}
-
+    @Override
+    protected void onDestroy() {
+        if(connection_voice!=null)
+            unbindService(connection_voice);
+        super.onDestroy();
+    }
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -173,11 +134,6 @@ public abstract class BaseActivity extends FragmentActivity  {
 	@Override
 	protected void onRestart() {
 		super.onResume();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
 	}
 
     class mGesture  extends GestureDetector.SimpleOnGestureListener {
@@ -190,29 +146,14 @@ public abstract class BaseActivity extends FragmentActivity  {
             Log.i("lanlan","double click");
             return super.onDoubleTap(e);
         }
+
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
+        public boolean onSingleTapConfirmed(MotionEvent e) {
             Message msg = Message.obtain();
             msg.what = Config.ACK_CLICK;
             BaseActivity.sendMessage(msg);
             Log.i("lanlan","1 click");
-            return false;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return false;
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
+            return true;
         }
 
         @Override
@@ -242,13 +183,13 @@ public abstract class BaseActivity extends FragmentActivity  {
                 Message msg = Message.obtain();
                 msg.what = Config.ACK_TOP;
                 BaseActivity.sendMessage(msg);
-                Log.i("lanlan","left");
+                Log.i("lanlan","top");
                 return true;
             }else if(e1.getY() - e2.getY() <-120){
                 Message msg = Message.obtain();
                 msg.what = Config.ACK_DOWN;
                 BaseActivity.sendMessage(msg);
-                Log.i("lanlan","right");
+                Log.i("lanlan","down");
                 return true;
             }
             return false;

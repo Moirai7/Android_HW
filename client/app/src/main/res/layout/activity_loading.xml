@@ -1,42 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context=".LoadingActivity"
-    android:background="@mipmap/login_background"
-    android:gravity="center_vertical|center_horizontal">
+    android:gravity="center_vertical|center_horizontal"
+    android:background="@mipmap/loading_background">
 
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/zblindView"/>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/logo_imageView"
-        android:background="@mipmap/logo"
-        android:layout_centerHorizontal="true" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/appName"
-        android:layout_centerHorizontal="true"
-
-        android:layout_below="@id/logo_imageView"/>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/reminder"
-            android:id="@+id/reminder_textView"
-            android:layout_centerVertical="true"
-            android:textSize="25dp"
-            android:textColor="#ffffff"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/logo_imageView"
-            android:layout_marginTop="100dip" />
 
 </RelativeLayout>

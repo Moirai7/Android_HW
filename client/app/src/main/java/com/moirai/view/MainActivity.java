@@ -1,5 +1,6 @@
 package com.moirai.view;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
@@ -10,10 +11,12 @@ import android.os.Message;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 
 import com.moirai.client.Config;
+import com.moirai.client.Constant;
 import com.moirai.client.R;
 import com.moirai.model.Info;
 import com.moirai.voice.VoiceService;
@@ -66,30 +69,69 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 new int[]{R.id.nameView,R.id.photoView});
 
         FragmentTabAdapter tabAdapter = new FragmentTabAdapter(this, fragments, R.id.tab_content, rgs);
-        tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener(){
+        tabAdapter.setOnRgsExtraCheckedChangedListener(new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
             @Override
             public void OnRgsExtraCheckedChanged(RadioGroup radioGroup, int checkedId, int index) {
-                switch(index){
+                switch (index) {
                     case 0:
                         // create ArrayAdapter and use it to bind tags to the ListView
-                        adapter = new SimpleAdapter(getApplicationContext(),getData(),R.layout.list_item,
-                            new String[]{"title","img"},
-                            new int[]{R.id.nameView,R.id.photoView});
+                        adapter = new SimpleAdapter(getApplicationContext(), getData(), R.layout.list_item,
+                                new String[]{"title", "img"},
+                                new int[]{R.id.nameView, R.id.photoView});
                         break;
                     case 1:
-                        adapter = new SimpleAdapter(getApplicationContext(),getData(),R.layout.list_item,
-                                new String[]{"title","img"},
-                                new int[]{R.id.nameView,R.id.photoView});
+                        adapter = new SimpleAdapter(getApplicationContext(), getData(), R.layout.list_item,
+                                new String[]{"title", "img"},
+                                new int[]{R.id.nameView, R.id.photoView});
                         break;
                     case 2:
-                        adapter = new SimpleAdapter(getApplicationContext(),getData(),R.layout.list_item,
-                                new String[]{"title","img"},
-                                new int[]{R.id.nameView,R.id.photoView});
+                        adapter = new SimpleAdapter(getApplicationContext(), getData(), R.layout.list_item,
+                                new String[]{"title", "img"},
+                                new int[]{R.id.nameView, R.id.photoView});
                         break;
                 }
                 System.out.println("Extra---- " + index + " checked!!! ");
             }
         });
+        ActionBar actionBar = getActionBar();
+        if(!queue.getLast().toString().contains("MainActivity")){
+            actionBar.setIcon(null);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }else{
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+            //  actionBar.setIcon(R.drawable.tabchat_selected);
+            actionBar.setIcon(null);
+        }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO ICON
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //当点击不同的menu item 是执行不同的操作
+        switch (id) {
+            case R.id.action_settings:
+                if(!Constant.isSetting){
+                    Intent intent = new Intent();
+                    intent.setClass(queue.getLast(),SettingActivity.class);
+                    startActivity(intent);
+                    Constant.isSetting = true;
+                }
+                break;
+            case android.R.id.home:
+                queue.getLast().finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
     @Override
     public void onBackPressed(){

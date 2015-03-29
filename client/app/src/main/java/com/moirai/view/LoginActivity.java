@@ -43,6 +43,9 @@ public class LoginActivity extends BaseActivity {
                     Toast.makeText(LoginActivity.this, "用户" + Constant.USERNAME + "登陆失败", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case Config.ACK_CON_SUCCESS:
+                StartRead("sdfasdf",Config.ACK_NONE);
+                break;
             case Config.ACK_CLICK:
                 break;
 
@@ -84,7 +87,7 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
-        if(Constant.ID=="1"){
+        if(Constant.ID.equals("1")){
             //设置事件监听，要修改ImageView的值
             final GestureDetectorCompat mGesturedetector;
             mGesture gesture = new mGesture();

@@ -30,6 +30,9 @@ public class RegisterActivity extends BaseActivity {
     @Override
     public void processMessage(Message message) {
         switch(message.what){
+            case Config.ACK_CON_SUCCESS:
+                StartRead("漂亮的岚岚姐",Config.ACK_NONE);
+                break;
             case Config.REQUEST_REGISTER:
                 int result = message.arg1;
                 if(result == Config.SUCCESS){
