@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"
-        android:layout_above="@id/takePhoto">
+        android:layout_above="@id/takePhoto">y
     </SurfaceView>
 
 </RelativeLayout>

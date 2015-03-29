@@ -1,20 +1,57 @@
 <resources>
-    <string name="app_name">client</string>
+    <string name="app_name">AllChat</string>
+
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_register">RegisterActivity</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="title_activity_talk">TalkActivity</string>
-    <string name="title_activity_friend">FriendActivity</string>
-    <string name="title_activity_moments">MomentsActivity</string>
-    <string name="title_activity_setting">SettingActivity</string>
-    <string name="title_activity_camera">CameraActivity</string>
-    <string name="title_activity_gesture">GestureActivity</string>
-    <string name="reminder">Choose voice reminder?</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_main">AllChat</string>
+    <string name="title_activity_talk">Talk</string>
+    <string name="title_activity_friend">Friends</string>
+    <string name="title_activity_moments">Share</string>
+    <string name="title_activity_setting">Settings</string>
+    <string name="title_activity_camera">Camera</string>
+    <string name="title_activity_gesture">Gesture</string>
+
+    <string name="tab_chat">Chats</string>
+    <string name="tab_friend">Friends</string>
+    <string name="tab_share">Shares</string>
+
+
+    <string name="register_id">ID</string>
+    <string name="register_password">Password</string>
+    <string name="register_style"></string>
+    <string-array name="register_type">
+        <item>normal</item>
+        <item>blind</item>
+        <item>Deaf-Muck</item>
+    </string-array>
+    <string name="tip_register_successfully">Registered successfully</string>
+    <string name="tip_register_failed">Registered failed</string>
+    <string name="tip_register_id">Please enter ID correctly</string>
+    <string name="tip_regieter_pw_null">Please enter password correctly</string>
+
+    <string name="title_activity_shake">Shake</string>
+    <string name="message1_shake_confirm">Do you want to add</string>
+    <string name="message2_shake_confirm">to be your friend ?</string>
+    <string name="yes_shake_confirm">Yes</string>
+    <string name="no_shake_confirm">No</string>
+    <string name="no_shake_friend_tip">No friend</string>
+
+    <string name="tip_gesture_textView">Click return</string>
+	
+	<string name="reminder">Choose voice reminder?</string>
     <string name="choice1">YES</string>
     <string name="choice2">NO</string>
     <string name="takePhoto">Start</string>
+
+    <!--Login function-->
     <string name="login">Login</string>
+    <string name="username">Please tell us the username</string>
+    <string name="password">Please tell us the password</string>
+    <string name="confirm">the username and password you input are</string>
+    <string name="login_success">Login successfully</string>
+    <string name="login_failure">username or password is wrong.Input again</string>
+
 </resources>

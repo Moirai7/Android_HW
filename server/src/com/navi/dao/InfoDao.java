@@ -38,7 +38,7 @@ public class InfoDao {
 
 	public boolean saveHistory(Info history) {
 		getConnection();
-		String sql = "insert into historyInfo (id,sendid,receid, detail, time,status) values (S_S_Depart.Nextval, '"
+		String sql = "insert into historyInfo (id,sendid,receid, detail, time,status) values (S_S_HISTORY.Nextval, '"
 				+ history.getSendUser()
 				+ "', '"
 				+ history.getReceiver()
@@ -71,16 +71,16 @@ public class InfoDao {
 	public List<Info> getNews(String userid) {
 		List<Info> chengyus = new ArrayList<Info>();
 		getConnection();
-		String sql = "select * from historyInfo where userid = '" + userid
-				+ "' and status = -1 order by infoid";
-		String sql2 = "update historyInfo set status = 1 where userid = '"
+		String sql = "select * from historyInfo where receid = '" + userid
+				+ "' and status = -1 order by id";
+		String sql2 = "update historyInfo set status = 1 where receid = '"
 				+ userid + "'";
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				Info history = new Info();
-				history.setSendUser(rs.getString("senduser"));
-				history.setReceiver(rs.getString("receiver"));
+				history.setSendUser(rs.getString("sendid"));
+				history.setReceiver(rs.getString("receid"));
 				history.setDetail(rs.getString("detail"));
 				history.setTime(rs.getString("time"));
 				chengyus.add(history);

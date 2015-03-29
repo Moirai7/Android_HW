@@ -1,4 +1,3 @@
-/*
 package com.moirai.voice;
 
 import com.iflytek.speech.ErrorCode;
@@ -46,7 +45,6 @@ public class VoiceService extends Service {
     private Handler handler = new Handler(){
     	@Override
     	public void handleMessage(Message msg) {
-    		// TODO Auto-generated method stub
 			if(flag_iat && flag_tts && flag_binder){
 				//mBinder.StartRead("语音启动");
 				flag_iat = false;
@@ -57,23 +55,21 @@ public class VoiceService extends Service {
 				try {
 					SendServiceBroadCast("语音启动");
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
 			}
 			
 			switch(msg.what){
-//			case Config.ACK_SERVICE:
-//				// broad cast
-//				Log.v(TAG, (String) msg.obj);
-//				try {
-//					SendServiceBroadCast((String)msg.obj);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				break;
+			case Config.ACK_SERVICE:
+				// broad cast
+				Log.v(TAG, (String) msg.obj);
+				try {
+					SendServiceBroadCast((String)msg.obj);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				break;
 			default:
 				break;
 			}
@@ -121,16 +117,15 @@ public class VoiceService extends Service {
     	public void setBinderFlagOn(){
     		flag_binder = true;
     		Message msg = Message.obtain();
-    		//msg.what = Config.ACK_NONE;
+    		msg.what = Config.ACK_NONE;
 			handler.sendMessage(msg);   		
     	}
   
-*
+    	/**
     	 * 开始语音录入
     	 * 
-    	 * @param
-
-
+    	 *
+    	 */
     	public void StartListen() {
 
     		// GLOBAL_MS = ack;
@@ -142,22 +137,20 @@ public class VoiceService extends Service {
     		mIat.startListening(mRecognizerListener);
     	}
 
-*
+    	/**
     	 * 停止语音录入
-
-
+    	 */
     	public void StopListen() {
     		mIat.stopListening(mRecognizerListener);
     	}
 
-*
+    	/**
     	 * 开始语音播报
     	 * 
     	 * @param content
     	 *            播报内容
-    	 * @param
-
-
+    	 *
+    	 */
     	public void StartRead(String content) {
 
     		// GLOBAL_MS = ack;
@@ -177,10 +170,9 @@ public class VoiceService extends Service {
     	}
     }  
     
-*
+	/**
 	 * 初期化监听器。
-
-
+	 */
 	private InitListener mInitListener = new InitListener() {
 
 		@Override
@@ -191,17 +183,16 @@ public class VoiceService extends Service {
 				flag_iat = true;
 
 				Message msg = Message.obtain();
-				//msg.what = Config.ACK_MAIN_WELCOME;
+				msg.what = Config.ACK_MAIN_WELCOME;
 				handler.sendMessage(msg);
 
 			}
 		}
 	};
 
-*
+	/**
 	 * 识别回调。
-
-
+	 */
 	private RecognizerListener mRecognizerListener = new RecognizerListener.Stub() {
 
 		String finalresult = "";
@@ -250,10 +241,9 @@ public class VoiceService extends Service {
 		}
 	};
 
-*
+	/**
 	 * 初期化监听。
-
-
+	 */
 	private InitListener mTtsInitListener = new InitListener() {
 
 		@Override
@@ -264,16 +254,15 @@ public class VoiceService extends Service {
 				flag_tts = true;
 
 				Message msg = Message.obtain();
-				//msg.what = Config.ACK_NONE;
+				msg.what = Config.ACK_NONE;
 				handler.sendMessage(msg);
 			}
 		}
 	};
 
-*
+	/**
 	 * 合成回调监听。
-
-
+	 */
 	private SynthesizerListener mTtsListener = new SynthesizerListener.Stub() {
 		@Override
 		public void onBufferProgress(int progress) throws RemoteException {
@@ -330,13 +319,12 @@ public class VoiceService extends Service {
 //		});
 	}
 
-*
+	/**
 	 * 参数设置
 	 * 
 	 * @param
 	 * @return
-
-
+	 */
 	public void setParam_Iat() {
 
 		mIat.setParameter(SpeechConstant.LANGUAGE, mSharedPreferences
@@ -391,5 +379,4 @@ public class VoiceService extends Service {
         //Toast.makeText( VoiceService.this, "Sent! Did you receive?", Toast.LENGTH_SHORT).show();
     }
   
-}
-*/
+}  

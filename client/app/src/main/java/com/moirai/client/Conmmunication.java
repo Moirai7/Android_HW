@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.moirai.model.User;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Conmmunication {
     Context context;
     private NetWorker netWorker;
@@ -52,12 +55,13 @@ public class Conmmunication {
     public void setInfo(String infoID) {
 
     }
+    private SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
     /**
-     * 确认联系人
+     * 请求联系人
      */
-    public void requireFriend(String ID1, String ID2) {
-
+    public void requireFriend(String id) {
+        netWorker.sendRequestFriend(id,df.format(new Date()));
     }
 
     /**
@@ -70,8 +74,8 @@ public class Conmmunication {
     /**
      * 添加朋友
      */
-    public void addFriend(String username, String otherID) {
-
+    public void addFriend(String username, String otherID,int answer) {
+        netWorker.addFriend(username,otherID,answer);
     }
 
     /**

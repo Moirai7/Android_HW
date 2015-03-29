@@ -7,7 +7,10 @@
     android:background="@mipmap/login_background"
     android:gravity="center_vertical|center_horizontal">
 
-
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/zblindView"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,33 +38,5 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@id/logo_imageView"
             android:layout_marginTop="100dip" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/choice1"
-            android:id="@+id/YES_btn"
-            android:background="@mipmap/loading"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/reminder_textView"
-            android:layout_marginTop="50dip"
-            android:textColor="#ffffff" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/choice2"
-            android:id="@+id/NO_btn"
-            android:layout_gravity="center_horizontal"
-            android:background="@mipmap/loading"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/YES_btn"
-            android:textColor="#ffffff" />
 
 </RelativeLayout>

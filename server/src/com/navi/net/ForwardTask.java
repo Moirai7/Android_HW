@@ -18,11 +18,13 @@ import com.navi.constant.Config;
 import com.navi.model.Friends;
 import com.navi.model.Moments;
 import com.navi.model.Info;
+import com.navi.model.RequestFriend;
 import com.navi.model.User;
 import com.navi.service.FriendsService;
 import com.navi.service.MomentsService;
 import com.navi.service.InfoService;
 import com.navi.service.UserService;
+import com.navi.util.FriendUtil;
 
 public class ForwardTask extends Task{
 	//鏉╂瑤閲淗ashMap閺勵垳鏁ら弶銉ョ摠閺�偓鐦℃稉鐚刼cket鏉╃偞甯撮惃锟�
@@ -191,7 +193,7 @@ public class ForwardTask extends Task{
 			String userid = message.getString("userid");//鍙戦�鐨勪汉
 			JSONArray arr = new FriendsService().downloadFriends(userid);
 			JSONObject obj = new JSONObject();
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_FRIEND);
+			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
 			obj.put("list", arr);
 			out.println(obj.toString());
 		} catch (Exception e) {
@@ -200,6 +202,24 @@ public class ForwardTask extends Task{
 	}
 
 	private void handSendRequestFriend() {
+		try {
+			String sender = message.getString("name");//鍙戦�鐨勪汉
+			String time = message.getString("time");//鍙戦�鐨勪汉
+			RequestFriend r = new RequestFriend(sender,time);
+			FriendUtil f = FriendUtil.getInstance();
+			f.addRequest(r);
+			String name = f.matchRequest(sender);
+			JSONObject obj = new JSONObject();
+			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_FRIEND);
+			obj.put("name", name);
+			out.println(obj.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+	}
+
+	private void handAddFriend() {
 		try {
 			String send = message.getString("send");//鍙戦�鐨勪汉
 			String reciver = message.getString("reciver");//鍙戦�鐨勪汉
@@ -212,21 +232,6 @@ public class ForwardTask extends Task{
 			}else{
 				obj.put(Config.RESULT, Config.FAIl);
 			}
-			out.println(obj.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-	}
-
-	private void handAddFriend() {
-		try {
-			String sender = message.getString("username");//鍙戦�鐨勪汉
-			String receiver = message.getString("reciver");//鍙戦�鐨勪汉
-			Friends friends = new Friends(sender,receiver);
-			new FriendsService().requireFriend(friends);
-			JSONObject obj = new JSONObject();
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
-			obj.put(Config.RESULT, Config.SUCCESS);
 			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();

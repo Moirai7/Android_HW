@@ -1,6 +1,17 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="com.moirai.view.MainActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" />
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.moirai.view.MainActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:icon="@drawable/tabsettings"
+        android:showAsAction="ifRoom"
+        android:orderInCategory="100"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </menu>

@@ -1,55 +1,142 @@
 package com.moirai.view;
 
 import java.util.LinkedList;
-
+import com.iflytek.speech.SpeechRecognizer;
+import com.iflytek.speech.SpeechSynthesizer;
+import com.moirai.client.Config;
 import com.moirai.client.Conmmunication;
+import com.moirai.client.Constant;
+import com.moirai.client.R;
 import com.moirai.util.Database;
+import com.moirai.voice.VoiceService;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.app.ActionBar;
+import android.content.ComponentName;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.Window;
 import android.widget.Toast;
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends FragmentActivity  {
 	// 将生成的Activity都放到LinkList集合中
 	protected static LinkedList<BaseActivity> queue = new LinkedList<BaseActivity>();
 	public static Conmmunication con;
 	public static Database db;
+    // 语音识别对象。
+    private SpeechRecognizer mIat;
+    private Toast mToast;
+    private static final String ACTION_INPUT = "com.iflytek.speech.action.voiceinput";
+    // 语音合成对象
+    private SpeechSynthesizer mTts;
+    private SharedPreferences mSharedPreferences;
+    private Intent intent_main_service;
+    private VoiceService.MyBinder voice_binder;
+    public static boolean voice_flag= false;
 
-	// 监听home键
-	HomeKeyEventBroadCastReceiver receiver;
+
+    public ServiceConnection connection_voice = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            voice_flag = false;
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            voice_binder = (VoiceService.MyBinder) service;
+            voice_flag = true;
+            Log.v("tag", "bind");
+
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_CON_SUCCESS;
+            BaseActivity.sendMessage(msg);
+        }
+    };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        con = Conmmunication.newInstance();
-        db = Database.getInstance();
+        if(Constant.ID=="1"&&!voice_flag){
+            Intent intent_voice_service = new Intent(this, VoiceService.class);
+            startService(intent_voice_service);
+            bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
+        }
+
+        //con = Conmmunication.newInstance();
+        //db = Database.getInstance();
 		// 判断该Activity是否在LinkedList中，没有在的话就添加上
 		if (!queue.contains(this)) {
 			queue.add(this);
 			System.out.println("将" + queue.getLast() + "添加到list中去");
 		}
 
-		// 监听home键
-		
-		
-		receiver = new HomeKeyEventBroadCastReceiver();
-		registerReceiver(receiver, new IntentFilter(
-				Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-
+        ActionBar actionBar = getActionBar();
+        if(!queue.getLast().toString().contains("MainActivity")){
+            actionBar.setIcon(null);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }else{
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+          //  actionBar.setIcon(R.drawable.tabchat_selected);
+            actionBar.setIcon(null);
+        }
 	}
+
+    protected void StopListen() {
+        voice_binder.StopListen();
+    }
+
+    protected void StartListen(int ackSayEnd) {
+        voice_binder.SetACK(ackSayEnd);
+        voice_binder.StartListen();
+
+    }
+
+    protected void StartRead(String string, int ackListenStart) {
+        voice_binder.SetACK(ackListenStart);
+        voice_binder.StartRead(string);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO ICON
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //当点击不同的menu item 是执行不同的操作
+        switch (id) {
+            case R.id.action_settings:
+                if(!Constant.isSetting){
+                    Intent intent = new Intent();
+                    intent.setClass(queue.getLast(),SettingActivity.class);
+                    startActivity(intent);
+                    Constant.isSetting = true;
+                }
+                break;
+            case android.R.id.home:
+                queue.getLast().finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 	public abstract void processMessage(Message message);
 
@@ -73,28 +160,6 @@ public abstract class BaseActivity extends Activity {
 		handler.sendMessage(msg);
 	}
 
-	class HomeKeyEventBroadCastReceiver extends BroadcastReceiver {
-		static final String SYSTEM_REASON = "reason";
-		static final String SYSTEM_HOME_KEY = "homekey";// home key
-		static final String SYSTEM_RECENT_APPS = "recentapps";// long home key
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
-				String reason = intent.getStringExtra(SYSTEM_REASON);
-				if (reason != null) {
-					if (reason.equals(SYSTEM_HOME_KEY)) {
-						// home key处理点
-
-					} else if (reason.equals(SYSTEM_RECENT_APPS)) {
-
-					}
-				}
-			}
-		}
-	}
-
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -103,85 +168,85 @@ public abstract class BaseActivity extends Activity {
 	@Override
 	protected void onRestart() {
 		super.onResume();
-
-		// Toast.makeText(BaseActivity.this, "i'm back",
-		// Toast.LENGTH_SHORT).show();
-
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		unregisterReceiver(receiver);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		//TODO ICON
-		menu.add(Menu.NONE, Menu.FIRST + 1, 5, "下载地图").setIcon(
-				android.R.drawable.ic_menu_delete);
-
-		menu.add(Menu.NONE, Menu.FIRST + 2, 2, "修改信息").setIcon(//(包括联系人，detail)
-				android.R.drawable.ic_menu_edit);
-		return super.onCreateOptionsMenu(menu);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case Menu.FIRST + 1:
+    class mGesture  extends GestureDetector.SimpleOnGestureListener {
+        // 双击的第二下Touch down时触发
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_DOUBLE_CLICK;
+            BaseActivity.sendMessage(msg);
+            Log.i("lanlan","double click");
+            return super.onDoubleTap(e);
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_CLICK;
+            BaseActivity.sendMessage(msg);
+            Log.i("lanlan","1 click");
+            return false;
+        }
 
-			break;
-		case Menu.FIRST + 2:
-			//TODO 跳转到修改联系人的界面
-			break;
-		}
-		return false;
-	}
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
 
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Builder dialog = new AlertDialog.Builder(BaseActivity.this)
-					.setTitle("提示")
-					.setMessage("您是否要退出？")
-					.setPositiveButton("确定",
-							new DialogInterface.OnClickListener() {
+        @Override
+        public boolean onDown(MotionEvent e) {
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-                                    con.exitGame();
-									con.clear();
-									finish();
-									int siz = BaseActivity.queue.size();
-									for (int i = 0; i < siz; i++) {
-										if (BaseActivity.queue.get(i) != null) {
-											System.out
-													.println((Activity) BaseActivity.queue
-															.get(i) + "退出程序");
-											((Activity) BaseActivity.queue
-													.get(i)).finish();
-										}
-									}
-								}
-							})
-					.setNegativeButton("取消",
-							new DialogInterface.OnClickListener() {
+            return false;
+        }
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									
+        @Override
+        public void onShowPress(MotionEvent e) {
 
-								}
-							});
-			dialog.create().show();
+        }
 
-			return true;
-		}
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_LONG_CLICK;
+            BaseActivity.sendMessage(msg);
+            Log.i("lanlan","long click");
+        }
 
-		else
-			return false;
-
-	}
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (e1.getX() - e2.getX() > 120) {
+                Message msg = Message.obtain();
+                msg.what = Config.ACK_LEFT;
+                BaseActivity.sendMessage(msg);
+                Log.i("lanlan","left");
+                return true;
+            } else if (e1.getX() - e2.getX() < -120) {
+                Message msg = Message.obtain();
+                msg.what = Config.ACK_RIGHT;
+                BaseActivity.sendMessage(msg);
+                Log.i("lanlan","right");
+                return true;
+            }
+            if(e1.getY() - e2.getY() >120){
+                Message msg = Message.obtain();
+                msg.what = Config.ACK_TOP;
+                BaseActivity.sendMessage(msg);
+                Log.i("lanlan","left");
+                return true;
+            }else if(e1.getY() - e2.getY() <-120){
+                Message msg = Message.obtain();
+                msg.what = Config.ACK_DOWN;
+                BaseActivity.sendMessage(msg);
+                Log.i("lanlan","right");
+                return true;
+            }
+            return false;
+        }
+    }
 }

@@ -4,19 +4,27 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import com.moirai.client.Config;
+import com.moirai.client.Constant;
 import com.moirai.client.R;
+import com.moirai.model.Info;
+
+import java.util.List;
 
 
-public class LoadingActivity extends Activity {
+public class LoadingActivity extends BaseActivity {
     private Button yes_btn;
     private Button no_btn;
     private String choice;//0-语音，1-文字
@@ -33,25 +41,57 @@ public class LoadingActivity extends Activity {
         animation.setDuration(3000);//设置动画持续时间
         animation.setFillAfter(true);//动画执行完后停留在执行完的状态*/
 
+        //设置事件监听，要修改ImageView的值
+        final GestureDetectorCompat mGesturedetector;
+        mGesture gesture = new mGesture();
+        mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+        ImageView iv = (ImageView)findViewById(R.id.zblindView);
+        iv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGesturedetector.onTouchEvent(event);
+                return true;
+            }
+        });
+
         //TODO 语音提示用户是否选择语音进行后续操作
 
-        yes_btn = (Button)findViewById(R.id.YES_btn);
-        no_btn = (Button)findViewById(R.id.NO_btn);
-        yes_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO 语音
-                choice = "0";
+//        yes_btn = (Button)findViewById(R.id.YES_btn);
+//        no_btn = (Button)findViewById(R.id.NO_btn);
+//        yes_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //TODO 语音
+//                choice = "0";
+//                redirectToRegister();
+//            }
+//        });
+//        no_btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                choice = "1";
+//                redirectToRegister();
+//            }
+//        });
+    }
+
+    @Override
+    public void processMessage(Message message) {
+        switch(message.what){
+            case Config.ACK_CON_SUCCESS:
+                StartRead("是否启用语音，是，请单击屏幕，不是，请长按屏幕",Config.ACK_NONE);
+                break;
+            case Config.ACK_LONG_CLICK :
+                Constant.ID="0";
                 redirectToRegister();
-            }
-        });
-        no_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                choice = "1";
+                break;
+            case Config.ACK_CLICK:
+                Constant.ID="1";
                 redirectToRegister();
-            }
-        });
+                break;
+            default:
+                break;
+        }
     }
 
     /**

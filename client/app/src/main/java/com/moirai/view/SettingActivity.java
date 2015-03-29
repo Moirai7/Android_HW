@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.moirai.client.Constant;
 import com.moirai.client.R;
 
 public class SettingActivity extends BaseActivity {
@@ -33,4 +34,10 @@ public class SettingActivity extends BaseActivity {
         setContentView(R.layout.activity_setting);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Constant.isSetting = false;
+    }
 }
