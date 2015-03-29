@@ -1,7 +1,6 @@
 package com.moirai.view;
 
 import java.util.LinkedList;
-
 import com.iflytek.speech.SpeechRecognizer;
 import com.iflytek.speech.SpeechSynthesizer;
 import com.moirai.client.Config;
@@ -11,12 +10,9 @@ import com.moirai.client.R;
 import com.moirai.util.Database;
 import com.moirai.voice.VoiceService;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
+import android.app.ActionBar;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,8 +25,7 @@ import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
+import android.view.Window;
 import android.widget.Toast;
 
 public abstract class BaseActivity extends FragmentActivity  {
@@ -86,7 +81,23 @@ public abstract class BaseActivity extends FragmentActivity  {
 			System.out.println("将" + queue.getLast() + "添加到list中去");
 		}
 
+        ActionBar actionBar = getActionBar();
+        if(!queue.getLast().toString().contains("MainActivity")){
+            actionBar.setIcon(null);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }else{
+            actionBar.setDisplayHomeAsUpEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+          //  actionBar.setIcon(R.drawable.tabchat_selected);
+            actionBar.setIcon(null);
+        }
 	}
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // OnGestureListener will analyzes the given motion event
+        return mGesturedetector.onTouchEvent(event);
+    }
 
     protected void StopListen() {
         voice_binder.StopListen();
@@ -103,6 +114,35 @@ public abstract class BaseActivity extends FragmentActivity  {
         voice_binder.StartRead(string);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO ICON
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //当点击不同的menu item 是执行不同的操作
+        switch (id) {
+            case R.id.action_settings:
+                if(!Constant.isSetting){
+                    Intent intent = new Intent();
+                    intent.setClass(queue.getLast(),SettingActivity.class);
+                    startActivity(intent);
+                    Constant.isSetting = true;
+                }
+                break;
+            case android.R.id.home:
+                queue.getLast().finish();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 	public abstract void processMessage(Message message);
 
 	private static Handler handler = new Handler() {
@@ -116,6 +156,7 @@ public abstract class BaseActivity extends FragmentActivity  {
 				 }
 				break;
 			}
+
 		};
 	};
 
@@ -139,40 +180,7 @@ public abstract class BaseActivity extends FragmentActivity  {
 		super.onDestroy();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		//TODO ICON
-		menu.add(Menu.NONE, Menu.FIRST + 1, 5, "下载地图").setIcon(
-				android.R.drawable.ic_menu_delete);
-
-		menu.add(Menu.NONE, Menu.FIRST + 2, 2, "修改信息").setIcon(//(包括联系人，detail)
-				android.R.drawable.ic_menu_edit);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case Menu.FIRST + 1:
-
-			break;
-		case Menu.FIRST + 2:
-			//TODO 跳转到修改联系人的界面
-			break;
-		}
-		return false;
-	}
-
     class mGesture  extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            Message msg = Message.obtain();
-            msg.what = Config.ACK_CLICK;
-            BaseActivity.sendMessage(msg);
-            Log.i("lanlan","1 click");
-            return super.onSingleTapConfirmed(e);
-        }
-
         // 双击的第二下Touch down时触发
         @Override
         public boolean onDoubleTap(MotionEvent e) {
@@ -181,6 +189,30 @@ public abstract class BaseActivity extends FragmentActivity  {
             BaseActivity.sendMessage(msg);
             Log.i("lanlan","double click");
             return super.onDoubleTap(e);
+        }
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_CLICK;
+            BaseActivity.sendMessage(msg);
+            Log.i("lanlan","1 click");
+            return false;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            return false;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+
         }
 
         @Override
@@ -198,22 +230,26 @@ public abstract class BaseActivity extends FragmentActivity  {
                 msg.what = Config.ACK_LEFT;
                 BaseActivity.sendMessage(msg);
                 Log.i("lanlan","left");
+                return true;
             } else if (e1.getX() - e2.getX() < -120) {
                 Message msg = Message.obtain();
                 msg.what = Config.ACK_RIGHT;
                 BaseActivity.sendMessage(msg);
                 Log.i("lanlan","right");
-            }else if(e1.getY() - e2.getY() >120){
+                return true;
+            }
+            if(e1.getY() - e2.getY() >120){
                 Message msg = Message.obtain();
                 msg.what = Config.ACK_TOP;
                 BaseActivity.sendMessage(msg);
-                Log.i("lanlan","Top");
+                Log.i("lanlan","left");
                 return true;
             }else if(e1.getY() - e2.getY() <-120){
                 Message msg = Message.obtain();
                 msg.what = Config.ACK_DOWN;
                 BaseActivity.sendMessage(msg);
-                Log.i("lanlan","Down");
+                Log.i("lanlan","right");
+                return true;
             }
             return false;
         }
