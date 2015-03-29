@@ -35,6 +35,7 @@
     <string name="tip_register_id">Please enter user name correctly</string>
     <string name="tip_regieter_pw_null">Please enter password correctly</string>
     <string name="register_btn">Sign Up</string>
+    <string name="register_goto_login">Go to login</string>
 
     <string name="title_activity_shake">Shake</string>
     <string name="message1_shake_confirm">Do you want to add</string>
@@ -63,7 +64,8 @@
     <string name="confirm">the username and password you input are</string>
     <string name="login_success">Login successfully</string>
     <string name="login_failure">username or password is wrong.Input again</string>
-
+    <string name="talk_send_message">Send</string>
+    <string name="talking_with">Talking with</string>
     <!--setting function-->
     <string name="setting">Please choose your type</string>
     <string name="type_choice">TYPE</string>

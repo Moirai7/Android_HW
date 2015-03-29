@@ -43,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/password_edit"
+            android:inputType="textPassword"
             android:layout_gravity="center_horizontal"
             android:background="@mipmap/login_password"
             android:paddingLeft="45dp"/>

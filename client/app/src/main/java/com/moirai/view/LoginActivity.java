@@ -146,11 +146,16 @@ public class LoginActivity extends BaseActivity {
                 String password = password_edit.getText().toString();
                 System.out.println("username:"+username);
                 System.out.println("password:"+password);
-                if(username==null || username==""|| password==null||password==""){
+                if(username==null || username.equals("")|| password==null||password.equals("")){
                    Toast toast = Toast.makeText(LoginActivity.this,"Please input username or password",Toast.LENGTH_LONG);
                    toast.setGravity(Gravity.CENTER,0,0);
                    toast.show();
                 }else {
+                    removeActivity();
+                    Intent intent = new Intent();
+                    intent.setClass(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                     //TODO 自动登录方法
                     /*db.getUserInfo();
                     User user1 = new User();

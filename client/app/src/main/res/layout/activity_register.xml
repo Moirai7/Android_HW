@@ -13,10 +13,24 @@
         android:background="@mipmap/blind_background"
         android:id="@+id/register_jBlindView"/>
 
-    <RelativeLayout
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/logo_eyes"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:layout_above="@+id/register_message_layout"/>
+
+    <LinearLayout
+        android:id="@+id/register_message_layout"
         android:layout_below="@+id/register_jBlindView"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent">
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <EditText
             android:id="@+id/register_id_EditView"
             android:background="@mipmap/register_id"
@@ -25,8 +39,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="60dp"
             android:hint="@string/tip_enter_id"
-            android:layout_above="@+id/register_password1_EditView"
-            android:layout_centerHorizontal="true" />
+          />
 
         <EditText
             android:id="@+id/register_password1_EditView"
@@ -34,13 +47,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="60dp"
+            android:layout_marginTop="5dp"
             android:hint="@string/tip_enter_pw1"
             android:inputType="textPassword"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_alignLeft="@+id/register_id_EditView"
-            android:layout_alignStart="@+id/register_id_EditView"
-            android:layout_alignRight="@+id/register_id_EditView"/>
+            android:layout_alignLeft="@id/register_id_EditView"
+            android:layout_alignStart="@id/register_id_EditView"
+            android:layout_alignRight="@id/register_id_EditView"/>
 
         <EditText
             android:id="@+id/register_password2_EditView"
@@ -48,28 +60,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="60dp"
+            android:layout_marginTop="5dp"
             android:hint="@string/tip_enter_pw2"
             android:inputType="textPassword"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/register_password1_EditView"
-            android:layout_alignLeft="@+id/register_id_EditView"
-            android:layout_alignStart="@+id/register_id_EditView"
-            android:layout_alignRight="@+id/register_id_EditView"
+            android:layout_alignLeft="@id/register_id_EditView"
+            android:layout_alignStart="@id/register_id_EditView"
+            android:layout_alignRight="@id/register_id_EditView"
             />
-
-        </RelativeLayout>
 
         <Button
             android:id="@+id/register_createButton"
             android:background="@mipmap/register_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
             android:text="@string/register_btn"
-            android:textSize="30sp"
-            android:textColor="#ffffff"
-            android:layout_below="@+id/register_jBlindView"
-            android:layout_marginBottom="50dp"/>
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="40dp"
+            android:textColor="#ffffff"/>
 
+        <Button
+            android:id="@+id/register_gotoLogin_btn"
+            android:background="@mipmap/register_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_goto_login"
+            android:textSize="20sp"
+            android:textColor="#ffffff"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="40dp"
+            />
+      </LinearLayout>
 </RelativeLayout>
