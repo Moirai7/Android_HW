@@ -63,6 +63,7 @@ public class LoginActivity extends BaseActivity {
                // StartRead(getResources().getString(R.string.username),Config.ACK_TALK_USERNAME);
                 break;
             case Config.ACK_CLICK:
+                StopRead();
                 StartRead(getResources().getString(R.string.username),Config.ACK_TALK_USERNAME);
                 break;
             case Config.ACK_TALK_USERNAME:
