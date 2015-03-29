@@ -72,7 +72,7 @@ public abstract class BaseActivity extends FragmentActivity  {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        if(Constant.ID=="1"&&voice_flag==false){
+        if(Constant.ID=="1"&&!voice_flag){
             Intent intent_voice_service = new Intent(this, VoiceService.class);
             startService(intent_voice_service);
             bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
