@@ -5,6 +5,11 @@
     android:layout_height="fill_parent"
     android:background="@android:color/white"
     >
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/blindView" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -8,6 +8,11 @@
     android:background="@mipmap/login_background">
 
     <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/zblindviewlogin"
+        android:visibility="gone"/>
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"

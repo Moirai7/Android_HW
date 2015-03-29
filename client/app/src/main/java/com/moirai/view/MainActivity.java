@@ -8,7 +8,15 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 
@@ -89,6 +97,18 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 System.out.println("Extra---- " + index + " checked!!! ");
             }
         });
+        //设置事件监听，要修改ImageView的值
+        final GestureDetectorCompat mGesturedetector;
+        mGesture gesture = new mGesture();
+        mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+        ImageView iv = (ImageView)findViewById(R.id.blindView);
+        iv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGesturedetector.onTouchEvent(event);
+                return true;
+            }
+        });
     }
     @Override
     public void onBackPressed(){
@@ -105,9 +125,6 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
     @Override
     protected void onStart() {
-        Intent intent_voice_service = new Intent(this, VoiceService.class);
-        startService(intent_voice_service);
-        bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
         super.onStart();
     }
 

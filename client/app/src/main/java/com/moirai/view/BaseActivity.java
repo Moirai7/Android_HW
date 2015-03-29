@@ -6,6 +6,8 @@ import com.iflytek.speech.SpeechRecognizer;
 import com.iflytek.speech.SpeechSynthesizer;
 import com.moirai.client.Config;
 import com.moirai.client.Conmmunication;
+import com.moirai.client.Constant;
+import com.moirai.client.R;
 import com.moirai.util.Database;
 import com.moirai.voice.VoiceService;
 
@@ -28,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public abstract class BaseActivity extends FragmentActivity  {
@@ -42,9 +45,10 @@ public abstract class BaseActivity extends FragmentActivity  {
     // 语音合成对象
     private SpeechSynthesizer mTts;
     private SharedPreferences mSharedPreferences;
-    // private Intent intent_main_service;
+    private Intent intent_main_service;
     private VoiceService.MyBinder voice_binder;
     public static boolean voice_flag= false;
+
 
     public ServiceConnection connection_voice = new ServiceConnection() {
 
@@ -64,13 +68,16 @@ public abstract class BaseActivity extends FragmentActivity  {
             BaseActivity.sendMessage(msg);
         }
     };
-    private GestureDetector mGesturedetector = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        mGesture gesture = new mGesture();
-        mGesturedetector = new GestureDetector(this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
-        mGesturedetector.setIsLongpressEnabled(true);
+        if(Constant.ID=="1"&&voice_flag==false){
+            Intent intent_voice_service = new Intent(this, VoiceService.class);
+            startService(intent_voice_service);
+            bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
+        }
+
         //con = Conmmunication.newInstance();
         //db = Database.getInstance();
 		// 判断该Activity是否在LinkedList中，没有在的话就添加上
@@ -78,12 +85,8 @@ public abstract class BaseActivity extends FragmentActivity  {
 			queue.add(this);
 			System.out.println("将" + queue.getLast() + "添加到list中去");
 		}
+
 	}
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        // OnGestureListener will analyzes the given motion event
-        return mGesturedetector.onTouchEvent(event);
-    }
 
     protected void StopListen() {
         voice_binder.StopListen();
@@ -113,7 +116,6 @@ public abstract class BaseActivity extends FragmentActivity  {
 				 }
 				break;
 			}
-
 		};
 	};
 
@@ -162,6 +164,15 @@ public abstract class BaseActivity extends FragmentActivity  {
 	}
 
     class mGesture  extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Message msg = Message.obtain();
+            msg.what = Config.ACK_CLICK;
+            BaseActivity.sendMessage(msg);
+            Log.i("lanlan","1 click");
+            return super.onSingleTapConfirmed(e);
+        }
+
         // 双击的第二下Touch down时触发
         @Override
         public boolean onDoubleTap(MotionEvent e) {
@@ -170,30 +181,6 @@ public abstract class BaseActivity extends FragmentActivity  {
             BaseActivity.sendMessage(msg);
             Log.i("lanlan","double click");
             return super.onDoubleTap(e);
-        }
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            Message msg = Message.obtain();
-            msg.what = Config.ACK_CLICK;
-            BaseActivity.sendMessage(msg);
-            Log.i("lanlan","1 click");
-            return false;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            return false;
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
         }
 
         @Override
@@ -211,26 +198,22 @@ public abstract class BaseActivity extends FragmentActivity  {
                 msg.what = Config.ACK_LEFT;
                 BaseActivity.sendMessage(msg);
                 Log.i("lanlan","left");
-                return true;
             } else if (e1.getX() - e2.getX() < -120) {
                 Message msg = Message.obtain();
                 msg.what = Config.ACK_RIGHT;
                 BaseActivity.sendMessage(msg);
                 Log.i("lanlan","right");
-                return true;
-            }
-            if(e1.getY() - e2.getY() >120){
+            }else if(e1.getY() - e2.getY() >120){
                 Message msg = Message.obtain();
                 msg.what = Config.ACK_TOP;
                 BaseActivity.sendMessage(msg);
-                Log.i("lanlan","left");
+                Log.i("lanlan","Top");
                 return true;
             }else if(e1.getY() - e2.getY() <-120){
                 Message msg = Message.obtain();
                 msg.what = Config.ACK_DOWN;
                 BaseActivity.sendMessage(msg);
-                Log.i("lanlan","right");
-                return true;
+                Log.i("lanlan","Down");
             }
             return false;
         }

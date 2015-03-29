@@ -4,16 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.moirai.client.Config;
+import com.moirai.client.Constant;
 import com.moirai.client.R;
 import com.moirai.model.Info;
 
@@ -36,6 +40,19 @@ public class LoadingActivity extends BaseActivity {
                 0.5f,Animation.RELATIVE_TO_SELF,0.5f);
         animation.setDuration(3000);//设置动画持续时间
         animation.setFillAfter(true);//动画执行完后停留在执行完的状态*/
+
+        //设置事件监听，要修改ImageView的值
+        final GestureDetectorCompat mGesturedetector;
+        mGesture gesture = new mGesture();
+        mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+        ImageView iv = (ImageView)findViewById(R.id.zblindView);
+        iv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mGesturedetector.onTouchEvent(event);
+                return true;
+            }
+        });
 
         //TODO 语音提示用户是否选择语音进行后续操作
 
@@ -63,6 +80,14 @@ public class LoadingActivity extends BaseActivity {
         switch(message.what){
             case Config.ACK_CON_SUCCESS:
                 StartRead("是否启用语音，是，请单击屏幕，不是，请长按屏幕",Config.ACK_NONE);
+                break;
+            case Config.ACK_LONG_CLICK :
+                Constant.ID="0";
+                redirectToRegister();
+                break;
+            case Config.ACK_CLICK:
+                Constant.ID="1";
+                redirectToRegister();
                 break;
             default:
                 break;

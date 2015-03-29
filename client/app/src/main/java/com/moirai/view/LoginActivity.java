@@ -3,12 +3,15 @@ package com.moirai.view;
 import android.content.Intent;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.moirai.client.Config;
@@ -40,6 +43,9 @@ public class LoginActivity extends BaseActivity {
                     Toast.makeText(LoginActivity.this, "用户" + Constant.USERNAME + "登陆失败", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case Config.ACK_CLICK:
+                break;
+
             default:
                 break;
         }
@@ -78,7 +84,21 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
-
+        if(Constant.ID=="1"){
+            //设置事件监听，要修改ImageView的值
+            final GestureDetectorCompat mGesturedetector;
+            mGesture gesture = new mGesture();
+            mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+            ImageView iv = (ImageView)findViewById(R.id.zblindviewlogin);
+            iv.setVisibility(View.VISIBLE);
+            iv.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mGesturedetector.onTouchEvent(event);
+                    return true;
+                }
+            });
+        }
 
 
     }
