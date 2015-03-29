@@ -94,6 +94,10 @@ public abstract class BaseActivity extends FragmentActivity  {
 
     }
 
+    protected void StopRead(){
+        voice_binder.StopRead();
+    }
+
     protected void StartRead(String string, int ackListenStart) {
         voice_binder.SetACK(ackListenStart);
         voice_binder.StartRead(string);

@@ -6,9 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -82,7 +84,7 @@ public class RegisterActivity extends BaseActivity {
             case Config.ACK_REGISTER_PASSWORD_2:
                 pw2 = (String)message.obj;
                 if(!pw1.equals(pw2)){
-                    StartRead(getString(R.string.tip_regieter_pw_null),Config.ACK_REGISTER_PASSWORD_1_TIP);
+                    StartRead(getString(R.string.tip_regieter_pw_null)+getString(R.string.voice_enter_pw1),Config.ACK_REGISTER_PASSWORD_1_TIP);
                 }else{
 //                    User user = new User();
 //                    user.setUsername(userName);
@@ -91,6 +93,12 @@ public class RegisterActivity extends BaseActivity {
 //                    con.register(user);
                       gotoLogin();
                 }
+                break;
+            case Config.ACK_LONG_CLICK:
+
+                Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             default:
                 break;
@@ -109,7 +117,18 @@ public class RegisterActivity extends BaseActivity {
         jBlindView = (ImageView) findViewById(R.id.register_jBlindView);
 
         if(Constant.ID.equals("1")){
+            //设置事件监听，要修改ImageView的值
+            final GestureDetectorCompat mGesturedetector;
+            mGesture gesture = new mGesture();
+            mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
             jBlindView.setVisibility(View.VISIBLE);
+            jBlindView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mGesturedetector.onTouchEvent(event);
+                    return true;
+                }
+            });
         }
 
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -140,7 +159,7 @@ public class RegisterActivity extends BaseActivity {
 
     private void gotoLogin(){
         Intent intent = new Intent();
-        intent.setClass(RegisterActivity.this,LoginActivity.class);
+        intent.setClass(RegisterActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }

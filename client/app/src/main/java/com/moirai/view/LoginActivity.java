@@ -93,6 +93,11 @@ public class LoginActivity extends BaseActivity {
                 startActivity(intent);
                 finish();
                 break;
+            case Config.ACK_LONG_CLICK:
+                Intent mintent = new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(mintent);
+                finish();
+                break;
             default:
                 break;
         }

@@ -164,6 +164,20 @@ public class VoiceService extends Service {
     			showTip("start speak success.");
 
     	}
+
+        public void StopRead() {
+
+            // GLOBAL_MS = ack;
+            //
+            // setParam_Tts();
+            // 设置参数
+            int code = mTts.stopSpeaking(mTtsListener);
+            if (code != 0) {
+                showTip("start speak error : " + code);
+            } else
+                showTip("start speak success.");
+
+        }
     	
     	public void SetACK(int ack){
     		CURRENT_ACK = ack;
