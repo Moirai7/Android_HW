@@ -91,11 +91,19 @@ public class RegisterActivity extends BaseActivity {
 //                    user.setPassword(pw1);
 //                    user.setType(Constant.ID);
 //                    con.register(user);
-                      gotoLogin();
+                    StartRead(getResources().getString(R.string.login_success), Config.ACK_LOGIN_SUCCESS_RETURN);
                 }
+                break;
+            case Config.ACK_LOGIN_SUCCESS_RETURN:
+                gotoLogin();
+                break;
+            case Config.ACK_CLICK:
+                StopRead();
+                StartRead(getResources().getString(R.string.username),Config.ACK_REGISTER_USERNAME_TIP);
                 break;
             case Config.ACK_LONG_CLICK:
                 StopRead();
+                removeActivity();
                 Intent intent = new Intent(RegisterActivity.this,LoginActivity.class);
                 startActivity(intent);
                 finish();
@@ -159,6 +167,7 @@ public class RegisterActivity extends BaseActivity {
 
     private void gotoLogin(){
         StopRead();
+        removeActivity();
         Intent intent = new Intent();
         intent.setClass(RegisterActivity.this, MainActivity.class);
         startActivity(intent);

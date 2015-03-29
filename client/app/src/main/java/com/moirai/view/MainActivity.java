@@ -4,12 +4,16 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.os.Message;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -116,7 +120,9 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                             new int[]{R.id.nameView, R.id.photoView});
                     break;
             }
-            StartListRead();
+            if(Constant.ID.equals("1")) {
+                StartListRead();
+            }
             System.out.println("Extra---- " + index + " checked!!! ");
         }
     };
@@ -182,6 +188,57 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         //TODO ICON
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onResume() {
+        if(!Constant.setBlind){
+            //设置事件监听，要修改ImageView的值
+            removeActivity();
+            final GestureDetectorCompat mGesturedetector;
+            mGesture gesture = new mGesture();
+            mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+            ImageView iv = (ImageView)findViewById(R.id.llblindView);
+            iv.setVisibility(View.VISIBLE);
+            iv.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mGesturedetector.onTouchEvent(event);
+                    return true;
+                }
+            });
+            if(voice_binder==null){
+                connection_voice = new ServiceConnection() {
+
+                    @Override
+                    public void onServiceDisconnected(ComponentName name) {
+                        voice_flag = false;
+                    }
+
+                    @Override
+                    public void onServiceConnected(ComponentName name, IBinder service) {
+                        voice_binder = (VoiceService.MyBinder) service;
+                        voice_flag = true;
+                        Log.v("tag", "bind");
+
+                        Message msg = Message.obtain();
+                        msg.what = Config.ACK_CON_SUCCESS;
+                        BaseActivity.sendMessage(msg);
+                    }
+                };
+
+                Intent intent_voice_service = new Intent(this, VoiceService.class);
+                startService(intent_voice_service);
+                bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
+            }
+        }else{
+            if(!Constant.ID.equals("1")){
+                ImageView iv = (ImageView)findViewById(R.id.llblindView);
+                iv.setVisibility(View.GONE);
+            }
+        }
+
+        super.onResume();
     }
 
     @Override

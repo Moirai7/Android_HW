@@ -43,6 +43,7 @@ public class LoginActivity extends BaseActivity {
                         Toast.makeText(LoginActivity.this, USERNAME + getResources().getString(R.string.login_success),
                                 Toast.LENGTH_SHORT).show();
                         StopRead();
+                        removeActivity();
                         Intent intent = new Intent();
                         intent.setClass(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -94,6 +95,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             case Config.ACK_LOGIN_SUCCESS_RETURN:
                 StopRead();
+                removeActivity();
                 Intent intent = new Intent();
                 intent.setClass(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -101,6 +103,7 @@ public class LoginActivity extends BaseActivity {
                 break;
             case Config.ACK_LONG_CLICK:
                 StopRead();
+                removeActivity();
                 Intent mintent = new Intent(LoginActivity.this,RegisterActivity.class);
                 startActivity(mintent);
                 finish();
@@ -161,6 +164,7 @@ public class LoginActivity extends BaseActivity {
         retriveToRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                removeActivity();
                 Intent mintent = new Intent(LoginActivity.this,RegisterActivity.class);
                 startActivity(mintent);
                 finish();

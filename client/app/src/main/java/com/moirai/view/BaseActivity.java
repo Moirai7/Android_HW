@@ -11,6 +11,7 @@ import com.moirai.util.Database;
 import com.moirai.voice.VoiceService;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -41,7 +42,7 @@ public abstract class BaseActivity extends FragmentActivity  {
     private SpeechSynthesizer mTts;
     private SharedPreferences mSharedPreferences;
     private Intent intent_main_service;
-    private VoiceService.MyBinder voice_binder;
+    public VoiceService.MyBinder voice_binder;
     public static boolean voice_flag = false;
 
 
@@ -134,6 +135,9 @@ public abstract class BaseActivity extends FragmentActivity  {
         if(connection_voice!=null)
             unbindService(connection_voice);
         super.onDestroy();
+    }
+    protected void removeActivity(){
+        queue.remove(queue.getLast());
     }
 	@Override
 	protected void onStop() {

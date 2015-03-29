@@ -1,9 +1,14 @@
 package com.moirai.view;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Message;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,16 +37,19 @@ public class SettingActivity extends BaseActivity {
               break;
           case Config.ACK_CLICK:
               Constant.ID = "0";
+              Constant.setBlind=true;
               StartRead(getResources().getString(R.string.setting_choice0),Config.ACK_NONE);
               finish();
                break;
           case Config.ACK_DOUBLE_CLICK:
                Constant.ID="1";
+              Constant.setBlind=false;
               StartRead(getResources().getString(R.string.setting_choice1),Config.ACK_NONE);
               finish();
                break;
             case Config.ACK_LONG_CLICK:
                 Constant.ID="2";
+                Constant.setBlind=true;
                 StartRead(getResources().getString(R.string.setting_choice2),Config.ACK_NONE);
                 finish();
                 break;
@@ -112,11 +120,17 @@ public class SettingActivity extends BaseActivity {
 
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+       //    finish();
+        }
+        return super.onKeyDown(keyCode,event);
+    }
+
     @Override
     protected void onDestroy() {
+        Constant.isSetting=false;
         super.onDestroy();
-
-        Constant.isSetting = false;
     }
 
     /**
@@ -124,6 +138,7 @@ public class SettingActivity extends BaseActivity {
      */
     public void choose0(){
         Constant.ID="0";
+        Constant.setBlind=true;
         radioBtn0.setChecked(true);
         radioBtn1.setChecked(false);
         radioBtn2.setChecked(false);
@@ -134,6 +149,7 @@ public class SettingActivity extends BaseActivity {
      */
     public void choose1(){
         Constant.ID="1";
+        Constant.setBlind=false;
         radioBtn0.setChecked(false);
         radioBtn1.setChecked(true);
         radioBtn2.setChecked(false);
@@ -144,6 +160,7 @@ public class SettingActivity extends BaseActivity {
      */
     public void choose2(){
         Constant.ID="2";
+        Constant.setBlind=true;
         radioBtn0.setChecked(false);
         radioBtn1.setChecked(false);
         radioBtn2.setChecked(true);
