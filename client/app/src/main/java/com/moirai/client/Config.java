@@ -41,4 +41,18 @@ public interface Config {
     public static final int ACK_TALK_PASSWORD = 122;
     public static final int ACK_LISTEN_PASSWORD = 123;
     public static final int ACK_LOGIN_SUCCESS_RETURN = 124;
+    public static final int ACK_REGISTER_USERNAME = 201;
+    public static final int ACK_START_REGISTER = 202;
+    public static final int ACK_REGISTER_PASSWORD_1 = 203;
+    public static final int ACK_REGISTER_PASSWORD_2 = 204;
+    public static final int ACK_REGISTER_USERNAME_TIP = 205;
+    public static final int ACK_REGISTER_PASSWORD_1_TIP = 206;
+    public static final int ACK_REGISTER_PASSWORD_2_TIP = 207;
+    public static final int ACK_REGISTER_SUCCESS = 208;
+    public static final int ACK_REGISTER_FAILED = 209;
+    public static final int ACK_SHAKE_TIP = 210;
+    public static final int ACK_SHAKE_RESULT = 211;
+    public static final int ACK_SHAKE_test = 212;
+    public static final int ACK_SHAKE_TIP_CANCEL = 213;
+    public static final int ACK_SHAKE_ANSWER = 214;
 }

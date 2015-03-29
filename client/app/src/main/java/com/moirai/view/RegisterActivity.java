@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -26,33 +27,71 @@ public class RegisterActivity extends BaseActivity {
     private EditText idEditText;
     private EditText pwEditText1;
     private EditText pwEditText2;
-    private Spinner typeSpinner;
+    private ImageView jBlindView;
+    private String userName;
+    private String pw1;
+    private String pw2;
     @Override
     public void processMessage(Message message) {
         switch(message.what){
-            case Config.ACK_CON_SUCCESS:
-                StartRead("漂亮的岚岚姐",Config.ACK_NONE);
-                break;
             case Config.REQUEST_REGISTER:
                 int result = message.arg1;
                 if(result == Config.SUCCESS){
                     //TODO 成功要得到name等值并写到数据库
+                    StartRead(getString(R.string.tip_register_successfully),Config.ACK_REGISTER_SUCCESS);
                     db.setUserInfo(Constant.USERNAME,Constant.PASSWORD,Constant.ID);
-                    Intent intent = new Intent();
-                    intent.setClass(RegisterActivity.this,LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    gotoLogin();
                     Toast.makeText(RegisterActivity.this, getString(R.string.tip_register_successfully), Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    StartRead(getString(R.string.tip_register_failed),Config.ACK_REGISTER_FAILED);
                     Toast.makeText(RegisterActivity.this, getString(R.string.tip_register_failed), Toast.LENGTH_SHORT).show();
                     //TODO 注意编辑框的值要设置为空，像下面一样
                     idEditText.setText("");
                     pwEditText1.setText("");
                     pwEditText2.setText("");
-
                 }
+                break;
+            case Config.ACK_CON_SUCCESS:
+                StartRead(getString(R.string.register_start),Config.ACK_START_REGISTER);
+                break;
+            case Config.ACK_START_REGISTER:
+                StartRead(getString(R.string.voice_enter_id),Config.ACK_REGISTER_USERNAME_TIP);
+                break;
+            case Config.ACK_REGISTER_USERNAME_TIP:
+                StartListen(Config.ACK_REGISTER_USERNAME);
+                break;
+            case Config.ACK_REGISTER_USERNAME:
+                userName = (String)message.obj;
+                if(userName.isEmpty()){
+                    StartRead(getString(R.string.tip_register_id),Config.ACK_REGISTER_USERNAME_TIP);
                     break;
+                }
+                StartRead(getString(R.string.voice_enter_pw1),Config.ACK_REGISTER_PASSWORD_1_TIP);
+                break;
+            case Config.ACK_REGISTER_PASSWORD_1_TIP:
+                StartListen(Config.ACK_REGISTER_PASSWORD_1);
+                break;
+            case Config.ACK_REGISTER_PASSWORD_1:
+                pw1 = (String)message.obj;
+                StartRead(getString(R.string.voice_enter_pw2),Config.ACK_REGISTER_PASSWORD_2_TIP);
+                break;
+            case Config.ACK_REGISTER_PASSWORD_2_TIP:
+                StartListen(Config.ACK_REGISTER_PASSWORD_2);
+                break;
+            case Config.ACK_REGISTER_PASSWORD_2:
+                pw2 = (String)message.obj;
+                if(!pw1.equals(pw2)){
+                    StartRead(getString(R.string.tip_regieter_pw_null),Config.ACK_REGISTER_PASSWORD_1_TIP);
+                }else{
+//                    User user = new User();
+//                    user.setUsername(userName);
+//                    user.setPassword(pw1);
+//                    user.setType(Constant.ID);
+//                    con.register(user);
+                      gotoLogin();
+                }
+                break;
             default:
                 break;
         }
@@ -67,8 +106,11 @@ public class RegisterActivity extends BaseActivity {
         idEditText = (EditText) findViewById(R.id.register_id_EditView);
         pwEditText1 = (EditText) findViewById(R.id.register_password1_EditView);
         pwEditText2 = (EditText) findViewById(R.id.register_password2_EditView);
-        typeSpinner = (Spinner) findViewById(R.id.register_type);
+        jBlindView = (ImageView) findViewById(R.id.register_jBlindView);
 
+        if(Constant.ID.equals("1")){
+            jBlindView.setVisibility(View.VISIBLE);
+        }
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +118,7 @@ public class RegisterActivity extends BaseActivity {
                 String id = idEditText.getText().toString();
                 String password1 = pwEditText1.getText().toString();
                 String password2 = pwEditText2.getText().toString();
-                String type =String.valueOf(typeSpinner.getSelectedItemPosition());
+                String type = Constant.ID;
                 System.out.println("获取注册数据： "+id+password1+type);
 
                 if(id == null || id == ""){
@@ -85,14 +127,21 @@ public class RegisterActivity extends BaseActivity {
                     Toast.makeText(RegisterActivity.this,"",Toast.LENGTH_SHORT).show();
                 }else{
                     //TODO 使用USER创建并调用register();
-                      User user = new User();
-                      user.setUsername(id);
-                      user.setPassword(password1);
-                      user.setType(type);
-                      con.register(user);
+//                      User user = new User();
+//                      user.setUsername(id);
+//                      user.setPassword(password1);
+//                      user.setType(type);
+//                      con.register(user);
+                         gotoLogin();
                 }
             }
         });
+    }
 
+    private void gotoLogin(){
+        Intent intent = new Intent();
+        intent.setClass(RegisterActivity.this,LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

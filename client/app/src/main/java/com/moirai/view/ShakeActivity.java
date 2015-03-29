@@ -11,24 +11,20 @@ import android.hardware.SensorManager;
 import android.os.Message;
 import android.os.Vibrator;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.moirai.client.Config;
 import com.moirai.client.Conmmunication;
+import com.moirai.client.Constant;
 import com.moirai.client.R;
 
 public class ShakeActivity extends BaseActivity
-        implements SensorEventListener,View.OnTouchListener {
-    private static int role = 1;  //盲人
+        implements SensorEventListener {
     private boolean state = true;
     private AnimationSet animUp;
     private AnimationSet animDown;
@@ -37,7 +33,7 @@ public class ShakeActivity extends BaseActivity
     private ProgressBar progressBar;
     private SensorManager sensorManager;
     private Vibrator vibrator;
-
+    private ImageView blindView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +45,13 @@ public class ShakeActivity extends BaseActivity
         downImage = (ImageView)findViewById(R.id.shake_down_imageView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+        blindView = (ImageView) findViewById(R.id.shake_jBlindView);
+        if(Constant.ID.equals("1")){
+           // blindView.setVisibility(View.VISIBLE);
+        }
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);  //首先得到传感器管理器对象
         vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
-        if(role == 1){
-            LinearLayout layout =(LinearLayout) findViewById (R.id.shake_layout);
-            layout.setOnTouchListener(this);
-        }
     }
 
     public void upStartAnim() {
@@ -139,22 +135,13 @@ public class ShakeActivity extends BaseActivity
                 upImage.startAnimation(animUp);
                 downImage.startAnimation(animDown);
                 progressBar.setVisibility(View.VISIBLE);
-                confirmAddFriend("ggg");
+                Message m = new Message();
+                m.what = Config.REQUEST_ADDFRIEND;
+                m.arg1 = Config.SUCCESS;
+                m.obj = "张岚";
+                sendMessage(m);
             }
         }
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        //屏幕点击事件监听
-        if(MotionEvent.ACTION_DOWN == motionEvent.getAction()) {
-
-        }else{
-
-
-        }
-
-        return false;
     }
 
     private void confirmAddFriend(String userName){
@@ -173,10 +160,7 @@ public class ShakeActivity extends BaseActivity
                 public void onClick(DialogInterface dialog, int which) {
                     //Todo 语音提示： 您已添加 userName 为好友
                     //con.addFriend(userName);
-                    Intent intent = new Intent();
-                    intent.setClass(ShakeActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    ShakeActivity.this.finish();
+                    gotoFriendActivity();
                  }
               })
         .setNegativeButton(getString(R.string.no_shake_confirm), new DialogInterface.OnClickListener() {
@@ -194,18 +178,57 @@ public class ShakeActivity extends BaseActivity
         switch (message.what) {
             case Config.REQUEST_ADDFRIEND:
                 //判断是否有同时摇的用户先，待完善
-                int result = message.arg1;
-                if (result == Config.SUCCESS) {
-                    String userName = "emma";
-                    confirmAddFriend(userName);
+               int result = message.arg1;
+               if (result == Config.SUCCESS) {
+                    String userName = (String)message.obj;
+                    if(!Constant.ID.equals("1")){
+                        confirmAddFriend(userName);
+                    }else{
+                        String msg = getString(R.string.message1_shake_confirm)
+                                + " "
+                                + userName
+                                + " "
+                                +getString(R.string.message2_shake_confirm)
+                                +getString(R.string.message3_shake_confirm);
+                        StartRead(msg, Config.ACK_SHAKE_RESULT);
+                    }
+
                 } else {
-                    //Todo 语音提示： 没有用户同时摇一摇
-                    Toast.makeText(ShakeActivity.this, getString(R.string.no_shake_friend_tip), Toast.LENGTH_SHORT).show();
+                   //Todo 语音提示： 没有用户同时摇一摇
+                    StartRead(getString(R.string.no_shake_friend_tip),Config.ACK_SHAKE_TIP);
+                   Toast.makeText(ShakeActivity.this, getString(R.string.no_shake_friend_tip), Toast.LENGTH_SHORT).show();
                     state = true;
                 }
+                break;
+            case Config.ACK_CON_SUCCESS:
+                StartRead(getString(R.string.voice_shake_tip),Config.ACK_SHAKE_test);
+                break;
+            case Config.ACK_SHAKE_RESULT:
+                StartListen(Config.ACK_SHAKE_ANSWER);
+                break;
+            case Config.ACK_SHAKE_ANSWER:
+                String answer = (String)message.obj;
+                System.out.printf("Answer:"+answer);
+                if(answer.toLowerCase().contains(getString(R.string.yes_shake_confirm).toLowerCase())){
+                    StartRead(getString(R.string.voice_shake_result_success),Config.ACK_SHAKE_TIP);
+                    gotoFriendActivity();
+                }else{
+                    StartRead(getString(R.string.voice_shake_result_cancel),Config.ACK_SHAKE_TIP_CANCEL);
+                }
+                state = true;
+                break;
+            case Config.ACK_SHAKE_TIP_CANCEL:
+                StartRead(getString(R.string.voice_shake_tip),Config.ACK_SHAKE_TIP);
                 break;
             default:
                 break;
         }
+    }
+
+    private void gotoFriendActivity(){
+        Intent intent = new Intent();
+        intent.setClass(ShakeActivity.this, MainActivity.class);
+        startActivity(intent);
+        ShakeActivity.this.finish();
     }
 }

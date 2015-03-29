@@ -3,19 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     android:background="@mipmap/register_background"
     tools:context="com.moirai.view.RegisterActivity">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/register_top"/>
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        android:background="#00ff00"
+        android:id="@+id/register_jBlindView"/>
 
     <RelativeLayout
+        android:layout_below="@+id/register_jBlindView"
         android:layout_width="match_parent"
         android:layout_height="fill_parent">
         <EditText
@@ -24,55 +23,53 @@
             android:inputType="text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
             android:paddingLeft="60dp"
-            android:layout_alignBottom="@+id/register_password1_EditView"
+            android:hint="@string/tip_enter_id"
+            android:layout_above="@+id/register_password1_EditView"
             android:layout_centerHorizontal="true" />
 
         <EditText
             android:id="@+id/register_password1_EditView"
-            android:background="@mipmap/register_password"
+            android:background="@mipmap/register_pw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="60dp"
-            android:inputType="numberPassword"
+            android:hint="@string/tip_enter_pw1"
+            android:inputType="textPassword"
             android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
             android:layout_alignLeft="@+id/register_id_EditView"
-            android:layout_alignStart="@+id/register_id_EditView" />
+            android:layout_alignStart="@+id/register_id_EditView"
+            android:layout_alignRight="@+id/register_id_EditView"/>
 
         <EditText
             android:id="@+id/register_password2_EditView"
-            android:background="@mipmap/register_password"
+            android:background="@mipmap/register_pw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="60dp"
-            android:layout_marginTop="48dp"
-            android:inputType="numberPassword"
-            android:layout_alignTop="@+id/register_password1_EditView"
-            android:layout_alignLeft="@+id/register_id_EditView"
-            android:layout_alignStart="@+id/register_id_EditView" />
-
-        <Spinner
-            android:background="@mipmap/register_type"
-            android:id="@+id/register_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="60dp"
-            android:clickable="true"
-            android:entries="@array/register_type"
+            android:hint="@string/tip_enter_pw2"
+            android:inputType="textPassword"
+            android:layout_centerHorizontal="true"
             android:layout_below="@+id/register_password1_EditView"
-            android:layout_alignLeft="@+id/register_password2_EditView"
-            android:layout_alignStart="@+id/register_password2_EditView">
-            </Spinner>
+            android:layout_alignLeft="@+id/register_id_EditView"
+            android:layout_alignStart="@+id/register_id_EditView"
+            android:layout_alignRight="@+id/register_id_EditView"
+            />
+
         </RelativeLayout>
 
         <Button
             android:id="@+id/register_createButton"
-            android:background="@mipmap/register_create_button"
+            android:background="@mipmap/register_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:text="@string/register_btn"
+            android:textSize="30sp"
+            android:textColor="#ffffff"
+            android:layout_below="@+id/register_jBlindView"
             android:layout_marginBottom="50dp"/>
 
 </RelativeLayout>
