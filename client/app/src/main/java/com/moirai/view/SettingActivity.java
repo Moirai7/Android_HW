@@ -102,17 +102,20 @@ public class SettingActivity extends BaseActivity {
                     Toast toast = Toast.makeText(SettingActivity.this,getResources().getString(R.string.setting_choice0),Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM,0,0);
                     toast.show();
+                    finish();
                 }else if(i==radioBtn1.getId()){
                     choose1();
                     Toast toast = Toast.makeText(SettingActivity.this,getResources().getString(R.string.setting_choice1),Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM,0,0);
                     toast.show();
+                    finish();
                 }else{
                     Constant.ID="2";
                     choose2();
                     Toast toast = Toast.makeText(SettingActivity.this,getResources().getString(R.string.setting_choice2),Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.BOTTOM,0,0);
                     toast.show();
+                    finish();
                 }
             }
         });

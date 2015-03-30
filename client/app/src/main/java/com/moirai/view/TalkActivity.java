@@ -65,7 +65,7 @@ public class TalkActivity extends BaseActivity {
                 break;
             case Config.ACK_DOWN:
                 mInfoNews++;
-                if(mInfoNews>mDataArrays.size())
+                if(mInfoNews>=mDataArrays.size())
                     mInfoNews--;
                 StartRead(mDataArrays.get(mInfoNews).getDetail(),Config.ACK_NONE);
                 break;
@@ -113,10 +113,10 @@ public class TalkActivity extends BaseActivity {
         actionBar.setIcon(null);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.talking_with)+" dayu");
+        actionBar.setTitle(getString(R.string.talking_with)+" fish");
 
         cameraIBbtn = (ImageButton) findViewById(R.id.talk_cameraIbtn);
-        changeIBtn = (ImageButton) findViewById(R.id.talk_text_voice_imageBtn);
+     //   changeIBtn = (ImageButton) findViewById(R.id.talk_text_voice_imageBtn);
         msgEdit = (EditText) findViewById(R.id.talk_editView);
         sendBtn = (Button) findViewById(R.id.talk_sendBtn);
         mListView = (ListView) findViewById(R.id.listview);
@@ -127,13 +127,6 @@ public class TalkActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.setClass(TalkActivity.this,CameraActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        changeIBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 
@@ -156,12 +149,12 @@ public class TalkActivity extends BaseActivity {
             entity.setTime(dataArray[i]);
             if (i % 2 == 0)
             {
-                entity.setSendUser("lanlan");
-                entity.setReceiver("dayu");
+                entity.setSendUser("emma");
+                entity.setReceiver("fish");
                // entity.setMsgType(true);
             }else{
-                entity.setSendUser("dayu");
-                entity.setReceiver("lanlan");
+                entity.setSendUser("fish");
+                entity.setReceiver("emma");
               //  entity.setMsgType(false);
             }
 
@@ -182,8 +175,8 @@ public class TalkActivity extends BaseActivity {
         {
             Info entity = new Info();
             entity.setTime(getDate());
-            entity.setSendUser("lanlan");
-            entity.setReceiver("dayu");
+            entity.setSendUser("emma");
+            entity.setReceiver("fish");
             entity.setDetail(contString);
 
             mDataArrays.add(entity);
