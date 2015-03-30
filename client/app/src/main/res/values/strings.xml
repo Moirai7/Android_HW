@@ -105,4 +105,8 @@
     <string name="setting_choice1">set successfully!Now you are the role:unable to see and use voice interaction </string>
     <string name="setting_choice2">set successfully!Now you are the role:able to see and use sign language</string>
     <string name="welcome_back">welcome back</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_share">Add</string>
 </resources>

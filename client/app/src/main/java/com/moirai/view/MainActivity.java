@@ -10,9 +10,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -73,43 +73,69 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 StartRead(getResources().getString(R.string.main_welcome),Config.ACK_NONE);//欢迎
                 break;
             case Config.ACK_DOWN:
-                theInfoId++;
-                if(theInfoId>=data.size())
-                    theInfoId=0;
-                StartListRead();
+                if(rgs.getVisibility()!=View.GONE){
+                    theInfoId++;
+                    if(theInfoId>=data.size())
+                        theInfoId=0;
+                    StartListRead();
+
+                }
                 break;
             case Config.ACK_TOP:
-                theInfoId--;
-                if(theInfoId<0)
-                    theInfoId=0;
-                StartListRead();
+                if(rgs.getVisibility()!=View.GONE){
+                    theInfoId--;
+                    if(theInfoId<0)
+                        theInfoId=0;
+                    StartListRead();
+
+                }
                 break;
             case Config.ACK_LEFT://0是首页，1是contact，2是朋友圈
-                int p = (theFragment+2)%3;
-                setSimulateClick(rb[p], position[p][0], position[p][1]);
-                //tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+2)%3,(theFragment+2)%3);
-                switch (p){
-                   case 0:StartRead(getResources().getString(R.string.main_mainPage),Config.ACK_NONE);break;
-                   case 1:StartRead(getResources().getString(R.string.main_contactPage),Config.ACK_NONE);break;
-                   case 2:StartRead(getResources().getString(R.string.main_sharePage),Config.ACK_NONE);break;
+                if(rgs.getVisibility()!=View.GONE) {
+                    int p = (theFragment + 2) % 3;
+                    setSimulateClick(rb[p], position[p][0], position[p][1]);
+                    //tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+2)%3,(theFragment+2)%3);
+                    switch (p) {
+                        case 0:
+                            StartRead(getResources().getString(R.string.main_mainPage), Config.ACK_NONE);
+                            break;
+                        case 1:
+                            StartRead(getResources().getString(R.string.main_contactPage), Config.ACK_NONE);
+                            break;
+                        case 2:
+                            StartRead(getResources().getString(R.string.main_sharePage), Config.ACK_NONE);
+                            break;
+                    }
                 }
                 break;
             case Config.ACK_RIGHT://0是首页，1是contact，2是朋友圈
-                int q = (theFragment+1)%3;
-                setSimulateClick(rb[q], position[q][0], position[q][1]);
-                switch (q){
-                    case 0:StartRead(getResources().getString(R.string.main_mainPage),Config.ACK_NONE);break;
-                    case 1:StartRead(getResources().getString(R.string.main_contactPage),Config.ACK_NONE);break;
-                    case 2:StartRead(getResources().getString(R.string.main_sharePage),Config.ACK_NONE);break;
+                if(rgs.getVisibility()!=View.GONE) {
+                    int q = (theFragment + 1) % 3;
+                    setSimulateClick(rb[q], position[q][0], position[q][1]);
+                    switch (q) {
+                        case 0:
+                            StartRead(getResources().getString(R.string.main_mainPage), Config.ACK_NONE);
+                            break;
+                        case 1:
+                            StartRead(getResources().getString(R.string.main_contactPage), Config.ACK_NONE);
+                            break;
+                        case 2:
+                            StartRead(getResources().getString(R.string.main_sharePage), Config.ACK_NONE);
+                            break;
+                    }
                 }
                 break;
             case Config.ACK_LONG_CLICK:
-                if(theFragment==0||theFragment==1){
-                    Intent intent = new Intent();
-                    //设置传递方向
-                    intent.setClass(MainActivity.this,TalkActivity.class);
-                    intent.putExtra("username",(String)data.get(theInfoId).get("title"));
-                    this.startActivity(intent);
+                if(rgs.getVisibility()!=View.GONE) {
+                    if (theFragment == 0 || theFragment == 1) {
+                        Intent intent = new Intent();
+                        //设置传递方向
+                        intent.setClass(MainActivity.this, TalkActivity.class);
+                        intent.putExtra("username", (String) data.get(theInfoId).get("title"));
+                        this.startActivity(intent);
+                    } else if (theFragment == 2) {
+                        onShareFragmentInteraction(theInfoId);
+                    }
                 }
                 break;
             case Config.ACK_LIST_READ:
@@ -137,15 +163,17 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                  }
                 break;
             case Config.ACK_DOUBLE_CLICK:
-                if(theFragment==0){
-                    Intent intent = new Intent();
-                    intent.setClass(MainActivity.this,SettingActivity.class);
-                    startActivity(intent);
-                    Constant.isSetting = true;
-                }else if(theFragment==1){
-                    Intent intent = new Intent();
-                    intent.setClass(MainActivity.this,ShakeActivity.class);
-                    startActivity(intent);
+                if(rgs.getVisibility()!=View.GONE) {
+                    if (theFragment == 0) {
+                        Intent intent = new Intent();
+                        intent.setClass(MainActivity.this, SettingActivity.class);
+                        startActivity(intent);
+                        Constant.isSetting = true;
+                    } else if (theFragment == 1) {
+                        Intent intent = new Intent();
+                        intent.setClass(MainActivity.this, ShakeActivity.class);
+                        startActivity(intent);
+                    }
                 }
                 break;
             default:
@@ -160,7 +188,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             switch (index) {
                 case 0:
                     theFragment = 0;
-                    data = getData();
+                    data = list1;
                     // create ArrayAdapter and use it to bind tags to the ListView
                     adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
                             new String[]{"title", "img","date","content"},
@@ -168,14 +196,14 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     break;
                 case 1:
                     theFragment = 1;
-                    data = getData2();
+                    data = list2;
                     adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
                             new String[]{"title", "img","date","content"},
                             new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
                     break;
                 case 2:
                     theFragment = 2;
-                    data = getData3();
+                    data = list3;
                     adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
                             new String[]{"title", "img","date","content"},
                             new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
@@ -229,6 +257,9 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         rb[1].getLocationInWindow(position[1]);
         rb[2].getLocationInWindow(position[2]);
 
+        getData();
+        getData2();
+        getData3();
         System.out.println("getLocationOnScreen:" + position[0] + "," + position[1]);
 //        theFragment = 0;
 //        data = getData();
@@ -346,174 +377,119 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         }else{
             super.onBackPressed();
         }
-
+        rgs.setVisibility(View.VISIBLE);
     }
     // ADDED to set up the ListFragment
     public SimpleAdapter getAdapter(){return adapter;}
 //聊天
-    private List<Map<String, Object>> getData() {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+    private List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
+    private void getData() {
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_title1));//String
         map.put("img", R.mipmap.pic1);
         map.put("date",getResources().getString(R.string.main_date1));
         map.put("content",getResources().getString(R.string.main_content1));
-        list.add(map);
+        list1.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_title2));//String
         map.put("img", R.mipmap.pic2);
         map.put("date",getResources().getString(R.string.main_date2));
         map.put("content",getResources().getString(R.string.main_content2));
-        list.add(map);
+        list1.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_title3));//String
         map.put("img", R.mipmap.pic3);
         map.put("date",getResources().getString(R.string.main_date3));
         map.put("content",getResources().getString(R.string.main_content3));
-        list.add(map);
-
-        return list;
+        list1.add(map);
     }
 //contact
-    private List<Map<String, Object>> getData2() {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
+    private List<Map<String, Object>> list2 = new ArrayList<Map<String, Object>>();
+    private void getData2() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact1));
         map.put("img", R.mipmap.pic4);
-        list.add(map);
+        list2.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact2));
         map.put("img", R.mipmap.pic5);
-        list.add(map);
+        list2.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact3));
         map.put("img", R.mipmap.pic6);
-        list.add(map);
-
-        return list;
+        list2.add(map);
     }
 //share
-    private List<Map<String, Object>> getData3() {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-
+    private List<Map<String, Object>> list3 = new ArrayList<Map<String, Object>>();
+    private void getData3() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_title1));//String
         map.put("img", R.mipmap.pic1);
         map.put("date",getResources().getString(R.string.main_date1));
         map.put("content",getResources().getString(R.string.main_share1));
-        list.add(map);
+        list3.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_title2));//String
         map.put("img", R.mipmap.pic2);
         map.put("date",getResources().getString(R.string.main_date2));
         map.put("content",getResources().getString(R.string.main_share2));
-        list.add(map);
+        list3.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_title3));//String
         map.put("img", R.mipmap.pic3);
         map.put("date",getResources().getString(R.string.main_date3));
         map.put("content",getResources().getString(R.string.main_share3));
-        list.add(map);
+        list3.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact1));//String
         map.put("img", R.mipmap.pic4);
         map.put("date",getResources().getString(R.string.main_date3));
         map.put("content",getResources().getString(R.string.main_share1));
-        list.add(map);
+        list3.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact2));//String
         map.put("img", R.mipmap.pic5);
         map.put("date",getResources().getString(R.string.main_date1));
         map.put("content",getResources().getString(R.string.main_share2));
-        list.add(map);
+        list3.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact3));//String
         map.put("img", R.mipmap.pic6);
         map.put("date",getResources().getString(R.string.main_date1));
         map.put("content",getResources().getString(R.string.main_share3));
-        list.add(map);
+        list3.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact1));//String
         map.put("img", R.mipmap.pic7);
         map.put("date",getResources().getString(R.string.main_date3));
         map.put("content",getResources().getString(R.string.main_share1));
-        list.add(map);
+        list3.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact2));//String
         map.put("img", R.mipmap.pic8);
         map.put("date",getResources().getString(R.string.main_date3));
         map.put("content",getResources().getString(R.string.main_share2));
-        list.add(map);
+        list3.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact3));//String
         map.put("img", R.mipmap.pic9);
         map.put("date",getResources().getString(R.string.main_date3));
         map.put("content",getResources().getString(R.string.main_share1));
-        list.add(map);
-
-        return list;
+        list3.add(map);
     }
-
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            AlertDialog.Builder dialog = new AlertDialog.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("您是否要退出？")
-                    .setPositiveButton("确定",
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    //con.exitGame();
-                                   // con.clear();
-                                    finish();
-                                    int siz = BaseActivity.queue.size();
-                                    for (int i = 0; i < siz; i++) {
-                                        if (BaseActivity.queue.get(i) != null) {
-                                            System.out
-                                                    .println((Activity) BaseActivity.queue
-                                                            .get(i) + "退出程序");
-                                            ((Activity) BaseActivity.queue
-                                                    .get(i)).finish();
-                                        }
-                                    }
-                                }
-                            })
-                    .setNegativeButton("取消",
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-
-
-                                }
-                            });
-            dialog.create().show();
-
-            return true;
-        }
-
-        else
-            return false;
-
-    }
-
 
     @Override
     public void onMainFragmentInteraction(int position) {
@@ -533,6 +509,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
     @Override
     public void onShareFragmentInteraction(int position) {
-
+        rgs.setVisibility(View.GONE);
+        getFragmentManager().beginTransaction().replace(R.id.tab_content,DetailFragment.newInstance((Integer)list3.get(position).get("img"),(String)list3.get(position).get("content"))).addToBackStack(null).commit();
     }
 }

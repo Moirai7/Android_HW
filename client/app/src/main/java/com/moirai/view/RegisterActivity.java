@@ -179,7 +179,51 @@ public class RegisterActivity extends BaseActivity {
             }
         });
     }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(this)
+                    .setTitle("提示")
+                    .setMessage("您是否要退出？")
+                    .setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
 
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    //con.exitGame();
+                                    // con.clear();
+                                    finish();
+                                    int siz = BaseActivity.queue.size();
+                                    for (int i = 0; i < siz; i++) {
+                                        if (BaseActivity.queue.get(i) != null) {
+                                            System.out
+                                                    .println((Activity) BaseActivity.queue
+                                                            .get(i) + "退出程序");
+                                            ((Activity) BaseActivity.queue
+                                                    .get(i)).finish();
+                                        }
+                                    }
+                                }
+                            })
+                    .setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+
+
+                                }
+                            });
+            dialog.create().show();
+
+            return true;
+        }
+
+        else
+            return false;
+
+    }
     private void gotoLogin(){
         StopRead();
         removeActivity();
