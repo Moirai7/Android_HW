@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ShallWeTalk</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_register">注册</string>
+    <string name="title_activity_login">登录</string>
+    <string name="title_activity_main">ShallWeTalk</string>
+    <string name="title_activity_talk">Talk</string>
+    <string name="title_activity_friend">好友</string>
+    <string name="title_activity_moments">分享</string>
+    <string name="title_activity_setting">设置</string>
+    <string name="title_activity_camera">拍照</string>
+    <string name="title_activity_gesture">手势</string>
+
+    <string name="tab_chat">聊天</string>
+    <string name="tab_friend">好友</string>
+    <string name="tab_share">分享</string>
+
+    <string name="register_id">用户名</string>
+    <string name="register_password">密码</string>
+    <string name="register_start">欢迎使用，请根据语音提示新建账户</string>
+    <string name="tip_enter_id">输入用户名</string>
+    <string name="tip_enter_pw1">输入密码</string>
+    <string name="tip_enter_pw2">再次输入密码</string>
+    <string name="voice_enter_id">请输入用户名</string>
+    <string name="voice_enter_pw1">请输入密码</string>
+    <string name="voice_enter_pw2">再次输入密码</string>
+    <string-array name="register_type">
+        <item>普通人</item>
+        <item>盲人</item>
+        <item>聋哑人</item>
+    </string-array>
+    <string name="tip_register_successfully">注册成功</string>
+    <string name="tip_register_failed">注册失败</string>
+    <string name="tip_register_id">请输入正确的用户</string>
+    <string name="tip_regieter_pw_null">请输入正确的密码</string>
+    <string name="register_btn">注册</string>
+    <string name="register_goto_login">去登录</string>
+
+    <string name="title_activity_shake">摇一摇</string>
+    <string name="message1_shake_confirm">你想要添加</string>
+    <string name="message2_shake_confirm">成为你的朋友吗？</string>
+    <string name="message3_shake_confirm">点击确认添加，长按取消添加</string>
+    <string name="yes_shake_confirm">是</string>
+    <string name="no_shake_confirm">否</string>
+    <string name="no_shake_friend_tip">没有好友</string>
+    <string name="voice_shake_tip">请摇动你的手机</string>
+    <string name="voice_shake_result_success">添加朋友成功</string>
+    <string name="voice_shake_result_cancel">取消添加朋友</string>
+
+    <string name="tip_gesture_textView">点击返回</string>
+
+    <string name="reminder">选择语音提示吗？</string>
+    <string name="choice1">是</string>
+    <string name="choice2">否</string>
+    <string name="takePhoto">开始</string>
+    <string name="loading">是否使用语音提示：是，请单击屏幕；否，长按屏幕</string>
+    <!--Login function-->
+    <string name="login">登录</string>
+    <string name="loginStart">欢迎进入登录，单击输入用户名，长按跳转到注册页面</string>
+    <string name="login_ReToRegister">跳转到注册</string>
+    <string name="username">请说出用户名</string>
+    <string name="password">请说出密码</string>
+    <string name="confirm">您输入的用户名和密码是：</string>
+    <string name="login_success">登录成功</string>
+    <string name="login_failure">用户名或密码错误，请重新输入</string>
+    <!--mainActivity-->
+    <string name="main_mainPage">欢迎进入主页</string>
+    <string name="main_contactPage">欢迎进入联系人页面</string>
+    <string name="main_sharePage">欢迎进入分享页面</string>
+    <string name="main_welcome">欢迎进入首页</string>
+    <string name="main_chats_tip">发给你一条消息，消息内容是：</string>
+    <string name="main_content1">你好美</string>
+    <string name="main_content2">你吃过早餐了吗</string>
+    <string name="main_content3">你现在在干嘛呢？</string>
+    <string name="main_date1">2015-03-29 16:44</string>
+    <string name="main_date2">2015-03-29 16:44</string>
+    <string name="main_date3">2015-03-29 16:44</string>
+    <string name="main_title1">emma</string>
+    <string name="main_title2">fish</string>
+    <string name="main_title3">brian</string>
+
+    <string name="main_contact1">Bright</string>
+    <string name="main_contact2">Emma</string>
+    <string name="main_contact3">Fish</string>
+
+    <string name="main_share_tip">发一条朋友圈 :</string>
+    <string name="main_share1">我要疯了</string>
+    <string name="main_share2">我好困</string>
+    <string name="main_share3">我很开心</string>
+
+    <string name="talk_send_message">发送</string>
+    <string name="talking_with">聊天，和</string>
+    <string name="ack_talk_start">欢迎，你正在聊天，和</string>
+    <string name="talk_have_Info">当前没有消息</string>
+
+    <string name="setting">请选择你的用户角色</string>
+    <string name="type_choice">用户角色</string>
+    <string name="type_choice0">0-普通人</string>
+    <string name="type_choice1">1-看不见，语音交互</string>
+    <string name="type_choice2">2-看的见，手语交流</string>
+    <string name="setting_welcome">欢迎来到设置：正常人请单击，语音交互请双击，手语交互请长按</string>
+    <string name="setting_choice0">设置成功，您现在的角色是正常人</string>
+    <string name="setting_choice1">设置成功，您现在的角色是看不见，语音交互</string>
+    <string name="setting_choice2">设置成功，您现在的角色是看得见，手势交互</string>
+    <string name="welcome_back">欢迎回来</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
