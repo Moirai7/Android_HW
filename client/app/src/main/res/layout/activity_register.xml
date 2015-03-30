@@ -6,24 +6,17 @@
     android:background="@mipmap/register_background"
     tools:context="com.moirai.view.RegisterActivity">
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone"
-        android:background="@mipmap/blind_background"
-        android:id="@+id/register_jBlindView"/>
+
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/logo_eyes"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
         android:layout_above="@+id/register_message_layout"/>
 
     <LinearLayout
         android:id="@+id/register_message_layout"
-        android:layout_below="@+id/register_jBlindView"
         android:orientation="vertical"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
@@ -93,4 +86,10 @@
             android:layout_marginTop="40dp"
             />
       </LinearLayout>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:id="@+id/register_jBlindView"/>
 </RelativeLayout>

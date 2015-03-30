@@ -58,4 +58,5 @@ public interface Config {
     public static final int ACK_SHAKE_ANSWER = 214;
     public static final int ACK_LIST_READ = 300;
     public static final int ACK_TALK_START = 215;
+    public static final int ACK_TALKING = 301;
 }

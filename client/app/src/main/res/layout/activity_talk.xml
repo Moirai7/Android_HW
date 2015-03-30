@@ -4,12 +4,6 @@
     android:layout_height="fill_parent"
     tools:context="com.moirai.view.TalkActivity">
 
-    <ImageView
-        android:id="@+id/talk_jblind"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone"
-        android:background="@mipmap/blind_background"/>
 
     <ListView
         android:id="@+id/listview"
@@ -19,12 +13,10 @@
         android:dividerHeight="5dp"
         android:scrollbars="none"
         android:background="#ffffff"
-        android:layout_below="@id/talk_jblind"
         android:layout_above="@+id/talk_btn_layout"
         android:cacheColorHint="#00000000"/>
 
     <TextView
-        android:layout_below="@id/talk_jblind"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_above="@+id/talk_btn_layout"
@@ -32,7 +24,6 @@
         android:background="#C0C0C0"/>
     <LinearLayout
         android:id="@+id/talk_btn_layout"
-        android:layout_below="@id/talk_jblind"
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -79,4 +70,11 @@
             android:paddingBottom="3dp"
             android:text="@string/talk_send_message"/>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/talk_jblind"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        android:background="@android:color/transparent"/>
 </RelativeLayout>

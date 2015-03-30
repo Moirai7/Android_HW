@@ -72,6 +72,8 @@ public class LoginActivity extends BaseActivity {
                 break;
             case Config.ACK_LISTEN_USERNAME:
                 USERNAME = (String)message.obj;
+                if(USERNAME.equals("LANLANERROR"))
+                    StartRead(getResources().getString(R.string.username),Config.ACK_TALK_USERNAME);
                 username_edit.setText(USERNAME);
                 //说出密码
                 StartRead(getResources().getString(R.string.password),Config.ACK_TALK_PASSWORD);

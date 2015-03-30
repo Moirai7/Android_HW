@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.os.Message;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
 
@@ -37,6 +39,8 @@ import java.util.Map;
 public class MainActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener,ContactFragment.OnFragmentInteractionListener,ShareFragment.OnFragmentInteractionListener {
     private List<Info> list;
     private SimpleAdapter adapter; // binds tags to ListView
+    private int[][] position = new int[3][2];
+    private RadioButton[] rb = new RadioButton[3];
     /**
      * Called when the activity is first created.
      */
@@ -45,6 +49,18 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     private int theFragment=0;
     private int theInfoId=0;
 
+    private void setSimulateClick(View view, float x, float y) {
+        long downTime = SystemClock.uptimeMillis();
+        final MotionEvent downEvent = MotionEvent.obtain(downTime, downTime,
+                MotionEvent.ACTION_DOWN, x, y, 0);
+        downTime += 1000;
+        final MotionEvent upEvent = MotionEvent.obtain(downTime, downTime,
+                MotionEvent.ACTION_UP, x, y, 0);
+        view.onTouchEvent(downEvent);
+        view.onTouchEvent(upEvent);
+        downEvent.recycle();
+        upEvent.recycle();
+    }
     @Override
     public void processMessage(Message message) {
         switch(message.what){
@@ -53,7 +69,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 //db.saveDownloadInfo(list);
                 break;
             case Config.ACK_CON_SUCCESS:
-                StartRead("漂漂的岚岚姐",Config.ACK_NONE);//欢迎
+                StartRead(getResources().getString(R.string.main_welcome),Config.ACK_NONE);//欢迎
                 break;
             case Config.ACK_DOWN:
                 theInfoId++;
@@ -68,16 +84,19 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 StartListRead();
                 break;
             case Config.ACK_LEFT://0是首页，1是contact，2是朋友圈
-                tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+2)%3,(theFragment+2)%3);
-                switch ((theFragment+2)%3){
+                int p = (theFragment+2)%3;
+                setSimulateClick(rb[p], position[p][0], position[p][1]);
+                //tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+2)%3,(theFragment+2)%3);
+                switch (p){
                    case 0:StartRead(getResources().getString(R.string.main_mainPage),Config.ACK_NONE);break;
                    case 1:StartRead(getResources().getString(R.string.main_contactPage),Config.ACK_NONE);break;
                    case 2:StartRead(getResources().getString(R.string.main_sharePage),Config.ACK_NONE);break;
                 }
                 break;
             case Config.ACK_RIGHT://0是首页，1是contact，2是朋友圈
-                tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+1)%3,(theFragment+1)%3);
-                switch ((theFragment+1)%3){
+                int q = (theFragment+1)%3;
+                setSimulateClick(rb[q], position[q][0], position[q][1]);
+                switch (q){
                     case 0:StartRead(getResources().getString(R.string.main_mainPage),Config.ACK_NONE);break;
                     case 1:StartRead(getResources().getString(R.string.main_contactPage),Config.ACK_NONE);break;
                     case 2:StartRead(getResources().getString(R.string.main_sharePage),Config.ACK_NONE);break;
@@ -98,14 +117,13 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             case Config.ACK_DOUBLE_CLICK:
                 if(theFragment==0){
                     Intent intent = new Intent();
-                    intent.setClass(queue.getLast(),SettingActivity.class);
+                    intent.setClass(MainActivity.this,SettingActivity.class);
                     startActivity(intent);
                     Constant.isSetting = true;
                 }else if(theFragment==1){
                     Intent intent = new Intent();
-                    intent.setClass(queue.getLast(),ShakeActivity.class);
+                    intent.setClass(MainActivity.this,ShakeActivity.class);
                     startActivity(intent);
-                    Constant.isSetting = true;
                 }
                 break;
             default:
@@ -182,6 +200,14 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         fragments.add(new ShareFragment());
 
         rgs = (RadioGroup) findViewById(R.id.tabs_rg);
+        rb[0] = (RadioButton)findViewById(R.id.tab_rb_a);
+        rb[1] = (RadioButton)findViewById(R.id.tab_rb_b);
+        rb[2] = (RadioButton)findViewById(R.id.tab_rb_c);
+        rb[0].getLocationInWindow(position[0]);
+        rb[1].getLocationInWindow(position[1]);
+        rb[2].getLocationInWindow(position[2]);
+
+        System.out.println("getLocationOnScreen:" + position[0] + "," + position[1]);
 //        theFragment = 0;
 //        data = getData();
 //        adapter = new SimpleAdapter(this,data,R.layout.list_item,
@@ -213,6 +239,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
     @Override
     protected void onResume() {
+        StartRead(getResources().getString(R.string.welcome_back),Config.ACK_NONE);
         if(!Constant.setBlind){
             //设置事件监听，要修改ImageView的值
             removeActivity();
@@ -269,10 +296,16 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         switch (id) {
             case R.id.action_settings:
                 if(!Constant.isSetting){
-                    Intent intent = new Intent();
-                    intent.setClass(queue.getLast(),SettingActivity.class);
-                    startActivity(intent);
-                    Constant.isSetting = true;
+                    if(theFragment==0){
+                        Intent intent = new Intent();
+                        intent.setClass(queue.getLast(),SettingActivity.class);
+                        startActivity(intent);
+                        Constant.isSetting = true;
+                    }else if(theFragment==1){
+                        Intent intent = new Intent();
+                        intent.setClass(queue.getLast(),ShakeActivity.class);
+                        startActivity(intent);
+                    }
                 }
                 break;
             case android.R.id.home:
@@ -416,7 +449,10 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
     @Override
     public void onContactFragmentInteraction(int position) {
-
+        Message msg = Message.obtain();
+        msg.what = Config.ACK_LONG_CLICK;
+        theInfoId=position;
+        BaseActivity.sendMessage(msg);
     }
 
     @Override

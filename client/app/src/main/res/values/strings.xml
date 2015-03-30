@@ -57,14 +57,43 @@
     <string name="loading">"Do you want to use the voice service?YES,click the screen.No,long press the screen"</string>
 	<!--Login function-->
     <string name="login">Login</string>
+    <string name="loginStart">Welcome to login,Click once to input username,Long Click to retrieve to Register</string>
+    <string name="login_ReToRegister">Retrieve to Register</string>
     <string name="username">Please tell us the username</string>
     <string name="password">Please tell us the password</string>
     <string name="confirm">the username and password you input are</string>
     <string name="login_success">Login successfully</string>
     <string name="login_failure">username or password is wrong.Input again</string>
+    <!--mainActivity-->
+    <string name="main_mainPage">Welcome to main Page</string>
+    <string name="main_contactPage">Welcome to contact Page</string>
+    <string name="main_sharePage">Welcome to share Page</string>
+    <string name="main_welcome">Welcome to the home page</string>
+    <string name="main_message1">Bright sends your a message,and the content is : you are amazing</string>
+    <string name="main_message2">Bright sends your a message,and the content is : Have you finished your breakfast</string>
+    <string name="main_message3">Bright sends your a message,and the content is : What are you doing now?</string>
 
+    <string name="main_contact1">The present contact is Bright</string>
+    <string name="main_contact2">The present contact is Emma</string>
+    <string name="main_contact3">The present contact is Fish</string>
+
+    <string name="main_share1">Emma posted moment : I am crazy now</string>
+    <string name="main_share2">Bright posted moment : I am sleepy now</string>
+    <string name="main_share3">Fish posted moment : I am happy now</string>
     <string name="talk_send_message">Send</string>
     <string name="talking_with">Talking with</string>
     <string name="ack_talk_start">Welcome,you are talking with</string>
     <string name="talk_have_Info">No message now,</string>
+    <string name="setting">Please choose your type</string>
+    <string name="type_choice">TYPE</string>
+    <string name="type_choice0">0-normal</string>
+    <string name="type_choice1">1-unable to see and use voice</string>
+    <string name="type_choice2">2-able to see,but use sign language</string>
+    <string name="setting_welcome">Welcome to setting:if you are normal,please click one,
+        if you need use voice interaction,please double click
+        if you need use sign language,please Long click</string>
+    <string name="setting_choice0">set successfully!Now you are the role:Normal</string>
+    <string name="setting_choice1">set successfully!Now you are the role:unable to see and use voice interaction </string>
+    <string name="setting_choice2">set successfully!Now you are the role:able to see and use sign language</string>
+    <string name="welcome_back">welcome back</string>
 </resources>

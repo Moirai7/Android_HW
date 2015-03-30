@@ -101,8 +101,10 @@ public abstract class BaseActivity extends FragmentActivity  {
     }
 
     protected void StartRead(String string, int ackListenStart) {
-        voice_binder.SetACK(ackListenStart);
-        voice_binder.StartRead(string);
+        if(voice_binder!=null){
+            voice_binder.SetACK(ackListenStart);
+            voice_binder.StartRead(string);
+        }
     }
 
 	public abstract void processMessage(Message message);

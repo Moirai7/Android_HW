@@ -48,6 +48,12 @@
 
         </activity>
         <activity
+            android:name="com.moirai.view.ShakeActivity"
+            android:label="@string/title_activity_shake"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
+        </activity>
+        <activity
             android:name="com.moirai.view.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >

@@ -240,6 +240,10 @@ public class VoiceService extends Service {
 		public void onError(int errorCode) throws RemoteException {
 			//showTip("onError Code：" + errorCode);
 			Log.d(TAG, "onError Code：" + errorCode);
+            Message msg = Message.obtain();
+            msg.what = CURRENT_ACK;
+            msg.obj = "LANLANERROR";
+            BaseActivity.sendMessage(msg);
 		}
 
 		@Override

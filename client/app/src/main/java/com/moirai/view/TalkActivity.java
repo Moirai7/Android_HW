@@ -4,8 +4,10 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -34,6 +36,7 @@ public class TalkActivity extends BaseActivity {
     private ListView mListView;
     private TalkMsgViewAdapter mAdapter;
     private List<Info> mDataArrays = new ArrayList<Info>();
+    private int mInfoNews=0;
 
     private String[]msgArray = new String[]{"请叫我漂漂的岚岚姐", "叫你谁？", "漂漂的岚岚姐啊", "什么的岚岚姐？",
             "漂漂的岚岚姐", "叫姐有饭吃吗？",
@@ -60,7 +63,26 @@ public class TalkActivity extends BaseActivity {
             case Config.ACK_SERVICE:
 
                 break;
-
+            case Config.ACK_DOWN:
+                mInfoNews++;
+                if(mInfoNews>mDataArrays.size())
+                    mInfoNews--;
+                StartRead(mDataArrays.get(mInfoNews).getDetail(),Config.ACK_NONE);
+                break;
+            case Config.ACK_TOP:
+                mInfoNews--;
+                if(mInfoNews<0)
+                    mInfoNews=0;
+                StartRead(mDataArrays.get(mInfoNews).getDetail(),Config.ACK_NONE);
+                break;
+            case Config.ACK_LONG_CLICK:
+                StartListen(Config.ACK_TALKING);
+                break;
+            case Config.ACK_TALKING:
+                String str = (String)message.obj;
+                msgEdit.setText(str);
+                send();
+                break;
             default:
                 break;
         }
@@ -70,6 +92,22 @@ public class TalkActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_talk);
+
+        if(Constant.ID.equals("1")){
+            //设置事件监听，要修改ImageView的值
+            final GestureDetectorCompat mGesturedetector;
+            mGesture gesture = new mGesture();
+            mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+            ImageView iv = (ImageView)findViewById(R.id.talk_jblind);
+            iv.setVisibility(View.VISIBLE);
+            iv.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mGesturedetector.onTouchEvent(event);
+                    return true;
+                }
+            });
+        }
 
         ActionBar actionBar = getActionBar();
         actionBar.setIcon(null);
@@ -82,10 +120,7 @@ public class TalkActivity extends BaseActivity {
         msgEdit = (EditText) findViewById(R.id.talk_editView);
         sendBtn = (Button) findViewById(R.id.talk_sendBtn);
         mListView = (ListView) findViewById(R.id.listview);
-        jblind = (ImageView) findViewById(R.id.talk_jblind);
-        if(Constant.ID.equals("1")){
-            jblind.setVisibility(View.VISIBLE);
-        }
+
         cameraIBbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +167,7 @@ public class TalkActivity extends BaseActivity {
 
             entity.setDetail(msgArray[i]);
             mDataArrays.add(entity);
+            mInfoNews=mDataArrays.size()-1;
         }
 
      //   mDataArrays = db.getDownloadInfo("lanlan","dayu");

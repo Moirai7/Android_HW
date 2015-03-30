@@ -5,15 +5,8 @@
     tools:context="com.moirai.view.LoginActivity"
     android:background="@mipmap/login_background">
 
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:visibility="gone"
-        android:background="@mipmap/blind_background"
-        android:id="@+id/hblindviewlogin"/>
 
     <ImageView
-        android:layout_below="@+id/hblindviewlogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
@@ -26,7 +19,6 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/hblindviewlogin"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="250dp"
         android:id="@+id/linearLayout">
@@ -74,4 +66,11 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/login_btn"/>
 
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
+        android:id="@+id/hblindviewlogin"/>
 </RelativeLayout>

@@ -66,10 +66,11 @@ public class RegisterActivity extends BaseActivity {
                 break;
             case Config.ACK_REGISTER_USERNAME:
                 userName = (String)message.obj;
-                if(userName.isEmpty()){
+                if(userName.isEmpty()||userName.equals("LANLANERROR")){
                     StartRead(getString(R.string.tip_register_id),Config.ACK_REGISTER_USERNAME_TIP);
                     break;
                 }
+                idEditText.setText(userName);
                 StartRead(getString(R.string.voice_enter_pw1),Config.ACK_REGISTER_PASSWORD_1_TIP);
                 break;
             case Config.ACK_REGISTER_PASSWORD_1_TIP:
@@ -77,6 +78,7 @@ public class RegisterActivity extends BaseActivity {
                 break;
             case Config.ACK_REGISTER_PASSWORD_1:
                 pw1 = (String)message.obj;
+                pwEditText1.setText(pw1);
                 StartRead(getString(R.string.voice_enter_pw2),Config.ACK_REGISTER_PASSWORD_2_TIP);
                 break;
             case Config.ACK_REGISTER_PASSWORD_2_TIP:
@@ -92,6 +94,7 @@ public class RegisterActivity extends BaseActivity {
 //                    user.setPassword(pw1);
 //                    user.setType(Constant.ID);
 //                    con.register(user);
+                    pwEditText2.setText(pw2);
                     StartRead(getResources().getString(R.string.login_success), Config.ACK_LOGIN_SUCCESS_RETURN);
                 }
                 break;
