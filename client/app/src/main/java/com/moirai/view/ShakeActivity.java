@@ -11,6 +11,8 @@ import android.hardware.SensorManager;
 import android.os.Message;
 import android.os.Vibrator;
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -47,7 +49,18 @@ public class ShakeActivity extends BaseActivity
         progressBar.setVisibility(View.INVISIBLE);
         blindView = (ImageView) findViewById(R.id.shake_jBlindView);
         if(Constant.ID.equals("1")){
-           // blindView.setVisibility(View.VISIBLE);
+            //设置事件监听，要修改ImageView的值
+            final GestureDetectorCompat mGesturedetector;
+            mGesture gesture = new mGesture();
+            mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
+            blindView.setVisibility(View.VISIBLE);
+            blindView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    mGesturedetector.onTouchEvent(event);
+                    return true;
+                }
+            });
         }
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);  //首先得到传感器管理器对象
@@ -172,7 +185,7 @@ public class ShakeActivity extends BaseActivity
             }
         }).show();
     }
-
+    private boolean checkInfoAdd = false;
     @Override
     public void processMessage(Message message) {
         switch (message.what) {
@@ -191,6 +204,7 @@ public class ShakeActivity extends BaseActivity
                                 +getString(R.string.message2_shake_confirm)
                                 +getString(R.string.message3_shake_confirm);
                         StartRead(msg, Config.ACK_SHAKE_RESULT);
+                        checkInfoAdd=true;
                     }
 
                 } else {
@@ -204,7 +218,17 @@ public class ShakeActivity extends BaseActivity
                 StartRead(getString(R.string.voice_shake_tip),Config.ACK_SHAKE_test);
                 break;
             case Config.ACK_SHAKE_RESULT:
-                StartListen(Config.ACK_SHAKE_ANSWER);
+                //StartListen(Config.ACK_SHAKE_ANSWER);
+                break;
+            case Config.ACK_DOUBLE_CLICK:
+                if(checkInfoAdd)
+                    finish();
+                break;
+            case Config.ACK_LONG_CLICK:
+                if(checkInfoAdd) {
+                    checkInfoAdd = false;
+                    state=true;
+                }
                 break;
             case Config.ACK_SHAKE_ANSWER:
                 String answer = (String)message.obj;

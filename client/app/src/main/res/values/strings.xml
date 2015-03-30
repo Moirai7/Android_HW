@@ -40,7 +40,7 @@
     <string name="title_activity_shake">Shake</string>
     <string name="message1_shake_confirm">Do you want to add</string>
     <string name="message2_shake_confirm">to be your friend ?</string>
-    <string name="message3_shake_confirm">please answer yes or no</string>
+    <string name="message3_shake_confirm">Click as yes or long click as cancel</string>
     <string name="yes_shake_confirm">Yes</string>
     <string name="no_shake_confirm">No</string>
     <string name="no_shake_friend_tip">No friend</string>
@@ -69,17 +69,26 @@
     <string name="main_contactPage">Welcome to contact Page</string>
     <string name="main_sharePage">Welcome to share Page</string>
     <string name="main_welcome">Welcome to the home page</string>
-    <string name="main_message1">Bright sends your a message,and the content is : you are amazing</string>
-    <string name="main_message2">Bright sends your a message,and the content is : Have you finished your breakfast</string>
-    <string name="main_message3">Bright sends your a message,and the content is : What are you doing now?</string>
+    <string name="main_chats_tip">sends your a message,and the content is :</string>
+    <string name="main_content1">you are amazing</string>
+    <string name="main_content2">Have you finished your breakfast</string>
+    <string name="main_content3">What are you doing now?</string>
+    <string name="main_date1">2015-03-29 16:44</string>
+    <string name="main_date2">2015-03-29 16:44</string>
+    <string name="main_date3">2015-03-29 16:44</string>
+    <string name="main_title1">emma</string>
+    <string name="main_title2">fish</string>
+    <string name="main_title3">brian</string>
 
-    <string name="main_contact1">The present contact is Bright</string>
-    <string name="main_contact2">The present contact is Emma</string>
-    <string name="main_contact3">The present contact is Fish</string>
+    <string name="main_contact1">Bright</string>
+    <string name="main_contact2">Emma</string>
+    <string name="main_contact3">Fish</string>
 
-    <string name="main_share1">Emma posted moment : I am crazy now</string>
-    <string name="main_share2">Bright posted moment : I am sleepy now</string>
-    <string name="main_share3">Fish posted moment : I am happy now</string>
+    <string name="main_share_tip">posted moment :</string>
+    <string name="main_share1">I am crazy now</string>
+    <string name="main_share2">I am sleepy now</string>
+    <string name="main_share3">I am happy now</string>
+
     <string name="talk_send_message">Send</string>
     <string name="talking_with">Talking with</string>
     <string name="ack_talk_start">Welcome,you are talking with</string>

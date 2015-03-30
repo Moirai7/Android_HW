@@ -1,12 +1,23 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.moirai.view.MainFragment">
-
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.moirai.view.MainFragment">
+    <ImageView
+        android:id="@+id/fragment_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@mipmap/share_bg"
+        />
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
+        android:divider="#9F9F9F"
+        android:dividerHeight="1px"
         android:id="@+id/android:list">
 
     </ListView>
-</FrameLayout>
+</LinearLayout>

@@ -3,10 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/register_background"
+    android:background="@mipmap/login_background"
     tools:context="com.moirai.view.RegisterActivity">
-
-
 
     <ImageView
         android:layout_width="wrap_content"
@@ -26,39 +24,44 @@
         android:layout_height="wrap_content">
         <EditText
             android:id="@+id/register_id_EditView"
-            android:background="@mipmap/register_id"
+            android:background="@mipmap/login_username"
             android:inputType="text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="60dp"
+            android:paddingLeft="50dp"
             android:hint="@string/tip_enter_id"
+            android:textColor="#ffffff"
           />
 
         <EditText
             android:id="@+id/register_password1_EditView"
-            android:background="@mipmap/register_pw"
+            android:background="@mipmap/login_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="60dp"
+            android:paddingLeft="50dp"
             android:layout_marginTop="5dp"
             android:hint="@string/tip_enter_pw1"
             android:inputType="textPassword"
             android:layout_alignLeft="@id/register_id_EditView"
             android:layout_alignStart="@id/register_id_EditView"
-            android:layout_alignRight="@id/register_id_EditView"/>
+            android:layout_alignRight="@id/register_id_EditView"
+            android:textColor="#ffffff"
+            />
 
         <EditText
             android:id="@+id/register_password2_EditView"
-            android:background="@mipmap/register_pw"
+            android:background="@mipmap/login_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="60dp"
+            android:paddingLeft="50dp"
             android:layout_marginTop="5dp"
             android:hint="@string/tip_enter_pw2"
             android:inputType="textPassword"
             android:layout_alignLeft="@id/register_id_EditView"
             android:layout_alignStart="@id/register_id_EditView"
             android:layout_alignRight="@id/register_id_EditView"
+            android:textColor="#ffffff"
+
             />
 
         <Button
@@ -83,7 +86,7 @@
             android:textColor="#ffffff"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="10dp"
             />
       </LinearLayout>
     <ImageView

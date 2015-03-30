@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -84,6 +85,8 @@ public class MainFragment extends ListFragment{
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         // Set the adapter
         mListView = (ListView) view.findViewById(android.R.id.list);
+        ImageView iv = (ImageView) view.findViewById(R.id.fragment_imageView);
+        iv.setVisibility(View.GONE);
         mListView.setAdapter(mAdapter);
         return view;
     }

@@ -16,20 +16,25 @@
         android:layout_above="@+id/talk_btn_layout"
         android:cacheColorHint="#00000000"/>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/talk_btn_layout"
-        android:layout_alignTop="@+id/talk_btn_layout"
-        android:background="#C0C0C0"/>
     <LinearLayout
         android:id="@+id/talk_btn_layout"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
         >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#9F9F9F"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
         <ImageButton
             android:id="@+id/talk_cameraIbtn"
             android:layout_width="wrap_content"
@@ -37,14 +42,14 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="3dp"
             android:background="@drawable/camera"/>
-        <ImageButton
-            android:id="@+id/talk_text_voice_imageBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/tabchat_selected"
-            android:layout_gravity="center_vertical"
-            />
+        <!--<ImageButton-->
+            <!--android:id="@+id/talk_text_voice_imageBtn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:background="@drawable/tabchat_selected"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--/>-->
         <EditText
             android:id="@+id/talk_editView"
             android:layout_width="0dp"
@@ -69,6 +74,8 @@
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
             android:text="@string/talk_send_message"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <ImageView

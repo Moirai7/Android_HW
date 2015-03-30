@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
+import android.widget.Switch;
 
 import com.moirai.client.Config;
 import com.moirai.client.Constant;
@@ -112,7 +113,28 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 }
                 break;
             case Config.ACK_LIST_READ:
-                StartRead((String)data.get(theInfoId).get("title"),Config.ACK_NONE);
+                String content;
+                switch(theFragment){
+                    case 0:
+                         content =(String)data.get(theInfoId).get("title")
+                                 + getString(R.string.main_chats_tip)
+                                 +(String)data.get(theInfoId).get("content");
+                         StartRead(content,Config.ACK_NONE);
+                         break;
+                    case 1:
+                        content = (String)data.get(theInfoId).get("title");
+                        StartRead(content,Config.ACK_NONE);
+                        break;
+                    case 2:
+                        content = (String)data.get(theInfoId).get("title")
+                                + getString(R.string.main_share_tip)
+                                + (String)data.get(theInfoId).get("content");
+                        StartRead(content,Config.ACK_NONE);
+                        break;
+                    default:
+                        break;
+
+                 }
                 break;
             case Config.ACK_DOUBLE_CLICK:
                 if(theFragment==0){
@@ -141,22 +163,22 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     data = getData();
                     // create ArrayAdapter and use it to bind tags to the ListView
                     adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
-                            new String[]{"title", "img"},
-                            new int[]{R.id.nameView, R.id.photoView});
+                            new String[]{"title", "img","date","content"},
+                            new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
                     break;
                 case 1:
                     theFragment = 1;
                     data = getData2();
                     adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
-                            new String[]{"title", "img"},
-                            new int[]{R.id.nameView, R.id.photoView});
+                            new String[]{"title", "img","date","content"},
+                            new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
                     break;
                 case 2:
                     theFragment = 2;
                     data = getData3();
                     adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
-                            new String[]{"title", "img"},
-                            new int[]{R.id.nameView, R.id.photoView});
+                            new String[]{"title", "img","date","content"},
+                            new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
                     break;
             }
             if(Constant.ID.equals("1")) {
@@ -333,18 +355,24 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_message1));//String
-        map.put("img", R.drawable.tababoutus);
+        map.put("title", getResources().getString(R.string.main_title1));//String
+        map.put("img", R.mipmap.pic1);
+        map.put("date",getResources().getString(R.string.main_date1));
+        map.put("content",getResources().getString(R.string.main_content1));
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_message2));
-        map.put("img", R.drawable.tabconfigicon);
+        map.put("title", getResources().getString(R.string.main_title2));//String
+        map.put("img", R.mipmap.pic2);
+        map.put("date",getResources().getString(R.string.main_date2));
+        map.put("content",getResources().getString(R.string.main_content2));
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_message3));
-        map.put("img", R.drawable.tablatestalert);
+        map.put("title", getResources().getString(R.string.main_title3));//String
+        map.put("img", R.mipmap.pic3);
+        map.put("date",getResources().getString(R.string.main_date3));
+        map.put("content",getResources().getString(R.string.main_content3));
         list.add(map);
 
         return list;
@@ -355,17 +383,17 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact1));
-        map.put("img", R.drawable.tababoutus);
+        map.put("img", R.mipmap.pic4);
         list.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact2));
-        map.put("img", R.drawable.tabconfigicon);
+        map.put("img", R.mipmap.pic5);
         list.add(map);
 
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact3));
-        map.put("img", R.drawable.tablatestalert);
+        map.put("img", R.mipmap.pic6);
         list.add(map);
 
         return list;
@@ -375,18 +403,66 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_share1));
-        map.put("img", R.drawable.tababoutus);
+        map.put("title", getResources().getString(R.string.main_title1));//String
+        map.put("img", R.mipmap.pic1);
+        map.put("date",getResources().getString(R.string.main_date1));
+        map.put("content",getResources().getString(R.string.main_share1));
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title",getResources().getString(R.string.main_share2));
-        map.put("img", R.drawable.tabconfigicon);
+        map.put("title", getResources().getString(R.string.main_title2));//String
+        map.put("img", R.mipmap.pic2);
+        map.put("date",getResources().getString(R.string.main_date2));
+        map.put("content",getResources().getString(R.string.main_share2));
         list.add(map);
 
         map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_share3));
-        map.put("img", R.drawable.tablatestalert);
+        map.put("title", getResources().getString(R.string.main_title3));//String
+        map.put("img", R.mipmap.pic3);
+        map.put("date",getResources().getString(R.string.main_date3));
+        map.put("content",getResources().getString(R.string.main_share3));
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", getResources().getString(R.string.main_contact1));//String
+        map.put("img", R.mipmap.pic4);
+        map.put("date",getResources().getString(R.string.main_date3));
+        map.put("content",getResources().getString(R.string.main_share1));
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", getResources().getString(R.string.main_contact2));//String
+        map.put("img", R.mipmap.pic5);
+        map.put("date",getResources().getString(R.string.main_date1));
+        map.put("content",getResources().getString(R.string.main_share2));
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", getResources().getString(R.string.main_contact3));//String
+        map.put("img", R.mipmap.pic6);
+        map.put("date",getResources().getString(R.string.main_date1));
+        map.put("content",getResources().getString(R.string.main_share3));
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", getResources().getString(R.string.main_contact1));//String
+        map.put("img", R.mipmap.pic7);
+        map.put("date",getResources().getString(R.string.main_date3));
+        map.put("content",getResources().getString(R.string.main_share1));
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", getResources().getString(R.string.main_contact2));//String
+        map.put("img", R.mipmap.pic8);
+        map.put("date",getResources().getString(R.string.main_date3));
+        map.put("content",getResources().getString(R.string.main_share2));
+        list.add(map);
+
+        map = new HashMap<String, Object>();
+        map.put("title", getResources().getString(R.string.main_contact3));//String
+        map.put("img", R.mipmap.pic9);
+        map.put("date",getResources().getString(R.string.main_date3));
+        map.put("content",getResources().getString(R.string.main_share1));
         list.add(map);
 
         return list;

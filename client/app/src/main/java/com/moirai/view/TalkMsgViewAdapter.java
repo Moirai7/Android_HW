@@ -73,7 +73,6 @@ public class TalkMsgViewAdapter extends BaseAdapter {
             return IMsgViewType.IMVT_COM_MSG;
 	 	}
 
-	 	
 	}
 
 
@@ -87,7 +86,7 @@ public class TalkMsgViewAdapter extends BaseAdapter {
 
     	Info entity = coll.get(position);
     	boolean isComMsg;
-        if (entity.getSendUser().equals(Constant.USERNAME))
+        if (!entity.getSendUser().equals(Constant.USERNAME))
         {
             isComMsg = true;
         }else{
@@ -99,9 +98,9 @@ public class TalkMsgViewAdapter extends BaseAdapter {
 	    {
 	    	  if (isComMsg)
 			  {
-				  convertView = mInflater.inflate(R.layout.chatting_item_msg_text_right, null);
-			  }else{
 				  convertView = mInflater.inflate(R.layout.chatting_item_msg_text_left, null);
+			  }else{
+				  convertView = mInflater.inflate(R.layout.chatting_item_msg_text_right, null);
 			  }
 
 	    	  viewHolder = new ViewHolder();
