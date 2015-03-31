@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SpeechApi">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/SpeechApi.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
