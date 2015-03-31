@@ -11,7 +11,7 @@ public interface Config {
 	public static final int REQUEST_DOWNLOAD_FRIEND = BASE + 7;
 	public static final int REQUEST_ADDFRIEND = BASE + 8;
 	public static final int REQUEST_DOWNLOAD_MOMENTS = BASE + 9;
-    public static final int REQUEST_UPLOAD_MOMENTS = BASE + 10;
+        public static final int REQUEST_UPLOAD_MOMENTS = BASE + 10;
 	
 	public static final int CON_SUCCESS = 2002;
 	public static final int SUCCESS = 2000;  
@@ -23,5 +23,5 @@ public interface Config {
 	public static final String RESULT = "result";
 	public static final String REQUEST_TYPE = "requestType";
 
-    public static final String TAG = "lanlan";
+        public static final String TAG = "lanlan";
 }
