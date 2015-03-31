@@ -8,5 +8,5 @@ So, in order to bring convenience to this special crowd and those normal person 
  1)normal person who want to communicate with the special crowd;
  2)deaf people;
  3)blind.
- For the normal people who want to communicate with special populations,like volunteers,there are certain difficulties in communicating with special crowd.For blind or deaf people,they want to express themselves better in order to know more people.
- This APP aimed at providing them with such a platform,to help normal people know more about the world of blind and deaf people and give blind and deaf people a normal communication opportunity as well.
+For the normal people who want to communicate with special populations,like volunteers,there are certain difficulties in communicating with special crowd.For blind or deaf people,they want to express themselves better in order to know more people.
+This APP aimed at providing them with such a platform,to help normal people know more about the world of blind and deaf people and give blind and deaf people a normal communication opportunity as well.
