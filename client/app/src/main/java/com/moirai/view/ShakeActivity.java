@@ -221,13 +221,16 @@ public class ShakeActivity extends BaseActivity
                 //StartListen(Config.ACK_SHAKE_ANSWER);
                 break;
             case Config.ACK_DOUBLE_CLICK:
-                if(checkInfoAdd)
+                if(checkInfoAdd) {
+                    StartRead(getResources().getString(R.string.voice_shake_result_success),Config.ACK_NONE);
                     finish();
+                }
                 break;
             case Config.ACK_LONG_CLICK:
                 if(checkInfoAdd) {
                     checkInfoAdd = false;
                     state=true;
+                    StartRead(getResources().getString(R.string.voice_shake_result_cancel),Config.ACK_NONE);
                 }
                 break;
             case Config.ACK_SHAKE_ANSWER:

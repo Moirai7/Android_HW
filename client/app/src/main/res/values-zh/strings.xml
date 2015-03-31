@@ -41,7 +41,7 @@
     <string name="title_activity_shake">摇一摇</string>
     <string name="message1_shake_confirm">你想要添加</string>
     <string name="message2_shake_confirm">成为你的朋友吗？</string>
-    <string name="message3_shake_confirm">点击确认添加，长按取消添加</string>
+    <string name="message3_shake_confirm">双击确认添加，长按取消添加</string>
     <string name="yes_shake_confirm">是</string>
     <string name="no_shake_confirm">否</string>
     <string name="no_shake_friend_tip">没有好友</string>

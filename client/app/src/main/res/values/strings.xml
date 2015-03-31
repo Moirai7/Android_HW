@@ -40,7 +40,7 @@
     <string name="title_activity_shake">Shake</string>
     <string name="message1_shake_confirm">Do you want to add</string>
     <string name="message2_shake_confirm">to be your friend ?</string>
-    <string name="message3_shake_confirm">Click as yes or long click as cancel</string>
+    <string name="message3_shake_confirm">double Click as yes or long click as cancel</string>
     <string name="yes_shake_confirm">Yes</string>
     <string name="no_shake_confirm">No</string>
     <string name="no_shake_friend_tip">No friend</string>
