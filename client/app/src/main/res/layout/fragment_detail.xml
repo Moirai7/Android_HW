@@ -6,19 +6,26 @@
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/show_image"/>
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:textSize="30dp"
-        android:id="@+id/show_detail"/>
+        <ImageView
+            android:id="@+id/show_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:focusable="false"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+        <TextView
+            android:id="@+id/show_detail"
+            android:layout_toRightOf="@id/iv_userhead"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/chatfrom_bg"
+            style="@style/chat_content_date_style"/>
     </LinearLayout>
 
 </FrameLayout>

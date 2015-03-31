@@ -92,7 +92,7 @@
 
     <string name="talk_send_message">发送</string>
     <string name="talking_with">聊天，和</string>
-    <string name="ack_talk_start">欢迎，你正在聊天，和</string>
+    <string name="ack_talk_start">欢迎，你正在聊天</string>
     <string name="talk_have_Info">当前没有消息</string>
 
     <string name="setting">请选择你的用户角色</string>

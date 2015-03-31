@@ -91,7 +91,7 @@
 
     <string name="talk_send_message">Send</string>
     <string name="talking_with">Talking with</string>
-    <string name="ack_talk_start">Welcome,you are talking with</string>
+    <string name="ack_talk_start">Welcome,you are talking</string>
     <string name="talk_have_Info">No message now,</string>
     <string name="setting">Please choose your type</string>
     <string name="type_choice">TYPE</string>
