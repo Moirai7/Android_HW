@@ -1,4 +1,5 @@
 # Android_HW
+We commit our files to a new branch and then zhanglan merge those file to her local branch by Command Line.After that,she commit those file use her Git ID,so there just show her commits.
 There are many differnet branches we used to use.You can see the detail of our job.
 
 Nowadays, with the growth of the world population,it's not rare to meet blind or deaf people when we walk around. They may meet a variety of problems because of the defect in their body.
