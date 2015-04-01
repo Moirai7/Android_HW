@@ -149,12 +149,12 @@ public class TalkActivity extends BaseActivity {
             entity.setTime(dataArray[i]);
             if (i % 2 == 0)
             {
-                entity.setSendUser("emma");
+                entity.setSendUser(Constant.USERNAME);
                 entity.setReceiver("fish");
                // entity.setMsgType(true);
             }else{
                 entity.setSendUser("fish");
-                entity.setReceiver("emma");
+                entity.setReceiver(Constant.USERNAME);
               //  entity.setMsgType(false);
             }
 
@@ -175,7 +175,7 @@ public class TalkActivity extends BaseActivity {
         {
             Info entity = new Info();
             entity.setTime(getDate());
-            entity.setSendUser("emma");
+            entity.setSendUser(Constant.USERNAME);
             entity.setReceiver("fish");
             entity.setDetail(contString);
 
@@ -228,6 +228,4 @@ public class TalkActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

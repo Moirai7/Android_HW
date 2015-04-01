@@ -1,5 +1,6 @@
 package com.moirai.view;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -61,7 +62,10 @@ public class SettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-
+        ActionBar actionBar = getActionBar();
+        actionBar.setIcon(null);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         if(Constant.ID.equals("1")){
             //设置事件监听，要修改ImageView的值
             final GestureDetectorCompat mGesturedetector;

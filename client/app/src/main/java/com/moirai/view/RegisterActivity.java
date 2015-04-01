@@ -95,7 +95,7 @@ public class RegisterActivity extends BaseActivity {
 //                    user.setType(Constant.ID);
 //                    con.register(user);
                     pwEditText2.setText(pw2);
-                    StartRead(getResources().getString(R.string.login_success), Config.ACK_LOGIN_SUCCESS_RETURN);
+                    StartRead(getResources().getString(R.string.tip_register_successfully), Config.ACK_LOGIN_SUCCESS_RETURN);
                 }
                 break;
             case Config.ACK_LOGIN_SUCCESS_RETURN:
