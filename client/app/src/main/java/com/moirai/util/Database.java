@@ -15,8 +15,8 @@ import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import com.moirai.client.Constant;
+import com.moirai.client.R;
 import com.moirai.model.Info;
 import com.moirai.model.User;
 
@@ -28,6 +28,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 public class Database {
+    private Context context;
 	private SQLiteDatabase db;
 	private static Database database = null;
 
@@ -36,12 +37,12 @@ public class Database {
 		db.close();
 	}
 
-	public static Database getInstance() {
-		if (database == null)
-			return new Database();
-		else
-			return database;
-	}
+    public static Database getInstance(Context context) {
+        if (database == null)
+            return new Database(context);
+        else
+            return database;
+    }
 
     public boolean setUserInfo(String userName,String password,String type){
         Cursor rs = db.rawQuery("select * from UserInfo", null);
@@ -69,19 +70,173 @@ public class Database {
         return false;
     }
 
-	public boolean saveDownloadInfo(List<Info> list) {
+	public boolean saveAllHistory(List<Info> list) {
         for (int i = 0; i < list.size(); i++) {
             ContentValues values = new ContentValues();
             Info path = list.get(i);
-            values.put("pointID", path.getReceiver());
-            values.put("streetID", path.getDetail());
-            values.put("pointName", path.getTime());
-            db.insert("PathInfo", null, values);
+            values.put("sendid", path.getSendUser());
+            values.put("receid", path.getReceiver());
+            values.put("detail", path.getDetail());
+            values.put("time", path.getTime());
+            db.insert("HistoryInfo", null, values);
         }
 		return true;
 	}
 
+    public List<Info> getAllHistory(){
+        Cursor rs = db.rawQuery("select * from HistoryInfo", null);
+        List<Info> list = new ArrayList<Info>();
+        if (rs != null) {
+            if (rs.moveToFirst()) {
+                do {
+                    Info road=new Info();
+                    road.setDetail(rs.getString(rs.getColumnIndex("detail")));
+                    road.setReceiver(rs.getString(rs.getColumnIndex("receid")));
+                    road.setSendUser(rs.getString(rs.getColumnIndex("sendid")));
+                    road.setTime(rs.getString(rs.getColumnIndex("time")));
+                    list.add(road);
+                } while (rs.moveToNext());
+            }
+        }
+        return list;
+    }
+
+    public List<Info> getFriendHistory(String name){
+        Cursor rs = db.rawQuery("select * from HistoryInfo where receid = "+ name +" or sendid= "+name, null);
+        List<Info> list = new ArrayList<Info>();
+        if (rs != null) {
+            if (rs.moveToFirst()) {
+                do {
+                    Info road=new Info();
+                    road.setDetail(rs.getString(rs.getColumnIndex("detail")));
+                    road.setReceiver(rs.getString(rs.getColumnIndex("receid")));
+                    road.setSendUser(rs.getString(rs.getColumnIndex("sendid")));
+                    road.setTime(rs.getString(rs.getColumnIndex("time")));
+                    list.add(road);
+                } while (rs.moveToNext());
+            }
+        }
+        return list;
+    }
+
+    public boolean saveFriendHistory(Info list) {
+            ContentValues values = new ContentValues();
+            values.put("sendid", list.getSendUser());
+            values.put("receid", list.getReceiver());
+            values.put("detail", list.getDetail());
+            values.put("time", list.getTime());
+            db.insert("HistoryInfo", null, values);
+        return true;
+    }
+
 	public boolean saveFriend(String id) {
+        ContentValues values = new ContentValues();
+        values.put("name", id);
+        db.insert("FriendInfo", null, values);
 		return true;
 	}
+
+    public boolean saveFriends(List<String> list){
+        for (int i = 0; i < list.size(); i++) {
+            ContentValues values = new ContentValues();
+            String path = list.get(i);
+            values.put("name", path);
+            db.insert("FriendInfo", null, values);
+        }
+        return true;
+    }
+
+    public List<String> getAllFriend() {
+        Cursor rs = db.rawQuery("select * from FriendInfo", null);
+        List<String> list = new ArrayList<String>();
+        if (rs != null) {
+            if (rs.moveToFirst()) {
+                do {
+                    String road;
+                    road = rs.getString(rs.getColumnIndex("name"));
+                    list.add(road);
+                } while (rs.moveToNext());
+            }
+        }
+        return list;
+    }
+
+    private Database(Context context) {
+        this.context = context;
+        String dbPath = Environment.getExternalStorageDirectory() + "/blind.db";
+
+        File dbFile = new File(dbPath);
+        if (!dbFile.exists()) {
+            copyDataBase(1);
+        }
+
+        db = SQLiteDatabase.openOrCreateDatabase(dbPath, null);
+
+        // db = SQLiteDatabase.openDatabase(dbPath, null,
+        // SQLiteDatabase.OPEN_READWRITE);
+        // db = openOrCreateDatabase(dbPath, SQLiteDatabase.OPEN_READWRITE,
+        // null);
+    }
+
+    /**
+     * ������Դ����ݿ�
+     *
+     * @param where
+     *            1SDCARD,2LOCAL
+     */
+    @SuppressLint("SdCardPath")
+    private void copyDataBase(int where) {
+        // ÿ��Ӧ�ö���һ����ݿ�Ŀ¼����λ�� /data/data/blind/databases/Ŀ¼��
+        String packageName = (String) context.getResources().getText(
+                R.string.packageName);
+        ; // xml�����õ�
+        String dbName = "blind.db";
+        String dbPath = null;
+        if (where == 1) { // sdcard
+            dbPath = Environment.getExternalStorageDirectory() + File.separator
+                    + dbName;
+        } else { // local
+            dbPath = "/data/data/" + packageName + "/databases/" + dbName;
+        }
+
+        if (where == 2) {
+            new File("/data/data/" + packageName + "/databases/").mkdirs();
+        }
+
+        if (where == 1
+                && !Environment.MEDIA_MOUNTED.equals(Environment
+                .getExternalStorageState())) {
+            return;
+        }
+
+        File dbFile = new File(dbPath);
+        if (dbFile.exists()) {
+            dbFile.delete();
+        }
+        try {
+            dbFile.createNewFile();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+            return;
+        }
+
+        try {
+            InputStream is = context.getResources()
+                    .openRawResource(R.raw.blind);
+            OutputStream os = new FileOutputStream(dbPath);
+
+            byte[] buffer = new byte[1024];
+            int length = 0;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+
+            os.flush();
+            os.close();
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
