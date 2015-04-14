@@ -11,17 +11,21 @@ public interface Config {
 	public static final int REQUEST_DOWNLOAD_FRIEND = BASE + 7;
 	public static final int REQUEST_ADDFRIEND = BASE + 8;
 	public static final int REQUEST_DOWNLOAD_MOMENTS = BASE + 9;
-        public static final int REQUEST_UPLOAD_MOMENTS = BASE + 10;
-	
+	public static final int REQUEST_UPLOAD_MOMENTS = BASE + 10;
+
+	// 4月9日添加
+	public static final int REQUEST_SEND_MESSAGE = BASE + 11;
+	public static final int REQUEST_GET_MESSAGE = BASE + 12;
+
 	public static final int CON_SUCCESS = 2002;
-	public static final int SUCCESS = 2000;  
-	public static final int FAIl = 2001;    
-	
-	public static final int USER_STATE_ONLINE = 3000;  
-	public static final int USER_STATE_NON_ONLINE = 3001; 
-	
+	public static final int SUCCESS = 2000;
+	public static final int FAIl = 2001;
+
+	public static final int USER_STATE_ONLINE = 3000;
+	public static final int USER_STATE_NON_ONLINE = 3001;
+
 	public static final String RESULT = "result";
 	public static final String REQUEST_TYPE = "requestType";
 
-        public static final String TAG = "lanlan";
+	public static final String TAG = "lanlan";
 }
