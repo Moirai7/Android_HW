@@ -177,6 +177,7 @@ public class NetWorker extends Thread {
                 item.put("senderid",jo.getJSONObject(i).getInt("senderid"));
                 item.put("receiverid",jo.getJSONObject(i).getInt("senderid"));
                 item.put("message",jo.getJSONObject(i).getString("message"));
+                item.put("time",jo.getJSONObject(i).getString("time"));
 				list.add(item);
 			}
 			Message msg = new Message();

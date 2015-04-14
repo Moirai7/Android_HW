@@ -41,6 +41,9 @@ public class MessageDao {
 	//获取和某一个人的消息列表
 	public JSONArray getmessage(int senderid, int receiverid) {
 		//给的是两个人的id,返回两个人的聊天信息列表
+		// key写成 "messageid","senderid","receiverid","message","time"
+		//这几个加到JSONObject里,然后JSONObject组成一个JSONArray
+		//注: 这块的JSONObject按time的时间先后排序(具体升序或降序可以询问贺明慧)
 		JSONArray messagelist = new JSONArray();
 
 		return messagelist;
