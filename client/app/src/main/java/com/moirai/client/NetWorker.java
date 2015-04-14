@@ -130,6 +130,19 @@ public class NetWorker extends Thread {
 		case Config.CON_SUCCESS:
 			handCon();
 			break;
+
+
+        //发送消息的结果 4-14
+            case Config.REQUEST_SEND_MESSAGE:
+                handSendInfo();
+                break;
+        //获取和某一个人的消息列表
+            case Config.REQUEST_GET_MESSAGE:
+                handgetmessage();
+                break;
+
+
+
 		default:
 			 /* System.out.println("default");
 				onWork=false;
@@ -143,6 +156,41 @@ public class NetWorker extends Thread {
 		msg.what = Config.CON_SUCCESS;
 		BaseActivity.sendMessage(msg);
 	}
+    //返回发送消息的结果
+    private void handSendInfo(){
+        result = jsonObject.getInt("result");
+        Message msg =new Message();
+        msg.arg1 = result;
+        msg.what = Config.REQUEST_SEND_MESSAGE;
+        BaseActivity.sendMessage(msg);
+
+    }
+    //返回获取和某一个人的消息列表的结果
+    private void handgetmessage(){
+        JSONArray jo = null;
+        ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		try {
+			jo = jsonObject.optJSONArray("messagelist");
+			for(int i = 0 ; i < jo.length() ; i++){
+                Map<String, Object> item = new HashMap<String, Object>();
+                item.put("messageid",jo.getJSONObject(i).getInt("messageid"));
+                item.put("senderid",jo.getJSONObject(i).getInt("senderid"));
+                item.put("receiverid",jo.getJSONObject(i).getInt("senderid"));
+                item.put("message",jo.getJSONObject(i).getString("message"));
+				list.add(item);
+			}
+			Message msg = new Message();
+
+
+        result = jsonObject.getInt("result");
+        Message msg =new Message();
+        msg.obj=list;
+        msg.arg1 = result;
+        msg.what = Config.REQUEST_GET_MESSAGE;
+        BaseActivity.sendMessage(msg);
+
+    }
+
 
 //	//得到位置
 //	public void getHistory(String userid){
@@ -286,21 +334,61 @@ public class NetWorker extends Thread {
         }
 	}
 	// 下载
-	public void downloadInfo(String username) {
+    public void downloadInfo(String username) {
 
-		System.out.println("发送下载Info的请求");
-		// JSOn
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("requestType", Config.REQUEST_DOWNLOAD_INFO);
+        System.out.println("发送下载Info的请求");
+        // JSOn
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("requestType", Config.REQUEST_DOWNLOAD_INFO);
             jo.put("username",username);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		Log.i(Config.TAG, "发送单个点的请求为：" + jo.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.i(Config.TAG, "发送单个点的请求为：" + jo.toString());
 
-		out.println(jo.toString());
-	}
+        out.println(jo.toString());
+    }
+
+    // 获取和某一个人的消息列表
+    public void getmessage(int userid1,int userid2) {
+
+        System.out.println("获取和某一个人的消息列表");
+        // JSOn
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("requestType", Config.REQUEST_GET_MESSAGE);
+            jo.put("userid1", userid1);
+            jo.put("userid2", userid2);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.i(Config.TAG, "发送单个点的请求为：" + jo.toString());
+
+        out.println(jo.toString());
+
+    }
+    // 发送消息 4-14
+    public void sendInfo(int sendid,int receiverid,String message) {
+
+        System.out.println("发送发送Info的请求");
+        // JSOn
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("requestType", Config.REQUEST_SEND_MESSAGE);
+            jo.put("sendid",sendid);
+            jo.put("receiverid",receiverid);
+            jo.put("message",message);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.i(Config.TAG, "发送单个点的请求为：" + jo.toString());
+
+        out.println(jo.toString());
+    }
+
+
+
 //	//传递下载
 	public void handDownloadInfo() {
 		Log.i(Config.TAG, "传递从服务器端返回的下载Info的请求");

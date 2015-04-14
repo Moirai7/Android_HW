@@ -42,12 +42,30 @@ public class Conmmunication {
     }
 
     /**
-     * 下载消息
+     * 下载消息   //这个应该是获取消息列表
      *
      */
     public void downloadInfo(String userName) {
         netWorker.downloadInfo(userName);
     }
+
+    /**
+     * 下载消息   //这个是获取和某一个人的消息列表
+     *
+     */
+    public void getmessage(int userid1,int userid2) {
+        netWorker.getmessage(userid1,userid2);
+    }
+
+/*
+发送消息,4-14
+  */
+    public void sendInfo(int sendid,int receiverid,String message){
+
+        netWorker.sendInfo(int sendid,int receiverid,String message);
+
+    }
+
 
     /**
      * 设置消息状态

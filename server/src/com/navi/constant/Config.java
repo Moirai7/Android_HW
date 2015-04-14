@@ -14,7 +14,9 @@ public interface Config {
 	public static final int REQUEST_UPLOAD_MOMENTS = BASE + 10;
 
 	// 4月9日添加
+	// 发送消息
 	public static final int REQUEST_SEND_MESSAGE = BASE + 11;
+	// 获取消息列表
 	public static final int REQUEST_GET_MESSAGE = BASE + 12;
 
 	public static final int CON_SUCCESS = 2002;

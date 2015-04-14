@@ -31,21 +31,17 @@ public class MessageDao {
 		}
 	}
 
+	// 发送消息
 	public boolean sendmessage(int senderid, int receiverid, String message) {
-		
-		
-		
-		
 
 		return true;
 
 	}
 
+	//获取和某一个人的消息列表
 	public JSONArray getmessage(int senderid, int receiverid) {
+		//给的是两个人的id,返回两个人的聊天信息列表
 		JSONArray messagelist = new JSONArray();
-		
-		
-		
 
 		return messagelist;
 

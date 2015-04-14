@@ -109,6 +109,7 @@ public class ForwardTask extends Task {
 		}
 
 		switch (requestType) {
+
 		case Config.REQUEST_LOGIN:
 			handLogin();// OK
 			break;
@@ -185,9 +186,9 @@ public class ForwardTask extends Task {
 	// 发送消息
 	private void handSendMessage() {
 		try {
-			int senderid = message.getInt("senderid");// 閸欐垿锟介惃鍕眽
+			int senderid = message.getInt("sendid");// 閸欐垿锟介惃鍕眽
 			int receiverid = message.getInt("receiverid");// 閸欐垿锟介惃鍕眽
-			String detail = message.getString("detail");// 閸欐垿锟介惃鍕眽
+			String detail = message.getString("message");// 閸欐垿锟介惃鍕眽
 
 			MessageDao dao = new MessageDao();
 			boolean result = dao.sendmessage(senderid, receiverid, detail);
@@ -206,8 +207,8 @@ public class ForwardTask extends Task {
 	// 接受消息
 	private void handGetMessage() {
 		try {
-			int senderid = message.getInt("senderid");// 閸欐垿锟介惃鍕眽
-			int receiverid = message.getInt("receiverid");// 閸欐垿锟介惃鍕
+			int senderid = message.getInt("userid1");// 閸欐垿锟介惃鍕眽
+			int receiverid = message.getInt("userid2");// 閸欐垿锟介惃鍕
 
 			MessageDao dao = new MessageDao();
 			JSONArray messagelist = dao.getmessage(senderid, receiverid);
