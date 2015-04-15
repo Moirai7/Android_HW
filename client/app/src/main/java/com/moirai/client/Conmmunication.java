@@ -62,7 +62,7 @@ public class Conmmunication {
   */
     public void sendInfo(int sendid,int receiverid,String message){
 
-        netWorker.sendInfo(int sendid,int receiverid,String message);
+        netWorker.sendInfo(sendid, receiverid,message);
 
     }
 
