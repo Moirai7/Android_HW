@@ -12,7 +12,14 @@ public interface Config {
 	public static final int REQUEST_ADDFRIEND = BASE + 8;
 	public static final int REQUEST_DOWNLOAD_MOMENTS = BASE + 9;
     public static final int REQUEST_IPLOAD_MOMENTS = BASE + 10;
-	
+
+
+    // 4月9日添加
+    public static final int REQUEST_SEND_MESSAGE = BASE + 11;
+    public static final int REQUEST_GET_MESSAGE = BASE + 12;
+
+
+
 	public static final int CON_SUCCESS = 2002;
 	public static final int SUCCESS = 2000;  
 	public static final int FAIl = 2001;    
