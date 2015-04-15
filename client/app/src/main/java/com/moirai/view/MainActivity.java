@@ -27,6 +27,7 @@ import android.widget.SimpleAdapter;
 import android.widget.Switch;
 
 import com.moirai.client.Config;
+import com.moirai.client.Conmmunication;
 import com.moirai.client.Constant;
 import com.moirai.client.R;
 import com.moirai.model.Info;
@@ -257,7 +258,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         rb[1].getLocationInWindow(position[1]);
         rb[2].getLocationInWindow(position[2]);
 
-        getData();
+        getData(con.downloadInfo(Constant.USERNAME));
         getData2();
         getData3();
         System.out.println("getLocationOnScreen:" + position[0] + "," + position[1]);
@@ -383,10 +384,24 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     public SimpleAdapter getAdapter(){return adapter;}
 //聊天
     private List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
-    private void getData() {
+    private void getData(List<Info> InfoList) {
 
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_title1));//String
+ //InfoList 是从服务器传来的全部消息
+        for(int i=0;i<InfoList.size();i++){
+            String sendUser = InfoList.get(i).getSendUser();
+            String time =  InfoList.get(i).getTime();
+            String detail = InfoList.get(i).getDetail();
+            //只显示最新的那条消息
+            if(i==0||!sendUser.equals(InfoList.get(i-1).getSendUser())) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("title", sendUser);
+                map.put("img", R.mipmap.pic1);
+                map.put("date", time);
+                map.put("content", detail);//最新的一条消息
+                list1.add(map);
+            }
+        }
+       /* map.put("title", getResources().getString(R.string.main_title1));//String
         map.put("img", R.mipmap.pic1);
         map.put("date",getResources().getString(R.string.main_date1));
         map.put("content",getResources().getString(R.string.main_content1));
@@ -404,7 +419,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         map.put("img", R.mipmap.pic3);
         map.put("date",getResources().getString(R.string.main_date3));
         map.put("content",getResources().getString(R.string.main_content3));
-        list1.add(map);
+        list1.add(map);*/
     }
 //contact
     private List<Map<String, Object>> list2 = new ArrayList<Map<String, Object>>();

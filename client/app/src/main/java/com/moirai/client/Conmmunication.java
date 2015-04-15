@@ -2,10 +2,13 @@ package com.moirai.client;
 
 import android.content.Context;
 
+import com.moirai.model.Info;
 import com.moirai.model.User;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Conmmunication {
     Context context;
@@ -45,8 +48,10 @@ public class Conmmunication {
      * 下载消息
      *
      */
-    public void downloadInfo(String userName) {
+    public List<Info> downloadInfo(String userName) {
+        List<Info> InfoList = new ArrayList<Info>();
         netWorker.downloadInfo(userName);
+        return InfoList;
     }
 
     /**

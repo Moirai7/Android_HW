@@ -68,7 +68,10 @@ public class Database {
         }
         return false;
     }
-
+   public List<Info> getDownloadInfo(String sendUser,String receiveUser){
+       List<Info> InfoList = new ArrayList<Info>();//指定朋友的消息
+       return InfoList;
+   }
 	public boolean saveDownloadInfo(List<Info> list) {
         for (int i = 0; i < list.size(); i++) {
             ContentValues values = new ContentValues();
