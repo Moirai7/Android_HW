@@ -7,7 +7,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -191,82 +193,6 @@ public class NetWorker extends Thread {
         BaseActivity.sendMessage(msg);
 
     }
-
-
-//	//得到位置
-//	public void getHistory(String userid){
-//		System.out.println("发送位置的请求ddd");
-//		// JSOn
-//		JSONObject jo = new JSONObject();
-//		try {
-//			jo.put("requestType", Config.REQUEST_GATHISTORY);
-//			jo.put("userid", userid);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//		Log.i(Config.TAG, "发送位置的请求为：" + jo.toString());
-//
-//		out.println(jo.toString());
-//	}
-//	//传递得到位置
-//	public void handGetHistory() {
-//		Log.i(Config.TAG, "传递从服务器端返回的位置的请求");
-//		System.out.println("传递从服务器端返回的位置的请求");
-//		// JSOn
-//		JSONArray jo = null;
-//		List<History> list = new ArrayList<History>();
-//		try {
-//			jo = jsonObject.optJSONArray("list");
-//			for(int i = 0 ; i < jo.length() ; i++){
-//				History path = new History();
-//				path.setPointID(jo.getJSONObject(i).getString("pointID"));
-//				path.setUserID(jo.getJSONObject(i).getString("userID"));
-//				path.setTime(jo.getJSONObject(i).getString("time"));
-//				list.add(path);
-//			}
-//			Message msg = new Message();
-//			msg.obj = list;
-//			msg.what = Config.REQUEST_GATHISTORY;
-//			BaseActivity.sendMessage(msg);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	//保存位置
-//	public void saveHistory(String userid,String pointID,String time) {
-//		System.out.println("发送位置的请求ddd");
-//		// JSOn
-//		JSONObject jo = new JSONObject();
-//		try {
-//			jo.put("requestType", Config.REQUEST_SAVEHISTORY);
-//			jo.put("userid", userid);
-//			jo.put("pointID", pointID);
-//			jo.put("time", time);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//		Log.i(Config.TAG, "发送位置的请求为：" + jo.toString());
-//
-//		out.println(jo.toString());
-//	}
-//	//传递保存位置
-//	public void handSaveHistory() {
-//		Log.i(Config.TAG, "传递从服务器端返回的位置的请求");
-//		System.out.println("传递从服务器端返回的位置的请求");
-//		int result = 0;
-//		try {
-//			result = jsonObject.getInt("result");
-//			Message msg = new Message();
-//			msg.arg1 = result;
-//			msg.what = Config.REQUEST_SAVEHISTORY;
-//			BaseActivity.sendMessage(msg);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//
-//	}
-//
 	//修改内容s
 	public void sendRequestFriend(String username,String time){
         System.out.println("发送消息的请求");

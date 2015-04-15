@@ -61,8 +61,7 @@ public class Conmmunication {
 发送消息,4-14
   */
     public void sendInfo(int sendid,int receiverid,String message){
-
-        netWorker.sendInfo(int sendid,int receiverid,String message);
+        netWorker.sendInfo( sendid, receiverid, message);
 
     }
 
