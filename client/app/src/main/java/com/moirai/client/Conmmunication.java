@@ -31,7 +31,7 @@ public class Conmmunication {
      * 登录 服务器要设置状态
      */
     public void login(User user) {
-        netWorker.login(user.getUsername(),user.getPassword());
+        netWorker.login(user.getUsername(), user.getPassword());
     }
 
     /**
@@ -43,7 +43,6 @@ public class Conmmunication {
 
     /**
      * 下载消息   //这个应该是获取消息列表
-     *
      */
     public void downloadInfo(String userName) {
         netWorker.downloadInfo(userName);
@@ -51,18 +50,17 @@ public class Conmmunication {
 
     /**
      * 下载消息   //这个是获取和某一个人的消息列表
-     *
      */
-    public void getmessage(int userid1,int userid2) {
-        netWorker.getmessage(userid1,userid2);
+    public void getmessage(int userid1, int userid2) {
+        netWorker.getmessage(userid1, userid2);
     }
 
-/*
-发送消息,4-14
-  */
-    public void sendInfo(int sendid,int receiverid,String message){
+    /*
+    发送消息,4-14
+      */
+    public void sendInfo(int sendid, int receiverid, String message) {
 
-        netWorker.sendInfo(int sendid,int receiverid,String message);
+        netWorker.sendInfo(sendid, receiverid, message);
 
     }
 
@@ -73,13 +71,14 @@ public class Conmmunication {
     public void setInfo(String infoID) {
 
     }
+
     private SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
     /**
      * 请求联系人
      */
     public void requireFriend(String id) {
-        netWorker.sendRequestFriend(id,df.format(new Date()));
+        netWorker.sendRequestFriend(id, df.format(new Date()));
     }
 
     /**
@@ -92,8 +91,8 @@ public class Conmmunication {
     /**
      * 添加朋友
      */
-    public void addFriend(String username, String otherID,int answer) {
-        netWorker.addFriend(username,otherID,answer);
+    public void addFriend(String username, String otherID, int answer) {
+        netWorker.addFriend(username, otherID, answer);
     }
 
     /**
