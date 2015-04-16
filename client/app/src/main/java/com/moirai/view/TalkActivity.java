@@ -37,16 +37,17 @@ public class TalkActivity extends BaseActivity {
     private TalkMsgViewAdapter mAdapter;
     private List<Info> mDataArrays = new ArrayList<Info>();
     private int mInfoNews=0;
-
-    private String[]msgArray = new String[]{"请叫我漂漂的岚岚姐", "叫你谁？", "漂漂的岚岚姐啊", "什么的岚岚姐？",
+    private String currFriend;//当前聊天的朋友
+    /*private String[]msgArray = new String[]{"请叫我漂漂的岚岚姐", "叫你谁？", "漂漂的岚岚姐啊", "什么的岚岚姐？",
             "漂漂的岚岚姐", "叫姐有饭吃吗？",
-            "想吃什么都可以", "okay~"};
-
-    private String[]dataArray = new String[]{"2015-03-01 18:00", "2015-03-01 18:10",
+            "想吃什么都可以", "okay~"};*/
+ //   private String[]msgArray;
+ // private String[]dataArray;
+/*    private String[]dataArray = new String[]{"2015-03-01 18:00", "2015-03-01 18:10",
             "2015-03-01 18:11", "2015-03-01 18:20",
             "2015-03-01 18:30", "2015-03-01 18:35",
-            "2015-03-01 18:40", "2015-03-01 18:50"};
-    private final static int COUNT = 8;
+            "2015-03-01 18:40", "2015-03-01 18:50"};*/
+  //  private final static int COUNT = 8;
 
     @Override
     public void processMessage(Message message) {
@@ -65,8 +66,11 @@ public class TalkActivity extends BaseActivity {
                 break;
             case Config.ACK_DOWN:
                 mInfoNews++;
-                if(mInfoNews>=mDataArrays.size())
-                    mInfoNews--;
+                if(mInfoNews>=mDataArrays.size()){
+                    //当前消息已经读完，需要从服务器下载新消息
+                  updateData();
+                }
+                    //mInfoNews--;
                 StartRead(mDataArrays.get(mInfoNews).getDetail(),Config.ACK_NONE);
                 break;
             case Config.ACK_TOP:
@@ -113,7 +117,8 @@ public class TalkActivity extends BaseActivity {
         actionBar.setIcon(null);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setTitle(getString(R.string.talking_with)+" fish");
+        currFriend=(String)this.getIntent().getSerializableExtra("title");//当前聊天的朋友
+        actionBar.setTitle(getString(R.string.talking_with)+ currFriend);
 
         cameraIBbtn = (ImageButton) findViewById(R.id.talk_cameraIbtn);
      //   changeIBtn = (ImageButton) findViewById(R.id.talk_text_voice_imageBtn);
@@ -143,7 +148,7 @@ public class TalkActivity extends BaseActivity {
     public void initData()
     {
 
-        for(int i = 0; i < COUNT; i++)
+/*       for(int i = 0; i < COUNT; i++)
         {
             Info entity = new Info();
             entity.setTime(dataArray[i]);
@@ -161,13 +166,30 @@ public class TalkActivity extends BaseActivity {
             entity.setDetail(msgArray[i]);
             mDataArrays.add(entity);
             mInfoNews=mDataArrays.size()-1;
+        }*/
+       //从本地数据库获取消息，显示在聊天页面
+        List<Info> tempList = db.getDownloadInfo(currFriend,Constant.USERNAME);
+        for(int i=0;i< tempList.size();i++){
+            mDataArrays.add(tempList.get(i));
+            mInfoNews=mDataArrays.size()-1;
         }
-
-     //   mDataArrays = db.getDownloadInfo("lanlan","dayu");
         mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
         mListView.setAdapter(mAdapter);
     }
 
+    /**
+     * 下滑更新数据（从服务器下载最新消息）
+     */
+    public void updateData(){
+
+        List<Info> tempList = con.downloadInfo(currFriend);
+        for(int i=0;i< tempList.size();i++){
+            mDataArrays.add(tempList.get(i));
+            mInfoNews=mDataArrays.size()-1;
+        }
+        mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
+        mListView.setAdapter(mAdapter);
+    }
     private void send()
     {
         String contString = msgEdit.getText().toString();
@@ -176,7 +198,7 @@ public class TalkActivity extends BaseActivity {
             Info entity = new Info();
             entity.setTime(getDate());
             entity.setSendUser(Constant.USERNAME);
-            entity.setReceiver("fish");
+            entity.setReceiver(currFriend);//发送消息时，currFriend 作为接受方
             entity.setDetail(contString);
 
             mDataArrays.add(entity);

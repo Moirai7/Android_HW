@@ -2,10 +2,13 @@ package com.moirai.client;
 
 import android.content.Context;
 
+import com.moirai.model.Info;
 import com.moirai.model.User;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Conmmunication {
     Context context;
