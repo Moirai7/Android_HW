@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.moirai.client.Constant;
+import com.moirai.client.R;
 import com.moirai.model.Info;
 import com.moirai.model.User;
 

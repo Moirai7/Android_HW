@@ -168,7 +168,7 @@ public class TalkActivity extends BaseActivity {
             mInfoNews=mDataArrays.size()-1;
         }*/
        //从本地数据库获取消息，显示在聊天页面
-        List<Info> tempList = db.getDownloadInfo(currFriend,Constant.USERNAME);
+        List<Info> tempList = db.getFriendHistory(currFriend);
         for(int i=0;i< tempList.size();i++){
             mDataArrays.add(tempList.get(i));
             mInfoNews=mDataArrays.size()-1;
@@ -182,13 +182,15 @@ public class TalkActivity extends BaseActivity {
      */
     public void updateData(){
 
-        List<Info> tempList = con.downloadInfo(currFriend);
-        for(int i=0;i< tempList.size();i++){
-            mDataArrays.add(tempList.get(i));
-            mInfoNews=mDataArrays.size()-1;
-        }
-        mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
-        mListView.setAdapter(mAdapter);
+        con.getmessage(Constant.USERNAME,currFriend);
+
+        //TODO
+//        for(int i=0;i< tempList.size();i++){
+//            mDataArrays.add(tempList.get(i));
+//            mInfoNews=mDataArrays.size()-1;
+//        }
+//        mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
+//        mListView.setAdapter(mAdapter);
     }
     private void send()
     {
@@ -205,6 +207,7 @@ public class TalkActivity extends BaseActivity {
             mAdapter.notifyDataSetChanged();
 
             msgEdit.setText("");
+            db.saveFriendHistory(entity);
 
             mListView.setSelection(mListView.getCount() - 1);
         }

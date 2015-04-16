@@ -177,6 +177,10 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     }
                 }
                 break;
+            case Config.REQUEST_GET_MESSAGE:
+                List<Info> list=(List<Info>)message.obj;
+                getData(list);
+                break;
             default:
                 break;
         }
@@ -258,7 +262,8 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         rb[1].getLocationInWindow(position[1]);
         rb[2].getLocationInWindow(position[2]);
 
-        getData(con.downloadInfo(Constant.USERNAME));
+        con.downloadInfo(Constant.USERNAME);
+
         getData2();
         getData3();
         System.out.println("getLocationOnScreen:" + position[0] + "," + position[1]);
