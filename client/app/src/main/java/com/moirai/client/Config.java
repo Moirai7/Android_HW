@@ -14,7 +14,7 @@ public interface Config {
     public static final int REQUEST_IPLOAD_MOMENTS = BASE + 10;
 
 
-    // 4月9日添加
+    // 4�?9日添�?
     public static final int REQUEST_SEND_MESSAGE = BASE + 11;
     public static final int REQUEST_GET_MESSAGE = BASE + 12;
 
