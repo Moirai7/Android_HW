@@ -68,7 +68,7 @@ public class TalkActivity extends BaseActivity {
                 mInfoNews++;
                 if(mInfoNews>=mDataArrays.size()){
                     //当前消息已经读完，需要从服务器下载新消息
-                  updateData();
+                    con.getmessage(Constant.USERNAME,currFriend);
                 }
                     //mInfoNews--;
                 StartRead(mDataArrays.get(mInfoNews).getDetail(),Config.ACK_NONE);
@@ -86,6 +86,13 @@ public class TalkActivity extends BaseActivity {
                 String str = (String)message.obj;
                 msgEdit.setText(str);
                 send();
+                break;
+            case Config.REQUEST_GET_MESSAGE:
+                List<Info> list = (List<Info>)message.obj;
+                if(list==null){
+                    mInfoNews--;
+                }
+                updateData(list);
                 break;
             default:
                 break;
@@ -147,7 +154,6 @@ public class TalkActivity extends BaseActivity {
 
     public void initData()
     {
-
 /*       for(int i = 0; i < COUNT; i++)
         {
             Info entity = new Info();
@@ -162,7 +168,6 @@ public class TalkActivity extends BaseActivity {
                 entity.setReceiver(Constant.USERNAME);
               //  entity.setMsgType(false);
             }
-
             entity.setDetail(msgArray[i]);
             mDataArrays.add(entity);
             mInfoNews=mDataArrays.size()-1;
@@ -180,18 +185,15 @@ public class TalkActivity extends BaseActivity {
     /**
      * 下滑更新数据（从服务器下载最新消息）
      */
-    public void updateData(){
-
-        con.getmessage(Constant.USERNAME,currFriend);
-
-        //TODO
-//        for(int i=0;i< tempList.size();i++){
-//            mDataArrays.add(tempList.get(i));
-//            mInfoNews=mDataArrays.size()-1;
-//        }
-//        mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
-//        mListView.setAdapter(mAdapter);
+    public void updateData(List<Info> tempList){
+       for(int i=0;i< tempList.size();i++){
+           mDataArrays.add(tempList.get(i));
+           mInfoNews=mDataArrays.size()-1;
+       }
+       mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
+        mListView.setAdapter(mAdapter);
     }
+
     private void send()
     {
         String contString = msgEdit.getText().toString();

@@ -56,7 +56,7 @@ public class Conmmunication {
      * 下载消息   //这个是获取和某一个人的消息列表
      *
      */
-    public void getmessage(int userid1,int userid2) {
+    public void getmessage(String userid1,String userid2) {
         netWorker.getmessage(userid1,userid2);
     }
 

@@ -30,6 +30,7 @@ import com.moirai.client.Config;
 import com.moirai.client.Conmmunication;
 import com.moirai.client.Constant;
 import com.moirai.client.R;
+import com.moirai.model.Friends;
 import com.moirai.model.Info;
 import com.moirai.voice.VoiceService;
 
@@ -39,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener,ContactFragment.OnFragmentInteractionListener,ShareFragment.OnFragmentInteractionListener {
-    private List<Info> list;
+
     private SimpleAdapter adapter; // binds tags to ListView
     private int[][] position = new int[3][2];
     private RadioButton[] rb = new RadioButton[3];
@@ -66,9 +67,11 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     @Override
     public void processMessage(Message message) {
         switch(message.what){
+            //主页下载所有朋友新消息
             case Config.REQUEST_DOWNLOAD_INFO:
-                list = (List<Info>) message.obj;
-                //db.saveDownloadInfo(list);
+                List<Info> list_Info=(List<Info>)message.obj;
+                db.saveAllHistory(list_Info);
+                getData(list_Info);
                 break;
             case Config.ACK_CON_SUCCESS:
                 StartRead(getResources().getString(R.string.main_welcome),Config.ACK_NONE);//欢迎
@@ -177,9 +180,12 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     }
                 }
                 break;
-            case Config.REQUEST_GET_MESSAGE:
-                List<Info> list=(List<Info>)message.obj;
-                getData(list);
+
+            case Config.REQUEST_DOWNLOAD_FRIEND:
+                //从服务器下载新朋友
+                List<String> list_Friend = (List<String>)message.obj;
+                db.saveFriends(list_Friend);
+                getData2();
                 break;
             default:
                 break;
@@ -263,8 +269,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         rb[2].getLocationInWindow(position[2]);
 
         con.downloadInfo(Constant.USERNAME);
-
-        getData2();
+        List<String> list_f=(List<String>)db.getAllFriend();
         getData3();
         System.out.println("getLocationOnScreen:" + position[0] + "," + position[1]);
 //        theFragment = 0;
@@ -390,7 +395,6 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 //聊天
     private List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
     private void getData(List<Info> InfoList) {
-
  //InfoList 是从服务器传来的全部消息
         for(int i=0;i<InfoList.size();i++){
             String sendUser = InfoList.get(i).getSendUser();
@@ -406,19 +410,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 list1.add(map);
             }
         }
-       /* map.put("title", getResources().getString(R.string.main_title1));//String
-        map.put("img", R.mipmap.pic1);
-        map.put("date",getResources().getString(R.string.main_date1));
-        map.put("content",getResources().getString(R.string.main_content1));
-        list1.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_title2));//String
-        map.put("img", R.mipmap.pic2);
-        map.put("date",getResources().getString(R.string.main_date2));
-        map.put("content",getResources().getString(R.string.main_content2));
-        list1.add(map);
-
+       /*
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_title3));//String
         map.put("img", R.mipmap.pic3);
@@ -429,20 +421,22 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 //contact
     private List<Map<String, Object>> list2 = new ArrayList<Map<String, Object>>();
     private void getData2() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact1));
-        map.put("img", R.mipmap.pic4);
-        list2.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact2));
-        map.put("img", R.mipmap.pic5);
-        list2.add(map);
-
+        List<String > list_Friends= db.getAllFriend();
+        for(int i=0;i<list_Friends.size();i++){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map = new HashMap<String, Object>();
+            map.put("title",list_Friends.get(i));
+            map.put("img", R.mipmap.pic6);
+            list2.add(map);
+        }
+       /*
         map = new HashMap<String, Object>();
         map.put("title", getResources().getString(R.string.main_contact3));
         map.put("img", R.mipmap.pic6);
         list2.add(map);
+        */
+
+
     }
 //share
     private List<Map<String, Object>> list3 = new ArrayList<Map<String, Object>>();

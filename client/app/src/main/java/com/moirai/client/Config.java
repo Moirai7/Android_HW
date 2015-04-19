@@ -66,4 +66,8 @@ public interface Config {
     public static final int ACK_LIST_READ = 300;
     public static final int ACK_TALK_START = 215;
     public static final int ACK_TALKING = 301;
+
+    //摇一摇
+    public static final int RESULT_YAOYIYAO = 401;
+    public static final int RESULT_ADDFRIEND = 402;
 }

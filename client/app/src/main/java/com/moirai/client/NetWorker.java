@@ -278,7 +278,7 @@ public class NetWorker extends Thread {
     }
 
     // 获取和某一个人的消息列表
-    public void getmessage(int userid1,int userid2) {
+    public void getmessage(String userid1,String userid2) {
 
         System.out.println("获取和某一个人的消息列表");
         // JSOn
