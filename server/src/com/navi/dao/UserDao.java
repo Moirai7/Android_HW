@@ -18,20 +18,21 @@ public class UserDao {
 	Statement stmt = null;
 	ResultSet rs = null;
 
-	final String driver = "oracle.jdbc.driver.OracleDriver";
-	final String uri = "jdbc:oracle:" + "thin:@127.0.0.1:1521:XE";
+    final String driver = "com.mysql.jdbc.Driver";//Driver name
+    final String uri = "jdbc:mysql://localhost:3306/swt";//mysql DB
 
-	private void getConnection() {
-		try {
-			Class.forName(driver);
-			String user = "androidHW";// 用户名,系统默认的账户名
-			String password = "123456";// 你安装时选设置的密码
-			conn = DriverManager.getConnection(uri, user, password);
-			stmt = conn.createStatement();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    //Modified
+    private void getConnection() {
+        try {
+            Class.forName(driver).newInstance();//Load Driver
+            String user = "root";//User of Mysql
+            String password = "";//Pwd of Mysql
+            conn = DriverManager.getConnection(uri, user, password);//Get Connection Object
+            stmt = conn.createStatement();//Execute SQL statement
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 	public void save(User user) {
 		getConnection();

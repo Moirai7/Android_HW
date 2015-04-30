@@ -16,27 +16,27 @@ import com.navi.service.FriendsService;
 import com.navi.util.DaoUtil;
 
 public class MomentsDao {
-	// 成员变量
-	Connection conn = null;
-	Statement stmt = null;
-	ResultSet rs = null;
-	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-	// 驱动名
-	final String driver = "oracle.jdbc.driver.OracleDriver";
-	final String uri = "jdbc:oracle:" + "thin:@127.0.0.1:1521:XE";
+	// 锟斤拷员锟斤拷锟斤拷
+    Connection conn = null;
+    Statement stmt = null;
+    ResultSet rs = null;
+    SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+    //Modified
+    final String driver = "com.mysql.jdbc.Driver";//Driver name
+    final String uri = "jdbc:mysql://localhost:3306/swt";//mysql DB
 
-	private void getConnection() {
-		try {
-			Class.forName(driver);
-			String user = "androidHW";// 用户名,系统默认的账户名
-			String password = "123456";// 你安装时选设置的密码
-			conn = DriverManager.getConnection(uri, user, password);
-			stmt = conn.createStatement();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+    //Modified
+    private void getConnection() {
+        try {
+            Class.forName(driver).newInstance();//Load Driver
+            String user = "root";//User of Mysql
+            String password = "";//Pwd of Mysql
+            conn = DriverManager.getConnection(uri, user, password);//Get Connection Object
+            stmt = conn.createStatement();//Execute SQL statement
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 	public boolean saveMoments(Moments history) {
 		getConnection();
 		String sql = "insert into momentsInfo (id,sendid,receid, detail, time,status) values (S_S_Depart.Nextval, '"
@@ -68,7 +68,7 @@ public class MomentsDao {
 		}
 	}
 
-	// 获取请求
+	// 锟斤拷取锟斤拷锟斤拷
 	public List<Moments> getMoments(String userid,String first,String end) {
 		List<Moments> chengyus = new ArrayList<Moments>();
 		getConnection();

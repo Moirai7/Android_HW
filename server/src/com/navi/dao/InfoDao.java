@@ -10,27 +10,33 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.navi.model.Info;
 import com.navi.util.DaoUtil;
 
+/**
+ * Last Modified By Yu, WANG on 2015-04-15 10:46
+ */
 public class InfoDao {
-	// 成员变量
+	// 锟斤拷员锟斤拷锟斤拷
 	Connection conn = null;
 	Statement stmt = null;
 	ResultSet rs = null;
 	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-	// 驱动名
-	final String driver = "oracle.jdbc.driver.OracleDriver";
-	final String uri = "jdbc:oracle:" + "thin:@127.0.0.1:1521:XE";
+	//Modified
+	final String driver = "com.mysql.jdbc.Driver";//Driver name
+	final String uri = "jdbc:mysql://localhost:3306/swt";//mysql DB
 
-	// 获取连接
+	//Modified
 	private void getConnection() {
 		try {
-			Class.forName(driver);
-			String user = "androidHW";// 用户名,系统默认的账户名
-			String password = "123456";// 你安装时选设置的密码
-			conn = DriverManager.getConnection(uri, user, password);
-			stmt = conn.createStatement();
+			Class.forName(driver).newInstance();//Load Driver
+			String user = "root";//User of Mysql
+			String password = "";//Pwd of Mysql
+			conn = DriverManager.getConnection(uri, user, password);//Get Connection Object
+			stmt = conn.createStatement();//Execute SQL statement
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,9 +73,15 @@ public class InfoDao {
 		}
 	}
 
-	// 获取请求
-	public List<Info> getNews(String userid) {
-		List<Info> chengyus = new ArrayList<Info>();
+
+    /**
+     * Modified by Yu, WANG on 2015-4-15
+     * @param userid
+     * @return
+     */
+    public JSONArray getNews(String userid) {
+		//List<Info> chengyus = new ArrayList<Info>();
+    	JSONArray msgs = new JSONArray();
 		getConnection();
 		String sql = "select * from historyInfo where receid = '" + userid
 				+ "' and status = -1 order by id";
@@ -78,12 +90,20 @@ public class InfoDao {
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				Info history = new Info();
-				history.setSendUser(rs.getString("sendid"));
-				history.setReceiver(rs.getString("receid"));
-				history.setDetail(rs.getString("detail"));
-				history.setTime(rs.getString("time"));
-				chengyus.add(history);
+//				Info history = new Info();
+//				history.setSendUser(rs.getString("sendid"));
+//				history.setReceiver(rs.getString("receid"));
+//				history.setDetail(rs.getString("detail"));
+//				history.setTime(rs.getString("time"));
+//				chengyus.add(history);
+				JSONObject msg = new JSONObject();
+				msg.put("messageid", rs.getString("id"));
+				msg.put("sendername", rs.getString("sendername"));
+				msg.put("receivername", rs.getString("receivername"));
+				msg.put("message", rs.getString("msg"));
+				msg.put("time", rs.getString("sendtime"));
+				msgs.put(msg);
+
 			}
 			conn.setAutoCommit(false);
 			stmt.execute(sql2);
@@ -93,6 +113,63 @@ public class InfoDao {
 		} finally {
 			DaoUtil.closeConnection(conn, stmt, rs);
 		}
-		return chengyus;
+		return msgs;
 	}
+    
+    public JSONArray getfriendNews(String username, String sendername) {
+		// List<Info> msgss = new ArrayList<Info>();
+		JSONArray msgs = new JSONArray();
+		getConnection();
+		String sql = "select * from msglist where receiverid = '" + username
+				+ "' and senderid = '" + sendername
+				+ "' order by sendtime DESC";
+		String sql2 = "update msglist set ifRead = 1 where receiverid = '"
+				+ username + "' and senderid = '" + sendername + "' ";
+		try {
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				// Info msg = new Info();
+				JSONObject msg = new JSONObject();
+				msg.put("messageid", rs.getString("id"));
+				msg.put("sendername", rs.getString("sendername"));
+				msg.put("receivername", rs.getString("receivername"));
+				msg.put("message", rs.getString("msg"));
+				msg.put("time", rs.getString("sendtime"));
+				msgs.put(msg);
+			}
+			conn.setAutoCommit(false);
+			stmt.execute(sql2);
+			conn.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DaoUtil.closeConnection(conn, stmt, rs);
+		}
+		return msgs;
+	}
+    
+    public boolean getSendMsg(String sendername, String receivername, String msg) {
+		getConnection();
+		String sql = "insert into msglist (sendername,receivername,msg,sendtime,ifRead)values('"
+				+ sendername
+				+ "','"
+				+ receivername
+				+ "','"
+				+ msg
+				+ "','"
+				+ df.format(new Date()) + "',0)";
+		try {
+			conn.setAutoCommit(false);
+			stmt.execute(sql);
+
+			conn.commit();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DaoUtil.closeConnection(conn, stmt, rs);
+		}
+		return false;
+	}
+    
 }
