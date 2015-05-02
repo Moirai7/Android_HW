@@ -15,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.navi.constant.Config;
 import com.navi.model.Friends;
+import com.navi.model.Info;
 import com.navi.net.ForwardTask;
 import com.navi.util.DaoUtil;
 
@@ -29,29 +31,26 @@ public class FriendsDao {
 	ResultSet rs = null;
 	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 	// 閿熸枻鎷烽敓鏂ゆ嫹
-	// Modified
-	final String driver = "com.mysql.jdbc.Driver";// Driver name
-	final String uri = "jdbc:mysql://localhost:3306/swt";// mysql DB
+    //Modified
+    final String driver = "com.mysql.jdbc.Driver";//Driver name
+    final String uri = "jdbc:mysql://localhost:3306/swt";//mysql DB
 
-	// Modified
-	private void getConnection() {
-		try {
-			Class.forName(driver).newInstance();// Load Driver
-			String user = "root";// User of Mysql
-			String password = "";// Pwd of Mysql
-			conn = DriverManager.getConnection(uri, user, password);// Get
-																	// Connection
-																	// Object
-			stmt = conn.createStatement();// Execute SQL statement
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public List<Friends> downloadAllFriends(String name) {
+    //Modified
+    private void getConnection() {
+        try {
+            Class.forName(driver).newInstance();//Load Driver
+            String user = "root";//User of Mysql
+            String password = "";//Pwd of Mysql
+            conn = DriverManager.getConnection(uri, user, password);//Get Connection Object
+            stmt = conn.createStatement();//Execute SQL statement
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+	public List<Friends> downloadAllFriends(String name){
 		List<Friends> chengyus = new ArrayList<Friends>();
 		getConnection();
-		String sql = "select * from friendsInfo where userid = '" + name + "'";
+		String sql = "select * from friendsInfo where userid = '" + name  + "'" ;
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -59,7 +58,7 @@ public class FriendsDao {
 				history.setSend(rs.getString("send"));
 				history.setReciver(rs.getString("reciver"));
 				history.setState(rs.getInt("state"));
-				chengyus.add(history);
+				chengyus.add(history );
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,14 +67,11 @@ public class FriendsDao {
 		}
 		return chengyus;
 	}
-
-	public List<Friends> downloadFriends(String name) {
+	public List<Friends> downloadFriends(String name){
 		List<Friends> chengyus = new ArrayList<Friends>();
 		getConnection();
-		String sql = "select * from friendsInfo where userid = '" + name
-				+ "' and status = -1";
-		String sql2 = "update friendsInfo set status = 1 where userid = '"
-				+ name + "'";
+		String sql = "select * from friendsInfo where userid = '" + name  + "' and status = -1" ;
+		String sql2 = "update friendsInfo set status = 1 where userid = '" + name  + "'";
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
@@ -83,7 +79,7 @@ public class FriendsDao {
 				history.setSend(rs.getString("send"));
 				history.setReciver(rs.getString("reciver"));
 				history.setState(rs.getInt("state"));
-				chengyus.add(history);
+				chengyus.add(history );
 			}
 
 			conn.setAutoCommit(false);
@@ -96,15 +92,10 @@ public class FriendsDao {
 		}
 		return chengyus;
 	}
-
-	public void saveFriend(Friends history) {
+	public void saveFriend(Friends history){
 		getConnection();
 		String sql = "insert into friendsInfo (send, reciver, state,status) values ('"
-				+ history.getSend()
-				+ "', '"
-				+ history.getReciver()
-				+ "', '"
-				+ 1 + "', '" + -1 + ")";
+				+ history.getSend() + "', '" + history.getReciver() + "', '" + 1 + "', '" + -1 + ")";
 		try {
 			conn.setAutoCommit(false);
 			stmt.execute(sql);
@@ -122,12 +113,10 @@ public class FriendsDao {
 			DaoUtil.closeConnection(conn, stmt, rs);
 		}
 	}
-
-	public void saveState(Friends history) {
+	public void saveState(Friends history){
 		getConnection();
-		String sql = "update friendsInfo set state = " + history.getState()
-				+ " where reciver='" + history.getReciver() + " and send='"
-				+ history.getSend() + "'";
+		String sql = "update friendsInfo set state = " + history.getState() + " where reciver='"
+				+ history.getReciver() + " and send='" + history.getSend() + "'";
 		try {
 			conn.setAutoCommit(false);
 			stmt.execute(sql);
@@ -145,12 +134,11 @@ public class FriendsDao {
 			DaoUtil.closeConnection(conn, stmt, rs);
 		}
 	}
-
-	public void deleteFriend(Friends history) {
+	
+	public void deleteFriend(Friends history){
 		getConnection();
 		String sql = "delete from friendsInfo where reciver='"
-				+ history.getReciver() + " and send='" + history.getSend()
-				+ "'";
+				+ history.getReciver() + " and send='" + history.getSend() + "'";
 		try {
 			conn.setAutoCommit(false);
 			stmt.execute(sql);
@@ -168,22 +156,25 @@ public class FriendsDao {
 			DaoUtil.closeConnection(conn, stmt, rs);
 		}
 	}
-
+	
+	
 	public void yaoyiyao(String sendname) {
-
 		Calendar rightNow = Calendar.getInstance();
 		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
 		String time = fmt.format(rightNow.getTime());
-
+		
 		String name2 = null;
-		String sqlsel = "select * from requestFriends";
-		String sqlins = "insert into requestFriends (name,sendtime,status)values('"
-				+ sendname + "','" + time + "',0)";
+		
 
 		getConnection();
 		try {
+			String sqlsel = "select * from requestFriends";
+			String sqlins = "insert into requestFriends (name,sendtime,status)values('"
+					+ sendname + "','" + time + "',0)";
+		//	System.out.println(sqlins);
 			conn.setAutoCommit(false);
 			stmt.execute(sqlins);
+			conn.commit();
 			ResultSet fs;
 
 			fs = stmt.executeQuery(sqlsel);
@@ -207,22 +198,27 @@ public class FriendsDao {
 								new OutputStreamWriter(ForwardTask.map.get(
 										sendname).getOutputStream(), "UTF-8")),
 								true);
+						
+						System.out.println(ForwardTask.map.get(
+										sendname.toString()));
+						
+						
 						JSONObject obj = new JSONObject();
 						obj.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
+						
 						obj.put("name", name2);
 						obj.put(Config.RESULT, Config.SUCCESS);
 						out.print(obj);
-
 						out2 = new PrintWriter(new BufferedWriter(
 								new OutputStreamWriter(ForwardTask.map.get(
 										name2).getOutputStream(), "UTF-8")),
 								true);
 						JSONObject obj2 = new JSONObject();
 						obj2.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
+						obj2.put(Config.RESULT, Config.SUCCESS);
 						obj2.put("name", sendname);
-						obj.put(Config.RESULT, Config.SUCCESS);
 						out2.print(obj2);
-
+						System.out.println("0000000000"+sendname+name2);
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -233,11 +229,15 @@ public class FriendsDao {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					break;
 
 				}
 			}
 			if (name2 == null) {
+		//		System.out.println("nofriend");
 				Thread.currentThread().sleep(2000);
+		//		System.out.println("delete");
+				System.out.println("22222222"+sendname+name2);
 				String sqldel = "delete from requestFriends where name ='"
 						+ sendname + "'";
 				stmt.execute(sqldel);
@@ -266,8 +266,8 @@ public class FriendsDao {
 	 * conn.setAutoCommit(false); ResultSet fs = stmt.executeQuery(sql0); while
 	 * (fs.next()) { String sql1 =
 	 * "delete from requestFriends where name = '"+fs.getString("sendname")+"'";
-	 * //锟斤拷锟斤拷fs.getString("sendtime")锟斤拷time锟斤拷时锟斤拷锟�if(小锟斤拷10锟斤拷){//小锟斤拷10锟斤拷
-	 * String sql2 = "insert into matchFriends (name1,name2,status)values('"
+	 * //锟斤拷锟斤拷fs.getString("sendtime")锟斤拷time锟斤拷时锟斤拷锟�if(小锟斤拷10锟斤拷){//小锟斤拷10锟斤拷 String sql2 =
+	 * "insert into matchFriends (name1,name2,status)values('"
 	 * +fs.getString("name")+"','"+sendname+"',0)"; stmt.execute(sql2); name2 =
 	 * fs.getString("name"); break; }else{ stmt.execute(sql1); } }
 	 * stmt.execute(sql); conn.commit(); } catch (SQLException e) {
@@ -276,7 +276,8 @@ public class FriendsDao {
 	 * DaoUtil.closeConnection(conn, stmt, rs); } return name2; }
 	 */
 	// 锟斤拷锟杰伙拷芫锟斤拷锟斤拷
-
+	
+	
 	public void aor(String name1, String name2, int toj) {// 0为未锟斤拷应锟斤拷1为同锟解，-1为锟杰撅拷
 
 		try {
@@ -318,7 +319,7 @@ public class FriendsDao {
 					String sqladfr2 = "insert into friendlist(username,friendname)values(name2,name1)";
 					stmt.execute(sqladfr1);
 					stmt.execute(sqladfr2);
-					// *****************name1,name2锟窖撅拷锟缴癸拷锟斤拷锟轿拷锟斤拷锟�*********************
+					// *****************name1,name2,success*********************
 					PrintWriter out, out2;
 
 					out = new PrintWriter(new BufferedWriter(
@@ -326,10 +327,11 @@ public class FriendsDao {
 									.getOutputStream(), "UTF-8")), true);
 					JSONObject obj = new JSONObject();
 					obj.put(Config.REQUEST_TYPE, Config.RESULT_ADDFRIEND);
+					
 					obj.put("name", name2);
 					obj.put(Config.RESULT, Config.SUCCESS);
 					out.print(obj);
-
+					
 					out2 = new PrintWriter(new BufferedWriter(
 							new OutputStreamWriter(ForwardTask.map.get(name2)
 									.getOutputStream(), "UTF-8")), true);
@@ -338,7 +340,9 @@ public class FriendsDao {
 					obj2.put("name", name1);
 					obj2.put(Config.RESULT, Config.SUCCESS);
 					out2.print(obj2);
-
+					
+					System.out.println("1111111"+name1+name2);
+					
 				} else if (status == -1) {
 					String sqldel = "delete from matchFriends where id = '"
 							+ id + "'";
@@ -352,6 +356,7 @@ public class FriendsDao {
 									.getOutputStream(), "UTF-8")), true);
 					JSONObject obj = new JSONObject();
 					obj.put(Config.REQUEST_TYPE, Config.RESULT_ADDFRIEND);
+					
 					obj.put("name", name2);
 					obj.put(Config.RESULT, Config.FAIl);
 					out.print(obj);
@@ -361,10 +366,10 @@ public class FriendsDao {
 									.getOutputStream(), "UTF-8")), true);
 					JSONObject obj2 = new JSONObject();
 					obj2.put(Config.REQUEST_TYPE, Config.RESULT_ADDFRIEND);
-					obj2.put("name1", name1);
+					obj2.put("name", name1);
 					obj2.put(Config.RESULT, Config.FAIl);
 					out2.print(obj2);
-
+					
 				}
 			}
 
@@ -391,9 +396,9 @@ public class FriendsDao {
 		}
 	}
 	/**
-	 * public int aor(String name1,String name2,int
-	 * toj){//0为未锟斤拷应锟斤拷1为同锟解，-1为锟杰撅拷 int id=0; int status=0; try {
-	 * getConnection(); conn.setAutoCommit(false); ResultSet fs; String sql1 =
+	 * public int aor(String name1,String name2,int toj){//0为未锟斤拷应锟斤拷1为同锟解，-1为锟杰撅拷 int
+	 * id=0; int status=0; try { getConnection(); conn.setAutoCommit(false);
+	 * ResultSet fs; String sql1 =
 	 * "select * from matchFriends where name1 = '"+name1
 	 * +"'and name2 = '"+name2+"'"; fs = stmt.executeQuery(sql1); while
 	 * (fs.next()) { id = fs.getInt("id"); status = fs.getInt("status"); }
@@ -408,9 +413,9 @@ public class FriendsDao {
 	 * "update matchFriends set status = 1 where id = '" + id + "'";
 	 * stmt.execute(sql4); return 锟饺达拷; }else if(status==1){ String sql5 =
 	 * "update matchFriends set status = 2 where id = '" + id + "'";
-	 * stmt.execute(sql5); //锟斤拷雍锟斤拷锟�return 锟斤拷映晒锟� }else if(status==-1){
-	 * return 锟皆凤拷锟杰撅拷; } } } catch (SQLException e) { e.printStackTrace(); if
-	 * (conn != null) { try { conn.rollback(); } catch (SQLException e1) {
+	 * stmt.execute(sql5); //锟斤拷雍锟斤拷锟�return 锟斤拷映晒锟� }else if(status==-1){ return
+	 * 锟皆凤拷锟杰撅拷; } } } catch (SQLException e) { e.printStackTrace(); if (conn !=
+	 * null) { try { conn.rollback(); } catch (SQLException e1) {
 	 * e1.printStackTrace(); } } } finally { DaoUtil.closeConnection(conn, stmt,
 	 * rs); } return 0; }
 	 */

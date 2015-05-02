@@ -14,41 +14,42 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.navi.constant.Config;
-import com.navi.dao.MessageDao;
+import com.navi.dao.FriendsDao;
+import com.navi.dao.InfoDao;
 import com.navi.model.Friends;
 import com.navi.model.Info;
 import com.navi.model.Moments;
-import com.navi.model.RequestFriend;
 import com.navi.model.User;
 import com.navi.service.FriendsService;
 import com.navi.service.InfoService;
 import com.navi.service.MomentsService;
 import com.navi.service.UserService;
-import com.navi.util.FriendUtil;
+//import com.navi.dao.MessageDao;
+//import com.navi.service.InfoService;
 
 public class ForwardTask extends Task {
-	// 閺夆晜鐟ら柌娣梐shMap闁哄嫷鍨抽弫銈夊级閵夈儳鎽犻柡锟藉亾閻︹剝绋夐悮鍒糲ket閺夆晝鍋炵敮鎾儍閿燂拷
-	private static HashMap<String, Socket> map = new HashMap<String, Socket>();
+	// 闁哄鏅滈悷銈夋煂濞ｆshMap闂佸搫瀚烽崹鎶藉极閵堝绾ч柕澶堝劤閹界娀鏌￠敓钘変壕闁伙腹鍓濈粙澶愭偖閸掔巢ket闁哄鏅濋崑鐐垫暜閹绢喗鍎嶉柨鐕傛嫹
+	public static HashMap<String, Socket> map = new HashMap<String, Socket>();
 	private String name = null;
 	private String ip;
-	// 閺夊牊鎸搁崣鍡椕归敓锟�
+	// 闁哄鐗婇幐鎼佸矗閸℃褰掓晸閿燂拷
 	private BufferedReader in;
-	// 閺夊牊鎸搁崵顓灻归敓锟�
+	// 闁哄鐗婇幐鎼佸吹椤撶伝褰掓晸閿燂拷
 	private PrintWriter out;
-	// Socket閻庣數顢婇挅锟�
+	// Socket闁诲海鏁搁、濠囨寘閿燂拷
 	private Socket socket;
-	// 闁活枌鍔嶅鐢碉拷濡粯鏉归柟鎭掑劜閺佸綊鎯冮崟顏冪箚闁诡叏鎷�
+	// 闂佹椿鏋岄崝宥咁焽閻㈢鎷锋俊顖滅帛閺夊綊鏌熼幁鎺戝姕闁轰礁缍婇幆鍐礋椤忓啰绠氶梺璇″弿閹凤拷
 	private JSONObject message;
-	// 閻犲洭鏀遍惇鎵尵鐠囪尙锟�
+	// 闁荤姴娲弨閬嶆儑閹殿喚灏甸悹鍥皺閿燂拷
 	private int requestType;
-	// 闁硅矇鍐ㄧ厬run闁哄倽顬冪涵鍫曟煂瀹�锟界暠while鐎甸偊浜為獮锟�
+	// 闂佺鐭囬崘銊у幀run闂佸搫鍊介‖鍐兜閸洘鐓傜?锟介敓鐣屾殸while閻庣敻鍋婃禍鐐虹嵁閿燂拷
 	private boolean onWork = true;
 
-	// 闁规亽鍎查弫瑙勭▔閿熶粙鍤婼ocket閻庣數顢婇挅鍕儍閸曨剛锟介梺顐ゅУ閺岀喎鈻旈敓锟�
+	// 闂佽浜介崕鏌ュ极鐟欏嫮鈻旈柨鐔剁矙閸ゅ┘ocket闁诲海鏁搁、濠囨寘閸曨垱鍎嶉柛鏇ㄥ墰閿熶粙姊洪銈呅ｉ柡宀?枎閳绘棃鏁撻敓锟?
 	public ForwardTask(Socket socket) {
 		this.socket = socket;
 		try {
-			// 闁告帗绻傞‖濠囧礌閺嶎剛缈婚柛蹇嬪劜缁侊箓宕畝鍐炕闁告垹鍎ょ粊锟�
+			// 闂佸憡甯楃换鍌炩?婵犲洤绀岄柡宥庡墰缂堝鏌涜箛瀣姕缂佷緤绠撳畷顏勭暆閸愵亞鐐曢梺鍛婂灩閸庛倗绮婇敓锟?
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream(), "UTF-8"));
 			out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
@@ -127,7 +128,7 @@ public class ForwardTask extends Task {
 			break;
 		case Config.REQUEST_REQUIRE_FRIEND:
 			handSendRequestFriend();// OK
-			break;
+	break;
 		case Config.REQUEST_ADDFRIEND:
 			handAddFriend();// OK
 			break;
@@ -148,6 +149,9 @@ public class ForwardTask extends Task {
 		case Config.REQUEST_GET_MESSAGE:
 
 			handGetMessage();
+			break;
+		case Config.RESULT_YAOYIYAO:
+			handSendRequestFriend();
 			break;
 		default:
 			/*
@@ -170,8 +174,8 @@ public class ForwardTask extends Task {
 
 	private void handUploadMoments() {
 		try {
-			String sender = message.getString("sender");// 閸欐垿锟介惃鍕眽
-			String detail = message.getString("detail");// 閸欐垿锟介惃鍕眽
+			String sender = message.getString("sender");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			String detail = message.getString("detail");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
 			Moments friends = new Moments(sender, detail);
 			new MomentsService().saveMoments(friends);
 			JSONObject obj = new JSONObject();
@@ -183,17 +187,20 @@ public class ForwardTask extends Task {
 		}
 	}
 
-	// 发送消息
+	// 鍙戦?娑堟伅
 	private void handSendMessage() {
 		try {
-			int senderid = message.getInt("sendid");// 閸欐垿锟介惃鍕眽
-			int receiverid = message.getInt("receiverid");// 閸欐垿锟介惃鍕眽
-			String detail = message.getString("message");// 閸欐垿锟介惃鍕眽
+			String senderid = message.getString("sendid");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			String receiverid = message.getString("receiverid");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			String detail = message.getString("message");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
 
-			MessageDao dao = new MessageDao();
-			boolean result = dao.sendmessage(senderid, receiverid, detail);
+			// MessageDao dao = new MessageDao();
+			// boolean result = dao.sendmessage(senderid, receiverid, detail);
+			InfoDao dao = new InfoDao();
+			boolean result = dao.getSendMsg(senderid, receiverid, detail);
+
 			JSONObject obj = new JSONObject();
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+			obj.put(Config.REQUEST_TYPE, Config.REQUEST_SEND_MESSAGE);
 			if (result == true)
 				obj.put(Config.RESULT, Config.SUCCESS);
 			if (result == false)
@@ -204,18 +211,28 @@ public class ForwardTask extends Task {
 		}
 	}
 
-	// 接受消息
+	// 鎺ュ彈娑堟伅
 	private void handGetMessage() {
 		try {
-			int senderid = message.getInt("userid1");// 閸欐垿锟介惃鍕眽
-			int receiverid = message.getInt("userid2");// 閸欐垿锟介惃鍕
+			// int senderid = message.getInt("userid1");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			// int receiverid = message.getInt("userid2");// 闁告瑦鍨块敓浠嬫儍閸曨亝
 
-			MessageDao dao = new MessageDao();
-			JSONArray messagelist = dao.getmessage(senderid, receiverid);
+			// MessageDao dao = new MessageDao();
+			// JSONArray messagelist = dao.getmessage(senderid, receiverid);
+
+			String senderid = message.getString("userid1");// 閸欐垿锟介惃鍕眽
+			String receiverid = message.getString("userid2");// 閸欐垿锟介惃鍕
+
+			System.out.println("********此处测试*****************");
+			System.out.println(message.toString());
+
+			InfoDao dao = new InfoDao();
+			JSONArray messagelist = dao.getfriendNews(senderid, receiverid);
+
 			JSONObject obj = new JSONObject();
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_GET_MESSAGE);
 			obj.put(Config.RESULT, Config.SUCCESS);
-			obj.put("messagelist", messagelist);
+			obj.put("list", messagelist);
 			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -224,12 +241,13 @@ public class ForwardTask extends Task {
 
 	private void handDownloadMoments() {
 		try {
-			String userid = message.getString("userid");// 閸欐垿锟介惃鍕眽
-			String first = message.getString("first");// 閸欐垿锟介惃鍕眽
-			String end = message.getString("end");// 閸欐垿锟介惃鍕眽
-			JSONArray arr = new MomentsService().downloadMoments(userid, first,
-					end);
+			String userid = message.getString("userid");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			String first = message.getString("first");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			String end = message.getString("end");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			JSONArray arr = new InfoDao().getNews(name);
+
 			JSONObject obj = new JSONObject();
+
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_FRIEND);
 			obj.put("list", arr);
 			out.println(obj.toString());
@@ -240,10 +258,10 @@ public class ForwardTask extends Task {
 
 	private void handDownloadFriend() {
 		try {
-			String userid = message.getString("userid");// 閸欐垿锟介惃鍕眽
+			String userid = message.getString("userid");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
 			JSONArray arr = new FriendsService().downloadFriends(userid);
 			JSONObject obj = new JSONObject();
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_FRIEND);
 			obj.put("list", arr);
 			out.println(obj.toString());
 		} catch (Exception e) {
@@ -251,32 +269,39 @@ public class ForwardTask extends Task {
 		}
 	}
 
+	// 摇一摇请求
 	private void handSendRequestFriend() {
 		try {
-			String sender = message.getString("name");// 閸欐垿锟介惃鍕眽
-			String time = message.getString("time");// 閸欐垿锟介惃鍕眽
-			RequestFriend r = new RequestFriend(sender, time);
-			FriendUtil f = FriendUtil.getInstance();
-			f.addRequest(r);
-			String name = f.matchRequest(sender);
-			JSONObject obj = new JSONObject();
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_FRIEND);
-			obj.put("name", name);
-			out.println(obj.toString());
+			String sender = message.getString("name");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			FriendsDao dao = new FriendsDao();
+			dao.yaoyiyao(sender);
+
+			System.out.println("handSendRequestFriend:" + sender);
+//			JSONObject obj = new JSONObject();
+//			obj.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
+//			obj.put("name", name);
+//			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
+	//摇一摇之后,是否添加好友的请求
 	private void handAddFriend() {
 		try {
-			String send = message.getString("send");// 閸欐垿锟介惃鍕眽
-			String reciver = message.getString("reciver");// 閸欐垿锟介惃鍕眽
-			int answer = message.getInt("answer");// 閸欐垿锟介惃鍕眽
+			String send = message.getString("send");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			String reciver = message.getString("reciver");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			int answer = message.getInt("answer");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			FriendsDao a = new FriendsDao();
+			a.aor(send, reciver, answer);
+
+			//
+			// 这里接入
+			//
 			Friends history = new Friends(send, reciver, answer);
 			JSONObject obj = new JSONObject();
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_REQUIRE_FRIEND);
+			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
 			if (new FriendsService().setState(history)) {
 				obj.put(Config.RESULT, Config.SUCCESS);
 			} else {
@@ -366,8 +391,8 @@ public class ForwardTask extends Task {
 			String name = message.getString("username");
 			JSONObject obj = new JSONObject();
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_INFO);
-
-			JSONArray arr = new InfoService().downloadNews(name);
+			JSONArray arr = new InfoDao().getNews(name);
+			// JSONArray arr = new InfoService().downloadNews(name);
 			obj.put("list", arr);
 			out.println(obj.toString());
 			System.out.println(ip + "download Info ");
@@ -379,9 +404,9 @@ public class ForwardTask extends Task {
 	private void handSetInfo() {
 		try {
 			System.out.println(ip + "check in");
-			String userid = message.getString("userid");// 閸欐垿锟介惃鍕眽
-			String reciver = message.getString("reciver");// 閸欐垿锟介惃鍕眽
-			String detail = message.getString("detail");// 閸欐垿锟介惃鍕眽
+			String userid = message.getString("userid");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			String reciver = message.getString("reciver");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+			String detail = message.getString("detail");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
 
 			JSONObject obj = new JSONObject();
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_SET_INFO);
