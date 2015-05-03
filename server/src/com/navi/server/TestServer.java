@@ -10,9 +10,8 @@ import com.navi.net.ThreadPool;
 public class TestServer {
 	public static void main(String[] args) {
 		try {
-			ServerSocket serverSocket = new ServerSocket(6666);
+			ServerSocket serverSocket = new ServerSocket(8888);
 			ThreadPool threadPool = ThreadPool.getInstance();
-			System.out.println("服务器启动。。。");
 			while(true){
 				Socket socket = serverSocket.accept();
 				System.out.println(socket.toString()+"连上了");
