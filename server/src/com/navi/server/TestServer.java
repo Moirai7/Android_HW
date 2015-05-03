@@ -12,12 +12,10 @@ public class TestServer {
 		try {
 			ServerSocket serverSocket = new ServerSocket(6666);
 			ThreadPool threadPool = ThreadPool.getInstance();
+			System.out.println("服务器启动。。。");
 			while(true){
 				Socket socket = serverSocket.accept();
-				System.out.println();
-				System.out.println();
-				System.out.println();
-				System.out.println(socket.toString());
+				System.out.println(socket.toString()+"连上了");
 				ForwardTask task = new ForwardTask(socket);
 				threadPool.addTask(task);
 				task.handConSuccess();
