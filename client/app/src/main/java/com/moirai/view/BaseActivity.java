@@ -76,8 +76,8 @@ public abstract class BaseActivity extends FragmentActivity  {
             bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
         }
 
-        //con = Conmmunication.newInstance();
-        //db = Database.getInstance();
+        con = Conmmunication.newInstance();
+        db = Database.getInstance(this);
 		// 判断该Activity是否在LinkedList中，没有在的话就添加上
 		if (!queue.contains(this)) {
 			queue.add(this);

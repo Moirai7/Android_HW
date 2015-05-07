@@ -29,7 +29,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 
 public class Database {
-    private Context context;
+    private static Context context;
 	private SQLiteDatabase db;
 	private static Database database = null;
 
@@ -103,7 +103,7 @@ public class Database {
     }
 
     public List<Info> getFriendHistory(String name){
-        Cursor rs = db.rawQuery("select * from HistoryInfo where receid = "+ name +" or sendid= "+name, null);
+        Cursor rs = db.rawQuery("select * from HistoryInfo where receid = ? or sendid = ?", new String[]{name,name});
         List<Info> list = new ArrayList<Info>();
         if (rs != null) {
             if (rs.moveToFirst()) {

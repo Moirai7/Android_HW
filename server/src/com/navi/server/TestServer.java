@@ -10,11 +10,12 @@ import com.navi.net.ThreadPool;
 public class TestServer {
 	public static void main(String[] args) {
 		try {
-			ServerSocket serverSocket = new ServerSocket(8888);
+			ServerSocket serverSocket = new ServerSocket(6666);
 			ThreadPool threadPool = ThreadPool.getInstance();
+			System.out.println("æœåŠ¡å™¨å¯åŠ¨å•¦");
 			while(true){
 				Socket socket = serverSocket.accept();
-				System.out.println(socket.toString()+"Á¬ÉÏÁË");
+				System.out.println(socket.toString());
 				ForwardTask task = new ForwardTask(socket);
 				threadPool.addTask(task);
 				task.handConSuccess();

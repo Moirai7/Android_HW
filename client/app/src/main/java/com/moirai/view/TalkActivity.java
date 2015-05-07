@@ -38,17 +38,6 @@ public class TalkActivity extends BaseActivity {
     private List<Info> mDataArrays = new ArrayList<Info>();
     private int mInfoNews=0;
     private String currFriend;//当前聊天的朋友
-    /*private String[]msgArray = new String[]{"请叫我漂漂的岚岚姐", "叫你谁？", "漂漂的岚岚姐啊", "什么的岚岚姐？",
-            "漂漂的岚岚姐", "叫姐有饭吃吗？",
-            "想吃什么都可以", "okay~"};*/
- //   private String[]msgArray;
- // private String[]dataArray;
-/*    private String[]dataArray = new String[]{"2015-03-01 18:00", "2015-03-01 18:10",
-            "2015-03-01 18:11", "2015-03-01 18:20",
-            "2015-03-01 18:30", "2015-03-01 18:35",
-            "2015-03-01 18:40", "2015-03-01 18:50"};*/
-  //  private final static int COUNT = 8;
-
     @Override
     public void processMessage(Message message) {
         // TODO Auto-generated method stub
@@ -56,22 +45,15 @@ public class TalkActivity extends BaseActivity {
             case Config.ACK_CON_SUCCESS:
                 StartRead(getString(R.string.ack_talk_start),Config.ACK_TALK_START);
                 break;
-            case Config.ACK_TALK_START:
-                if(mDataArrays.isEmpty()){
-
-                }
-                break;
-            case Config.ACK_SERVICE:
-
-                break;
             case Config.ACK_DOWN:
                 mInfoNews++;
                 if(mInfoNews>=mDataArrays.size()){
                     //当前消息已经读完，需要从服务器下载新消息
-                  updateData();
+                    StartRead("当前消息已经读完",Config.ACK_NONE);
+                    //con.getmessage(Constant.USERNAME,currFriend);
+                }else {
+                    StartRead(mDataArrays.get(mInfoNews).getDetail(), Config.ACK_NONE);
                 }
-                    //mInfoNews--;
-                StartRead(mDataArrays.get(mInfoNews).getDetail(),Config.ACK_NONE);
                 break;
             case Config.ACK_TOP:
                 mInfoNews--;
@@ -79,6 +61,7 @@ public class TalkActivity extends BaseActivity {
                     mInfoNews=0;
                 StartRead(mDataArrays.get(mInfoNews).getDetail(),Config.ACK_NONE);
                 break;
+            //长按发送消息
             case Config.ACK_LONG_CLICK:
                 StartListen(Config.ACK_TALKING);
                 break;
@@ -86,6 +69,13 @@ public class TalkActivity extends BaseActivity {
                 String str = (String)message.obj;
                 msgEdit.setText(str);
                 send();
+                break;
+            case Config.REQUEST_GET_MESSAGE:
+                List<Info> list = (List<Info>)message.obj;
+                if(list.isEmpty()){
+                    mInfoNews--;
+                }
+                updateData(list);
                 break;
             default:
                 break;
@@ -117,7 +107,7 @@ public class TalkActivity extends BaseActivity {
         actionBar.setIcon(null);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
-        currFriend=(String)this.getIntent().getSerializableExtra("title");//当前聊天的朋友
+        currFriend=(String)this.getIntent().getSerializableExtra("username");//当前聊天的朋友
         actionBar.setTitle(getString(R.string.talking_with)+ currFriend);
 
         cameraIBbtn = (ImageButton) findViewById(R.id.talk_cameraIbtn);
@@ -134,45 +124,25 @@ public class TalkActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
-
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 send();
             }
         });
-
         initData();
     }
-
+// TODO 初始化数据页面显示有点问题
     public void initData()
     {
-
-/*       for(int i = 0; i < COUNT; i++)
-        {
-            Info entity = new Info();
-            entity.setTime(dataArray[i]);
-            if (i % 2 == 0)
-            {
-                entity.setSendUser(Constant.USERNAME);
-                entity.setReceiver("fish");
-               // entity.setMsgType(true);
-            }else{
-                entity.setSendUser("fish");
-                entity.setReceiver(Constant.USERNAME);
-              //  entity.setMsgType(false);
-            }
-
-            entity.setDetail(msgArray[i]);
-            mDataArrays.add(entity);
-            mInfoNews=mDataArrays.size()-1;
-        }*/
        //从本地数据库获取消息，显示在聊天页面
         List<Info> tempList = db.getFriendHistory(currFriend);
         for(int i=0;i< tempList.size();i++){
+            if(tempList.get(i).getSendUser()==currFriend){}
             mDataArrays.add(tempList.get(i));
             mInfoNews=mDataArrays.size()-1;
         }
+        System.out.println("从本地数据库获取消息的数量"+tempList.size());
         mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
         mListView.setAdapter(mAdapter);
     }
@@ -180,18 +150,16 @@ public class TalkActivity extends BaseActivity {
     /**
      * 下滑更新数据（从服务器下载最新消息）
      */
-    public void updateData(){
+    public void updateData(List<Info> tempList){
 
-        con.getmessage(Constant.USERNAME,currFriend);
-
-        //TODO
-//        for(int i=0;i< tempList.size();i++){
-//            mDataArrays.add(tempList.get(i));
-//            mInfoNews=mDataArrays.size()-1;
-//        }
-//        mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
-//        mListView.setAdapter(mAdapter);
+        for(int i=0;i< tempList.size();i++){
+            mDataArrays.add(tempList.get(i));
+            mInfoNews=mDataArrays.size()-1;
+        }
+        mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
+        mListView.setAdapter(mAdapter);
     }
+    //发消息给朋友
     private void send()
     {
         String contString = msgEdit.getText().toString();
@@ -207,6 +175,7 @@ public class TalkActivity extends BaseActivity {
             mAdapter.notifyDataSetChanged();
 
             msgEdit.setText("");
+            con.sendInfo(Constant.USERNAME,currFriend,contString);
             db.saveFriendHistory(entity);
 
             mListView.setSelection(mListView.getCount() - 1);

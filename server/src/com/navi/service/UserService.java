@@ -23,14 +23,14 @@ public class UserService {
 	//register
 	public boolean register(User user){
 		UserDao UserDao = new UserDao();
-		if(UserDao.findByUsernameAndPassword(user.getUsername(), user.getPassword()) == null){
+		if(UserDao.findByUsernameAndPassword(user.getUsername(), user.getPassword())==null){
 			UserDao.save(user);	
 			return true;
 		}else{
 			return false;
 		}
 	}
-	//设置用户的状态为不在�?
+	//设置用户的状态为不在�?
 	public void setStateToNonOnline(String username){
 		UserDao UserDao = new UserDao();
 		UserDao.setState(Config.USER_STATE_NON_ONLINE, username);
@@ -40,7 +40,7 @@ public class UserService {
 		UserDao UserDao = new UserDao();
 		UserDao.setState(Config.USER_STATE_ONLINE, username);
 	}
-	//获取用户的状�?
+	//获取用户的状�?
 	public int getUsernameState(String username){
 		UserDao UserDao = new UserDao();
 		return UserDao.getState(username);

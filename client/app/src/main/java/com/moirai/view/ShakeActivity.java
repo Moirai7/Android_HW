@@ -41,8 +41,6 @@ public class ShakeActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shake);
-        /*连接服务器*/
-      //  con = Conmmunication.newInstance();
         upImage = (ImageView)findViewById(R.id.shake_up_imageView);
         downImage = (ImageView)findViewById(R.id.shake_down_imageView);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -148,11 +146,8 @@ public class ShakeActivity extends BaseActivity
                 upImage.startAnimation(animUp);
                 downImage.startAnimation(animDown);
                 progressBar.setVisibility(View.VISIBLE);
-                Message m = new Message();
-                m.what = Config.REQUEST_ADDFRIEND;
-                m.arg1 = Config.SUCCESS;
-                m.obj = "张岚";
-                sendMessage(m);
+                //摇完给服务器发送请求
+                con.requireFriend(Constant.USERNAME);
             }
         }
     }
@@ -163,7 +158,7 @@ public class ShakeActivity extends BaseActivity
                 + userName
                 + " "
                 +getString(R.string.message2_shake_confirm);
-
+        final String friendName = userName;
         //TODO 语音提示：message
         new AlertDialog.Builder(ShakeActivity.this)
             .setCancelable(true)
@@ -172,8 +167,7 @@ public class ShakeActivity extends BaseActivity
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //Todo 语音提示： 您已添加 userName 为好友
-                    //con.addFriend(userName);
-                    gotoFriendActivity();
+                    con.addFriend(Constant.USERNAME,friendName,Config.SUCCESS);
                  }
               })
         .setNegativeButton(getString(R.string.no_shake_confirm), new DialogInterface.OnClickListener() {
@@ -181,6 +175,7 @@ public class ShakeActivity extends BaseActivity
             public void onClick(DialogInterface dialog, int which) {
                 //Todo 语音提示： 取消添加好友请求
                 progressBar.setVisibility(View.INVISIBLE);
+                con.addFriend(Constant.USERNAME,friendName,Config.FAIl);
                 state = true;
             }
         }).show();
@@ -191,8 +186,8 @@ public class ShakeActivity extends BaseActivity
         switch (message.what) {
             case Config.REQUEST_ADDFRIEND:
                 //判断是否有同时摇的用户先，待完善
-               int result = message.arg1;
-               if (result == Config.SUCCESS) {
+                int result_Yao = message.arg1;
+               if (result_Yao == Config.SUCCESS) {
                     String userName = (String)message.obj;
                     if(!Constant.ID.equals("1")){
                         confirmAddFriend(userName);
@@ -217,15 +212,14 @@ public class ShakeActivity extends BaseActivity
             case Config.ACK_CON_SUCCESS:
                 StartRead(getString(R.string.voice_shake_tip),Config.ACK_SHAKE_test);
                 break;
-            case Config.ACK_SHAKE_RESULT:
-                //StartListen(Config.ACK_SHAKE_ANSWER);
-                break;
+            //确认添加对方为好友
             case Config.ACK_DOUBLE_CLICK:
                 if(checkInfoAdd) {
                     StartRead(getResources().getString(R.string.voice_shake_result_success),Config.ACK_NONE);
                     finish();
                 }
                 break;
+            //取消添加好友
             case Config.ACK_LONG_CLICK:
                 if(checkInfoAdd) {
                     checkInfoAdd = false;
@@ -233,19 +227,18 @@ public class ShakeActivity extends BaseActivity
                     StartRead(getResources().getString(R.string.voice_shake_result_cancel),Config.ACK_NONE);
                 }
                 break;
-            case Config.ACK_SHAKE_ANSWER:
-                String answer = (String)message.obj;
-                System.out.printf("Answer:"+answer);
-                if(answer.toLowerCase().contains(getString(R.string.yes_shake_confirm).toLowerCase())){
-                    StartRead(getString(R.string.voice_shake_result_success),Config.ACK_SHAKE_TIP);
-                    gotoFriendActivity();
-                }else{
-                    StartRead(getString(R.string.voice_shake_result_cancel),Config.ACK_SHAKE_TIP_CANCEL);
-                }
-                state = true;
-                break;
             case Config.ACK_SHAKE_TIP_CANCEL:
                 StartRead(getString(R.string.voice_shake_tip),Config.ACK_SHAKE_TIP);
+                break;
+            case Config.RESULT_ADDFRIEND:
+                int result_Add = message.arg1;
+                if(result_Add == Config.SUCCESS){
+                    StartRead(getResources().getString(R.string.voice_shake_result_success),Config.ACK_NONE);
+                    gotoFriendActivity();
+                }else{
+                    StartRead(getResources().getString(R.string.voice_shake_result_success),Config.ACK_NONE);
+                }
+                state=true;
                 break;
             default:
                 break;

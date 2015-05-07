@@ -14,11 +14,12 @@ public interface Config {
 	public static final int REQUEST_ADDFRIEND = BASE + 8;
 	public static final int REQUEST_DOWNLOAD_MOMENTS = BASE + 9;
         public static final int REQUEST_UPLOAD_MOMENTS = BASE + 10;
-	//4月23日加的
+	//4锟斤拷23锟秸加碉拷
     public static final int REQUEST_SEND_MESSAGE = BASE + 11;
     public static final int REQUEST_GET_MESSAGE = BASE + 12;
+    public static final int REQUEST_DOWNLOAD_NEWINFO = BASE + 13;
     public static final int RESULT_YAOYIYAO = 401;
-    public static final int RESULT_ADDFRIEND = 402;
+   // public static final int RESULT_ADDFRIEND = 402;
         
 	public static final int CON_SUCCESS = 2002;
 	public static final int SUCCESS = 2000;  //鎴愬姛

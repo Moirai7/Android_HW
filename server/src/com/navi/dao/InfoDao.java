@@ -78,17 +78,18 @@ public class InfoDao {
      * Modified by Yu, WANG on 2015-4-15
      * @param userid
      * @return
+     * *********************已測
      */
     public JSONArray getNews(String userid) {
 		//List<Info> chengyus = new ArrayList<Info>();
     	JSONArray msgs = new JSONArray();
 		getConnection();
-		String sql = "select * from historyInfo where receid = '" + userid
-				+ "' and status = -1 order by id";
-		String sql2 = "update historyInfo set status = 1 where receid = '"
+		String sql = "select * from msglist where receivername = '" + userid
+				+ "' and status = 0 order by id";
+		String sql2 = "update msglist set status = 1 where receivername = '"
 				+ userid + "'";
 		try {
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = stmt.executeQuery(sql);//、/////
 			while (rs.next()) {
 //				Info history = new Info();
 //				history.setSendUser(rs.getString("sendid"));
@@ -105,6 +106,7 @@ public class InfoDao {
 				msgs.put(msg);
 
 			}
+			System.out.println("json的消息"+msgs.toString());
 			conn.setAutoCommit(false);
 			stmt.execute(sql2);
 			conn.commit();
@@ -115,30 +117,35 @@ public class InfoDao {
 		}
 		return msgs;
 	}
-    
+    //****************************已测
     public JSONArray getfriendNews(String username, String sendername) {
 		// List<Info> msgss = new ArrayList<Info>();
 		JSONArray msgs = new JSONArray();
 		getConnection();
-		String sql = "select * from msglist where receiverid = '" + username
-				+ "' and senderid = '" + sendername
-				+ "' order by sendtime DESC";
-		String sql2 = "update msglist set ifRead = 1 where receiverid = '"
-				+ username + "' and senderid = '" + sendername + "' ";
+		String sql = "select * from msglist where receivername = '" + username
+				+ "' and sendername = '" + sendername
+				+ "' union select * from msglist where receivername = '" + sendername
+				+ "' and sendername = '" + username
+				+ "' order by sendtime DESC" ;
+		String sql2 = "update msglist set status = 1 where receivername = '"
+				+ username + "' and sendername = '" + sendername + "' ";
+		String sql3 = "update msglist set status = 1 where receivername = '"
+				+ sendername + "' and sendername = '" + username + "' ";
 		try {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				// Info msg = new Info();
 				JSONObject msg = new JSONObject();
 				msg.put("messageid", rs.getString("id"));
-				msg.put("sendername", rs.getString("sendername"));
-				msg.put("receivername", rs.getString("receivername"));
+				msg.put("senderid", rs.getString("sendername"));
+				msg.put("receiverid", rs.getString("receivername"));
 				msg.put("message", rs.getString("msg"));
 				msg.put("time", rs.getString("sendtime"));
 				msgs.put(msg);
 			}
 			conn.setAutoCommit(false);
 			stmt.execute(sql2);
+			stmt.execute(sql3);
 			conn.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,10 +154,10 @@ public class InfoDao {
 		}
 		return msgs;
 	}
-    
+  //****************************已测
     public boolean getSendMsg(String sendername, String receivername, String msg) {
 		getConnection();
-		String sql = "insert into msglist (sendername,receivername,msg,sendtime,ifRead)values('"
+		String sql = "insert into msglist (sendername,receivername,msg,sendtime,status)values('"
 				+ sendername
 				+ "','"
 				+ receivername

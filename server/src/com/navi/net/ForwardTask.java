@@ -128,7 +128,7 @@ public class ForwardTask extends Task {
 			break;
 		case Config.REQUEST_REQUIRE_FRIEND:
 			handSendRequestFriend();// OK
-			break;
+	break;
 		case Config.REQUEST_ADDFRIEND:
 			handAddFriend();// OK
 			break;
@@ -277,17 +277,17 @@ public class ForwardTask extends Task {
 			dao.yaoyiyao(sender);
 
 			System.out.println("handSendRequestFriend:" + sender);
-			// JSONObject obj = new JSONObject();
-			// obj.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
-			// obj.put("name", name);
-			// out.println(obj.toString());
+//			JSONObject obj = new JSONObject();
+//			obj.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
+//			obj.put("name", name);
+//			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	// 摇一摇之后,是否添加好友的请求
+	//摇一摇之后,是否添加好友的请求
 	private void handAddFriend() {
 		try {
 			String send = message.getString("send");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
@@ -295,18 +295,19 @@ public class ForwardTask extends Task {
 			int answer = message.getInt("answer");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
 			FriendsDao a = new FriendsDao();
 			a.aor(send, reciver, answer);
+
 			//
 			// 这里接入
 			//
-			// Friends history = new Friends(send, reciver, answer);
-			// JSONObject obj = new JSONObject();
-			// obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
-			// if (new FriendsService().setState(history)) {
-			// obj.put(Config.RESULT, Config.SUCCESS);
-			// } else {
-			// obj.put(Config.RESULT, Config.FAIl);
-			// }
-			// out.println(obj.toString());
+//			Friends history = new Friends(send, reciver, answer);
+//			JSONObject obj = new JSONObject();
+//			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+//			if (new FriendsService().setState(history)) {
+//				obj.put(Config.RESULT, Config.SUCCESS);
+//			} else {
+//				obj.put(Config.RESULT, Config.FAIl);
+//			}
+//			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -349,7 +350,7 @@ public class ForwardTask extends Task {
 
 			UserService userService = new UserService();
 			boolean result = userService.getUsernameState(username) == Config.USER_STATE_NON_ONLINE;
-			if (userService.login(username, password) && result) {
+			if (userService.login(username, password)) {
 				userService.setStateToOnline(username);
 				name = username;
 				map.put(username, socket);
@@ -387,7 +388,7 @@ public class ForwardTask extends Task {
 	private void handDownloadInfo() {
 		try {
 			System.out.println(ip + "check in");
-			String name = message.getString("username");
+			String name = message.getString("name");
 			JSONObject obj = new JSONObject();
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_INFO);
 			JSONArray arr = new InfoDao().getNews(name);

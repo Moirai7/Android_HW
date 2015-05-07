@@ -24,7 +24,7 @@ import com.moirai.view.BaseActivity;
 public class NetWorker extends Thread {
 	// Context context;
 	// private static final String IP = "59.65.171.333";
-	private static final String IP = "192.168.253.1";
+	private static final String IP = "172.24.10.52";
 
 	private static final int PORT = 6666;
 
@@ -360,7 +360,7 @@ public class NetWorker extends Thread {
 	}
 
 	// 下载
-	public void downloadInfo(String username) {
+	/*public void downloadInfo(String username) {
 
 		// System.out.println("发�?�下载Info的请�?");
 		// JSOn
@@ -374,7 +374,7 @@ public class NetWorker extends Thread {
 		// Log.i(Config.TAG, "发�?�单个点的请求为�?" + jo.toString());
 
 		out.println(jo.toString());
-	}
+	}*/
 
 	// 下载最新消息
 	public void handdownloadnewmessage() {
@@ -452,29 +452,34 @@ public class NetWorker extends Thread {
 	}
 
 	// //传�?�下�?
-	public void handDownloadInfo() {
-		// //Log.i(Config.TAG, "传�?�从服务器端返回的下载Info的请�?");
-		// JSOn
-		JSONArray jo = null;
-		List<Info> list = new ArrayList<Info>();
-		try {
-			jo = jsonObject.optJSONArray("list");
-			for (int i = 0; i < jo.length(); i++) {
-				Info path = new Info();
-				path.setSendUser(jo.getJSONObject(i).getString("sendUser"));
-				path.setDetail(jo.getJSONObject(i).getString("detail"));
-				path.setTime(jo.getJSONObject(i).getString("time"));
-				list.add(path);
-			}
-			Message msg = new Message();
-			msg.obj = list;
-			msg.what = Config.REQUEST_DOWNLOAD_INFO;
-			BaseActivity.sendMessage(msg);
-			System.out.println("服务器返回handDownloadInfo:" + list.toString());
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
+    public void handDownloadInfo() {
+        JSONArray jo = null;
+        List<Info> list = new ArrayList<Info>();
+        jo = jsonObject.optJSONArray("list");
+        System.out.println(jo.toString());
+        try {
+            for (int i = 0; i < jo.length(); i++) {
+                JSONObject json = new JSONObject();
+                json = jo.getJSONObject(i);
+                Info a = new Info();
+
+                a.setSendUser(json.getString("sendername"));
+
+                a.setReceiver(json.getString("receivername"));
+                a.setDetail(json.getString("message"));
+                a.setTime(json.getString("time"));
+                list.add(a);
+            }
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println("封装后的list:" + list.toString());
+        Message msg = new Message();
+        msg.obj = list;
+        msg.what = Config.REQUEST_DOWNLOAD_INFO;
+        BaseActivity.sendMessage(msg);
+    }
 
 	// 登录
 	public void login(String userName, String password) {

@@ -44,9 +44,9 @@ public class Conmmunication {
 	/**
 	 * 下载消息 //这个应该是获取消息列�?
 	 */
-	public void downloadInfo(String userName) {
+	/*public void downloadInfo(String userName) {
 		netWorker.downloadInfo(userName);
-	}
+	}*/
 
 	//
 	// // 获取和某人的最新消息
