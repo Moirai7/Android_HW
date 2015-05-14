@@ -140,6 +140,10 @@ public class Database {
 	}
 
     public boolean saveFriends(List<String> list){
+        Cursor rs = db.rawQuery("select * from FriendInfo", null);
+        if (rs.getCount() != 0) {
+            db.execSQL("DELETE FROM FriendInfo");
+        }
         for (int i = 0; i < list.size(); i++) {
             ContentValues values = new ContentValues();
             String path = list.get(i);
