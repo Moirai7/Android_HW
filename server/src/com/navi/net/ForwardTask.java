@@ -147,7 +147,6 @@ public class ForwardTask extends Task {
 			handSendMessage();
 			break;
 		case Config.REQUEST_GET_MESSAGE:
-
 			handGetMessage();
 			break;
 		case Config.RESULT_YAOYIYAO:
@@ -223,7 +222,7 @@ public class ForwardTask extends Task {
 			String senderid = message.getString("userid1");// 閸欐垿锟介惃鍕眽
 			String receiverid = message.getString("userid2");// 閸欐垿锟介惃鍕
 
-			System.out.println("********此处测试*****************");
+			System.out.println("********此处测试*****************下载和某个朋友的消息");
 			System.out.println(message.toString());
 
 			InfoDao dao = new InfoDao();
@@ -233,6 +232,7 @@ public class ForwardTask extends Task {
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_GET_MESSAGE);
 			obj.put(Config.RESULT, Config.SUCCESS);
 			obj.put("list", messagelist);
+			System.out.println("获取和某个人的新消息"+obj.toString());
 			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -274,8 +274,9 @@ public class ForwardTask extends Task {
 		try {
 			String sender = message.getString("name");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
 			FriendsDao dao = new FriendsDao();
+			map.put(sender, socket);
 			dao.yaoyiyao(sender);
-
+		
 			System.out.println("handSendRequestFriend:" + sender);
 //			JSONObject obj = new JSONObject();
 //			obj.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);

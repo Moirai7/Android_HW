@@ -178,6 +178,7 @@ public class FriendsDao {
 			ResultSet fs;
 
 			fs = stmt.executeQuery(sqlsel);
+			//fs.getRow();
 			while (fs.next()) {
 				if (!fs.getString("name").equals(sendname)) {
 					name2 = fs.getString("name");
@@ -236,7 +237,7 @@ public class FriendsDao {
 			}
 			if (name2 == null) {
 		//		System.out.println("nofriend");
-				Thread.currentThread().sleep(2000);
+				Thread.currentThread().sleep(10000);
 		//		System.out.println("delete");
 				System.out.println("nofriend"+sendname);
 				String sqldel = "delete from requestFriends where name ='"

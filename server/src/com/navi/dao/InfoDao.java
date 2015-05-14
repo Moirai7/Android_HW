@@ -85,7 +85,7 @@ public class InfoDao {
     	JSONArray msgs = new JSONArray();
 		getConnection();
 		String sql = "select * from msglist where receivername = '" + userid
-				+ "' and status = 0 order by id";
+				+ "' and status = 0 order by sendtime DESC";
 		String sql2 = "update msglist set status = 1 where receivername = '"
 				+ userid + "'";
 		try {
@@ -117,7 +117,7 @@ public class InfoDao {
 		}
 		return msgs;
 	}
-    //****************************已测
+    //****************************已测（贺明慧：下载新消息在聊天过程中，需要加上states的判断    按降序排列）
     public JSONArray getfriendNews(String username, String sendername) {
 		// List<Info> msgss = new ArrayList<Info>();
 		JSONArray msgs = new JSONArray();
