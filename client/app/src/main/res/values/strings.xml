@@ -12,7 +12,7 @@
     <string name="title_activity_setting">Settings</string>
     <string name="title_activity_camera">Camera</string>
     <string name="title_activity_gesture">Gesture</string>
-
+    <string name="send_moments">Send Moments</string>
     <string name="tab_chat">Chats</string>
     <string name="tab_friend">Friends</string>
     <string name="tab_share">Shares</string>
@@ -111,4 +111,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_share">Add</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_send_moment">SendMomentActivity</string>
 </resources>

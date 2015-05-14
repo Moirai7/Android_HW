@@ -390,6 +390,10 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         Intent intent = new Intent();
                         intent.setClass(queue.getLast(),ShakeActivity.class);
                         startActivity(intent);
+                    }else if(theFragment==2) {
+                        Intent intent = new Intent();
+                        intent.setClass(queue.getLast(),SendMomentActivity.class);
+                        startActivity(intent);
                     }
                 }
                 break;
