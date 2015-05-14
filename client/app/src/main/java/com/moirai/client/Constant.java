@@ -4,7 +4,7 @@ package com.moirai.client;
 public class Constant {
 	
 	public static String ID="1";
-    public static String USERNAME="Test001";
+    public static String USERNAME="Test002";
     public static String PASSWORD;
     public static int first=0;
     public static boolean isSetting = false;

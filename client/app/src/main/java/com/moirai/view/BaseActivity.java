@@ -51,6 +51,13 @@ public abstract class BaseActivity extends FragmentActivity  {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        con = Conmmunication.newInstance();
+        db = Database.getInstance(this);
+        // 判断该Activity是否在LinkedList中，没有在的话就添加上
+        if (!queue.contains(this)) {
+            queue.add(this);
+            System.out.println("将" + queue.getLast() + "添加到list中去"+"queue : " + queue.toString());
+        }
         if(Constant.ID=="1"){
             connection_voice = new ServiceConnection() {
 
@@ -76,13 +83,7 @@ public abstract class BaseActivity extends FragmentActivity  {
             bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
         }
 
-        con = Conmmunication.newInstance();
-        db = Database.getInstance(this);
-		// 判断该Activity是否在LinkedList中，没有在的话就添加上
-		if (!queue.contains(this)) {
-			queue.add(this);
-			System.out.println("将" + queue.getLast() + "添加到list中去");
-		}
+
 	}
 
     protected void StopListen() {
@@ -113,7 +114,7 @@ public abstract class BaseActivity extends FragmentActivity  {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			default:
-				 System.out.println("执行到了控制信息处理handle");
+				 System.out.println(queue.getLast()+"执行到了控制信息处理handle");
 				 if(!queue.isEmpty()){
 				 Log.i("提示","值="+msg.arg1+"!!!!!!"+"类型="+msg.what);
 				 queue.getLast().processMessage(msg);
@@ -128,16 +129,7 @@ public abstract class BaseActivity extends FragmentActivity  {
 	public static void sendMessage(Message msg) {
 		handler.sendMessage(msg);
 	}
-    @Override
-    protected void onDestroy() {
-        if (queue.contains(this)) {
-            queue.remove(this);
-            System.out.println("将" + this + "移出list");
-        }
-        if(connection_voice!=null)
-            unbindService(connection_voice);
-        super.onDestroy();
-    }
+
     protected void removeActivity(){
         queue.remove(queue.getLast());
     }

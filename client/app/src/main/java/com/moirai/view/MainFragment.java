@@ -78,6 +78,10 @@ public class MainFragment extends ListFragment{
         mAdapter = ((MainActivity)getActivity()).getAdapter();
     }
 
+    public void setmAdapter(SimpleAdapter tAdapter){
+        mAdapter = tAdapter;
+        mListView.setAdapter(mAdapter);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

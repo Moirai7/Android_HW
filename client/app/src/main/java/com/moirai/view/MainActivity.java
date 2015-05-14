@@ -69,21 +69,20 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             case Config.REQUEST_DOWNLOAD_INFO:
                 System.out.println("message的信息"+message.toString());
                 List<Info> list_Info=(List<Info>)message.obj;
-                if(!list_Info.isEmpty()) {
+                if(!list_Info.isEmpty())
                     db.saveAllHistory(list_Info);
-                    getData(list_Info);
-                    adapter = new SimpleAdapter(getApplicationContext(), list1, R.layout.list_item,
+                //首页显示从本地数据库读取
+                getData();
+                data = list1;
+                    SimpleAdapter adapter = new SimpleAdapter(getApplicationContext(), list1, R.layout.list_item,
                             new String[]{"title", "img","date","content"},
                             new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
+                    ((MainFragment)fragments.get(0)).setmAdapter(adapter);
                     if(Constant.ID.equals("1")) {
                         StartListRead();
                     }
-                }else{
-                    StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
-                }
                 break;
             case Config.ACK_CON_SUCCESS:
-                StartRead(getResources().getString(R.string.main_welcome),Config.ACK_NONE);//欢迎
                 StartRead(getResources().getString(R.string.main_welcome),Config.ACK_NONE);//欢迎
                 break;
             case Config.ACK_DOWN:
@@ -109,6 +108,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             case Config.ACK_LEFT://0是首页，1是contact，2是朋友圈
                 if(rgs.getVisibility()!=View.GONE) {
                     int p = (theFragment + 2) % 3;
+                    //theFragment=p;
                     setSimulateClick(rb[p], position[p][0], position[p][1]);
                     //tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+2)%3,(theFragment+2)%3);
                     switch (p) {
@@ -127,6 +127,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             case Config.ACK_RIGHT://0是首页，1是contact，2是朋友圈
                 if(rgs.getVisibility()!=View.GONE) {
                     int q = (theFragment + 1) % 3;
+                    //theFragment=q;
                     setSimulateClick(rb[q], position[q][0], position[q][1]);
                     switch (q) {
                         case 0:
@@ -163,15 +164,21 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 switch(theFragment){
                     case 0:
                         if(!data.isEmpty()) {
-                            content = (String) data.get(theInfoId).get("title")
+                            //如果data里的这条消息发送人不是用户，则是新消息
+                            if(!((String) data.get(theInfoId).get("title")).equals(Constant.USERNAME)){
+                            content =(String) data.get(theInfoId).get("time")
+                                    + (String) data.get(theInfoId).get("title")
                                     + getString(R.string.main_chats_tip)
                                     + (String) data.get(theInfoId).get("content");
-                            StartRead(content, Config.ACK_NONE);
+                                    StartRead(content,Config.ACK_NONE);
+                            }else{
+                                StartRead("你和朋友"+(String) data.get(theInfoId).get("title")+"的历史消息", Config.ACK_NONE);
+                            }
                         }else{
                             StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
                         }
                          break;
-               /*     case 1:
+                   case 1:
                         content = (String)data.get(theInfoId).get("title");
                         StartRead(content,Config.ACK_NONE);
                         break;
@@ -180,7 +187,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                                 + getString(R.string.main_share_tip)
                                 + (String)data.get(theInfoId).get("content");
                         StartRead(content,Config.ACK_NONE);
-                        break;*/
+                        break;
                     default:
                         break;
 
@@ -220,9 +227,11 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     theFragment = 0;
                     data = list1;
                     // create ArrayAdapter and use it to bind tags to the ListView
-                    adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
-                            new String[]{"title", "img","date","content"},
-                            new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
+                    if(!data.isEmpty()) {
+                        adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+                                new String[]{"title", "img", "date", "content"},
+                                new int[]{R.id.nameView, R.id.photoView, R.id.dateView, R.id.contentView});
+                    }
                     break;
                 case 1:
                     theFragment = 1;
@@ -308,13 +317,13 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
+    private int flag_Resume=0;//用来标识第几次调用onResume
     @Override
     protected void onResume() {
         StartRead(getResources().getString(R.string.welcome_back),Config.ACK_NONE);
         if(!Constant.setBlind){
             //设置事件监听，要修改ImageView的值
-            removeActivity();
+            //removeActivity();
             final GestureDetectorCompat mGesturedetector;
             mGesture gesture = new mGesture();
             mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
@@ -350,6 +359,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 Intent intent_voice_service = new Intent(this, VoiceService.class);
                 startService(intent_voice_service);
                 bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
+
             }
         }else{
             if(!Constant.ID.equals("1")){
@@ -357,7 +367,10 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 iv.setVisibility(View.GONE);
             }
         }
-
+        if(flag_Resume!=0)
+       con.getnewmessage(Constant.USERNAME);
+        System.out.println("back更新");
+        flag_Resume++;
         super.onResume();
     }
 
@@ -406,26 +419,48 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
      * 已测（贺明慧）
      */
     private List<Map<String, Object>> list1 = new ArrayList<Map<String, Object>>();
-    private void getData(List<Info> InfoList) {
-
- //InfoList 是从服务器传来的全部消息
-/*        if(InfoList==null){
-            InfoList = db.getAllHistory();
-        }*/
-            for (int i = 0; i < InfoList.size(); i++) {
-                String sendUser = InfoList.get(i).getSendUser();
-                String time = InfoList.get(i).getTime();
-                String detail = InfoList.get(i).getDetail();
-                //只显示最新的那条消息
-                if (i == 0 || !sendUser.equals(InfoList.get(i - 1).getSendUser())) {
-                    Map<String, Object> map = new HashMap<String, Object>();
+    private void getData() {
+        //InfoList 是从服务器传来的全部消息
+        List<Info> InfoList = db.getAllHistory();
+        list1 = new ArrayList<Map<String, Object>>();
+        for (int i = 0; i < InfoList.size(); i++) {
+            String sendUser = InfoList.get(i).getSendUser();
+            String receiver = InfoList.get(i).getReceiver();
+            String time = InfoList.get(i).getTime();
+            String detail = InfoList.get(i).getDetail();
+            //只显示最新的那条消息
+            Map<String, Object> map = new HashMap<String, Object>();
+            if(list1.isEmpty()) {
+                if (sendUser.equals(Constant.USERNAME)) {
+                    map.put("title", receiver);
+                } else {
                     map.put("title", sendUser);
+                }
+                map.put("img", R.mipmap.pic1);
+                map.put("date", time);
+                map.put("content", detail);//最新的一条消息
+                list1.add(map);
+            }else {
+                int count = 0;
+                for (int j = 0; j < list1.size(); j++) {
+                    if (!sendUser.equals(list1.get(j).get("title")) && !receiver.equals(list1.get(j).get("title"))) {
+                        count++;
+                    }
+                }//for 循环结束 判断是否已经存在list1中
+                //如果相等，说明可以加进list1中
+                if (count == list1.size()) {
+                    if (sendUser.equals(Constant.USERNAME)) {
+                        map.put("title", receiver);
+                    } else {
+                        map.put("title", sendUser);
+                    }
                     map.put("img", R.mipmap.pic1);
                     map.put("date", time);
                     map.put("content", detail);//最新的一条消息
                     list1.add(map);
                 }
-                System.out.println("list1的大小" + list1.size());
+            }//判断count是否等于list1大小的if结束
+            System.out.println("list1的大小" + list1.size());
         }
     }
 //contact

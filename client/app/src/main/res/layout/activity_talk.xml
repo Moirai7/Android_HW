@@ -36,12 +36,12 @@
             android:layout_weight="1">
 
         <ImageButton
-            android:id="@+id/talk_cameraIbtn"
+            android:id="@+id/talk_refreshIbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="3dp"
-            android:background="@drawable/camera"/>
+            android:background="@drawable/refresh"/>
         <!--<ImageButton-->
             <!--android:id="@+id/talk_text_voice_imageBtn"-->
             <!--android:layout_width="wrap_content"-->

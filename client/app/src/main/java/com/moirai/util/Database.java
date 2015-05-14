@@ -85,7 +85,7 @@ public class Database {
 	}
 
     public List<Info> getAllHistory(){
-        Cursor rs = db.rawQuery("select * from HistoryInfo", null);
+        Cursor rs = db.rawQuery("select * from HistoryInfo order by time desc", null);
         List<Info> list = new ArrayList<Info>();
         if (rs != null) {
             if (rs.moveToFirst()) {
@@ -103,7 +103,7 @@ public class Database {
     }
 
     public List<Info> getFriendHistory(String name){
-        Cursor rs = db.rawQuery("select * from HistoryInfo where receid = ? or sendid = ?", new String[]{name,name});
+        Cursor rs = db.rawQuery("select * from HistoryInfo where receid = ? or sendid = ? order by time asc", new String[]{name,name});
         List<Info> list = new ArrayList<Info>();
         if (rs != null) {
             if (rs.moveToFirst()) {

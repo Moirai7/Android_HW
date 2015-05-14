@@ -3,7 +3,12 @@ package com.moirai.view;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.os.Message;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
@@ -22,6 +27,7 @@ import android.widget.Toast;
 import com.moirai.client.Config;
 import com.moirai.client.Constant;
 import com.moirai.client.R;
+import com.moirai.voice.VoiceService;
 
 public class SettingActivity extends BaseActivity {
     private RadioGroup radioGroup;
@@ -130,8 +136,15 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         Constant.isSetting=false;
+        if (queue.contains(this)) {
+            queue.remove(this);
+            System.out.println("将" + this + "移出list"+"queue : " + queue.toString());
+        }
+        if(connection_voice!=null)
+            unbindService(connection_voice);
         super.onDestroy();
     }
+
 
     /**
      * 设置0被选

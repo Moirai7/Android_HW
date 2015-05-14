@@ -24,7 +24,7 @@ import com.moirai.view.BaseActivity;
 public class NetWorker extends Thread {
 	// Context context;
 	// private static final String IP = "59.65.171.333";
-	private static final String IP = "172.24.10.52";
+	private static final String IP = "172.28.22.123";
 
 	private static final int PORT = 6666;
 
@@ -318,6 +318,7 @@ public class NetWorker extends Thread {
 			msg.obj = name;
 			msg.arg1 = result;
 			msg.what = Config.RESULT_YAOYIYAO;
+            System.out.println("yaoyiyao"+ msg.obj);
 			BaseActivity.sendMessage(msg);
 		} catch (JSONException e) {
 			e.printStackTrace();

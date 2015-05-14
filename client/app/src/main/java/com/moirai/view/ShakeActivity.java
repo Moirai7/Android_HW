@@ -109,7 +109,8 @@ public class ShakeActivity extends BaseActivity
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
-        super.onResume(); //注册监听器
+        super.onResume();
+        //注册监听器
         sensorManager.registerListener(this,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 sensorManager.SENSOR_DELAY_NORMAL);
@@ -147,6 +148,7 @@ public class ShakeActivity extends BaseActivity
                 downImage.startAnimation(animDown);
                 progressBar.setVisibility(View.VISIBLE);
                 //摇完给服务器发送请求
+                System.out.println("shakeActivity摇一摇已经检测到");
                 con.requireFriend(Constant.USERNAME);
             }
         }
@@ -184,10 +186,11 @@ public class ShakeActivity extends BaseActivity
     @Override
     public void processMessage(Message message) {
         switch (message.what) {
-            case Config.REQUEST_ADDFRIEND:
+            case Config.RESULT_YAOYIYAO:
                 //判断是否有同时摇的用户先，待完善
                 int result_Yao = message.arg1;
                if (result_Yao == Config.SUCCESS) {
+                   StartRead("检测到摇一摇好友了",Config.ACK_NONE);
                     String userName = (String)message.obj;
                     if(!Constant.ID.equals("1")){
                         confirmAddFriend(userName);
@@ -198,7 +201,7 @@ public class ShakeActivity extends BaseActivity
                                 + " "
                                 +getString(R.string.message2_shake_confirm)
                                 +getString(R.string.message3_shake_confirm);
-                        StartRead(msg, Config.ACK_SHAKE_RESULT);
+                        StartRead(msg, Config.ACK_NONE);
                         checkInfoAdd=true;
                     }
 
@@ -227,10 +230,10 @@ public class ShakeActivity extends BaseActivity
                     StartRead(getResources().getString(R.string.voice_shake_result_cancel),Config.ACK_NONE);
                 }
                 break;
-            case Config.ACK_SHAKE_TIP_CANCEL:
+      /*      case Config.ACK_SHAKE_TIP_CANCEL:
                 StartRead(getString(R.string.voice_shake_tip),Config.ACK_SHAKE_TIP);
-                break;
-            case Config.RESULT_ADDFRIEND:
+                break;*/
+            case Config.REQUEST_ADDFRIEND:
                 int result_Add = message.arg1;
                 if(result_Add == Config.SUCCESS){
                     StartRead(getResources().getString(R.string.voice_shake_result_success),Config.ACK_NONE);
@@ -250,5 +253,16 @@ public class ShakeActivity extends BaseActivity
         intent.setClass(ShakeActivity.this, MainActivity.class);
         startActivity(intent);
         ShakeActivity.this.finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (queue.contains(this)) {
+            queue.remove(this);
+            System.out.println("将" + this + "移出list"+"queue : " + queue.toString());
+        }
+        if(connection_voice!=null)
+            unbindService(connection_voice);
+        super.onDestroy();
     }
 }
