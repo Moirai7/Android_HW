@@ -148,7 +148,7 @@ public class TalkActivity extends BaseActivity {
         });
         initData();
     }
-// TODO 初始化数据页面显示有点问题
+
     public void initData()
     {
        //从本地数据库获取消息，显示在聊天页面
@@ -205,7 +205,7 @@ public class TalkActivity extends BaseActivity {
 
             msgEdit.setText("");
             con.sendInfo(Constant.USERNAME,currFriend,contString);
-            db.saveFriendHistory(entity);
+            //db.saveFriendHistory(entity);
 
             mListView.setSelection(mListView.getCount() - 1);
         }

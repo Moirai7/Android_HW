@@ -219,6 +219,7 @@ public class ShakeActivity extends BaseActivity
             case Config.ACK_DOUBLE_CLICK:
                 if(checkInfoAdd) {
                     StartRead(getResources().getString(R.string.voice_shake_result_success),Config.ACK_NONE);
+
                     finish();
                 }
                 break;
@@ -235,8 +236,10 @@ public class ShakeActivity extends BaseActivity
                 break;*/
             case Config.REQUEST_ADDFRIEND:
                 int result_Add = message.arg1;
+
                 if(result_Add == Config.SUCCESS){
                     StartRead(getResources().getString(R.string.voice_shake_result_success),Config.ACK_NONE);
+                    db.saveFriend((String)message.obj);
                     gotoFriendActivity();
                 }else{
                     StartRead(getResources().getString(R.string.voice_shake_result_success),Config.ACK_NONE);

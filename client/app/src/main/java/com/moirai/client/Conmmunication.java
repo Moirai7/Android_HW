@@ -92,12 +92,12 @@ public class Conmmunication {
 		netWorker.sendRequestFriend(id);
 	}
 
-	/**
-	 * 下载朋友
-	 */
-	public void downloadFriend(String userName) {
-
-	}
+    /**
+     * 下载朋友列表
+     */
+    public void downloadFriend(String userName) {
+        netWorker.downloadFriend(userName);
+    }
 
 	/**
 	 * 添加朋友

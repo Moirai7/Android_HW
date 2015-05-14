@@ -19,12 +19,13 @@ import android.os.Message;
 
 import com.moirai.model.Info;
 import com.moirai.model.User;
+import com.moirai.model.Friend;
 import com.moirai.view.BaseActivity;
 
 public class NetWorker extends Thread {
 	// Context context;
 	// private static final String IP = "59.65.171.333";
-	private static final String IP = "172.28.22.123";
+	private static final String IP = "172.28.17.101";
 
 	private static final int PORT = 6666;
 
@@ -118,9 +119,6 @@ public class NetWorker extends Thread {
 		case Config.REQUEST_REQUIRE_FRIEND:
 			handSendRequestFriend();// OK
 			break;
-		case Config.REQUEST_DOWNLOAD_FRIEND:
-			// handSetRequestInfo();//OK
-			break;
 		case Config.REQUEST_ADDFRIEND:
 			handAddFriend();// OK
 			break;
@@ -149,6 +147,10 @@ public class NetWorker extends Thread {
 		case Config.RESULT_YAOYIYAO:
 			handSendRequestFriend();
 			break;
+            // 传递获取朋友列表
+        case Config.REQUEST_DOWNLOAD_FRIEND:
+             handdownloadFriend();
+                break;
 		default:
 			/*
 			 * System.out.println("default"); onWork=false; socket.close();
@@ -325,10 +327,8 @@ public class NetWorker extends Thread {
 		}
 	}
 
-	// 发消�?
+	// 发送添加朋友请求
 	public void addFriend(String username, String otherid, int answer) {
-		// System.out.println("发�?�消息的请求");
-		// JSOn
 		JSONObject jo = new JSONObject();
 		try {
 			jo.put("requestType", Config.REQUEST_ADDFRIEND);
@@ -343,16 +343,28 @@ public class NetWorker extends Thread {
 		out.println(jo.toString());
 	}
 
-	// 传�?�发消息
+    // 下载朋友列表
+    public void downloadFriend(String name) {
+
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("requestType", Config.REQUEST_DOWNLOAD_FRIEND);
+            jo.put("name", name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(jo.toString());
+
+    }
+
+	// 传递添加朋友
 	public void handAddFriend() {
-		// //Log.i(Config.TAG, "传�?�从服务器端返回的消息的请求");
-		// System.out.println("传�?�从服务器端返回的消息的请求");
-		// JSOn
 		int result = 0;
 		try {
 			result = jsonObject.getInt("result");
 			Message msg = new Message();
 			msg.arg1 = result;
+            msg.obj = jsonObject.getString("name");
 			msg.what = Config.REQUEST_ADDFRIEND;
 			BaseActivity.sendMessage(msg);
 		} catch (JSONException e) {
@@ -360,7 +372,35 @@ public class NetWorker extends Thread {
 		}
 	}
 
-	// 下载
+    // 传递下载朋友列表
+    public void handdownloadFriend() {
+
+        JSONArray jo = null;
+        List<Friend> list = new ArrayList<Friend>();
+        jo = jsonObject.optJSONArray("list");
+        System.out.println(jo.toString());
+        try {
+            for (int i = 0; i < jo.length(); i++) {
+                JSONObject json = new JSONObject();
+                json = jo.getJSONObject(i);
+                Friend a = new Friend();
+                a.setfriendname(json.getString("friend"));
+                // a.setState(json.getInt("state"));
+                list.add(a);
+            }
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println("封装后的list:" + list.toString());
+        Message msg = new Message();
+        msg.obj = list;
+        msg.what = Config.REQUEST_DOWNLOAD_FRIEND;
+        BaseActivity.sendMessage(msg);
+
+    }
+
+    // 下载
 	/*public void downloadInfo(String username) {
 
 		// System.out.println("发�?�下载Info的请�?");
