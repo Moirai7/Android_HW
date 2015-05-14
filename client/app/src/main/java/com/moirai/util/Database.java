@@ -19,6 +19,7 @@ import org.json.JSONException;
 import com.moirai.client.Constant;
 import com.moirai.client.R;
 import com.moirai.model.Info;
+import com.moirai.model.Moments;
 import com.moirai.model.User;
 
 import android.annotation.SuppressLint;
@@ -57,6 +58,7 @@ public class Database {
         db.insert("UserInfo", "username", values);
         return true;
     }
+
     public boolean getUserInfo() {
         Cursor rs = db.rawQuery("select * from UserInfo", null);
         if (rs != null) {
@@ -147,6 +149,32 @@ public class Database {
         return true;
     }
 
+    public List<Moments> getMoments() {
+        Cursor rs = db.rawQuery("select * from MomentsInfo order by time asc",null);
+        List<Moments> list = new ArrayList<Moments>();
+        if (rs != null) {
+            if (rs.moveToFirst()) {
+                do {
+                    Moments road=new Moments();
+                    road.setSendUser(rs.getString(rs.getColumnIndex("sendid")));
+                    road.setTime(rs.getString(rs.getColumnIndex("time")));
+                    road.setContent(rs.getString(rs.getColumnIndex("content")));
+                    list.add(road);
+                } while (rs.moveToNext());
+            }
+        }
+        return list;
+    }
+
+    public boolean saveMoments(Moments list) {
+        ContentValues values = new ContentValues();
+        values.put("sendid", list.getSendUser());
+        values.put("content", list.getContent());
+        values.put("time", list.getTime());
+        db.insert("MomentsInfo", null, values);
+        return true;
+    }
+
     public List<String> getAllFriend() {
         Cursor rs = db.rawQuery("select * from FriendInfo", null);
         List<String> list = new ArrayList<String>();
@@ -160,6 +188,18 @@ public class Database {
             }
         }
         return list;
+    }
+
+    public boolean saveAllMoments(List<Moments> list) {
+        for (int i = 0; i < list.size(); i++) {
+            ContentValues values = new ContentValues();
+            Moments path = list.get(i);
+            values.put("sendid", path.getSendUser());
+            values.put("content", path.getContent());
+            values.put("time", path.getTime());
+            db.insert("HistoryInfo", null, values);
+        }
+        return true;
     }
 
     private Database(Context context) {
