@@ -20,12 +20,13 @@ import android.os.Message;
 import com.moirai.model.Info;
 import com.moirai.model.User;
 import com.moirai.model.Friend;
+import com.moirai.model.Moments;
 import com.moirai.view.BaseActivity;
 
 public class NetWorker extends Thread {
 	// Context context;
 	// private static final String IP = "59.65.171.333";
-	private static final String IP = "172.28.17.101";
+	private static final String IP = "192.168.253.1";
 
 	private static final int PORT = 6666;
 
@@ -113,9 +114,6 @@ public class NetWorker extends Thread {
 		case Config.REQUEST_DOWNLOAD_INFO:
 			handDownloadInfo();// OK
 			break;
-		// case Config.REQUEST_SET_INFO:
-		// handPathInfo();//OK
-		// break;
 		case Config.REQUEST_REQUIRE_FRIEND:
 			handSendRequestFriend();// OK
 			break;
@@ -123,7 +121,7 @@ public class NetWorker extends Thread {
 			handAddFriend();// OK
 			break;
 		case Config.REQUEST_DOWNLOAD_MOMENTS:
-			// handGetHistory();
+            handdownloadMoments();
 			break;
 		case Config.REQUEST_IPLOAD_MOMENTS:
 			// handGetHistory();
@@ -132,18 +130,18 @@ public class NetWorker extends Thread {
 			handCon();
 			break;
 
-		// 发�?�消息的结果 4-14
+		// 发送消息的结果 4-14
 		case Config.REQUEST_SEND_MESSAGE:
 			handSendInfo();
 			break;
-		// 获取和某�?个人的消息列�?
+		// 获取和某一个人的消息列表
 		case Config.REQUEST_GET_MESSAGE:
 			handgetmessage();
 			break;
-		// 传递获取最新消息
+	/*	// 传递获取最新消息
 		case Config.REQUEST_DOWNLOAD_NEWINFO:
 			handdownloadnewmessage();
-			break;
+			break;*/
 		case Config.RESULT_YAOYIYAO:
 			handSendRequestFriend();
 			break;
@@ -211,82 +209,6 @@ public class NetWorker extends Thread {
 			e.printStackTrace();
 		}
 	}
-
-	// //得到位置
-	// public void getHistory(String userid){
-	// System.out.println("发�?�位置的请求ddd");
-	// // JSOn
-	// JSONObject jo = new JSONObject();
-	// try {
-	// jo.put("requestType", Config.REQUEST_GATHISTORY);
-	// jo.put("userid", userid);
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// }
-	// //Log.i(Config.TAG, "发�?�位置的请求为：" + jo.toString());
-	//
-	// out.println(jo.toString());
-	// }
-	// //传�?�得到位�?
-	// public void handGetHistory() {
-	// //Log.i(Config.TAG, "传�?�从服务器端返回的位置的请求");
-	// System.out.println("传�?�从服务器端返回的位置的请求");
-	// // JSOn
-	// JSONArray jo = null;
-	// List<History> list = new ArrayList<History>();
-	// try {
-	// jo = jsonObject.optJSONArray("list");
-	// for(int i = 0 ; i < jo.length() ; i++){
-	// History path = new History();
-	// path.setPointID(jo.getJSONObject(i).getString("pointID"));
-	// path.setUserID(jo.getJSONObject(i).getString("userID"));
-	// path.setTime(jo.getJSONObject(i).getString("time"));
-	// list.add(path);
-	// }
-	// Message msg = new Message();
-	// msg.obj = list;
-	// msg.what = Config.REQUEST_GATHISTORY;
-	// BaseActivity.sendMessage(msg);
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// //保存位置
-	// public void saveHistory(String userid,String pointID,String time) {
-	// System.out.println("发�?�位置的请求ddd");
-	// // JSOn
-	// JSONObject jo = new JSONObject();
-	// try {
-	// jo.put("requestType", Config.REQUEST_SAVEHISTORY);
-	// jo.put("userid", userid);
-	// jo.put("pointID", pointID);
-	// jo.put("time", time);
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// }
-	// //Log.i(Config.TAG, "发�?�位置的请求为：" + jo.toString());
-	//
-	// out.println(jo.toString());
-	// }
-	// //传�?�保存位�?
-	// public void handSaveHistory() {
-	// //Log.i(Config.TAG, "传�?�从服务器端返回的位置的请求");
-	// System.out.println("传�?�从服务器端返回的位置的请求");
-	// int result = 0;
-	// try {
-	// result = jsonObject.getInt("result");
-	// Message msg = new Message();
-	// msg.arg1 = result;
-	// msg.what = Config.REQUEST_SAVEHISTORY;
-	// BaseActivity.sendMessage(msg);
-	// } catch (JSONException e) {
-	// e.printStackTrace();
-	// }
-	//
-	// }
-	//
-	// 修改内容s
 
 	// 摇一摇
 	public void sendRequestFriend(String username) {
@@ -400,28 +322,8 @@ public class NetWorker extends Thread {
 
     }
 
-    // 下载
-	/*public void downloadInfo(String username) {
-
-		// System.out.println("发�?�下载Info的请�?");
-		// JSOn
-		JSONObject jo = new JSONObject();
-		try {
-			jo.put("requestType", Config.REQUEST_DOWNLOAD_INFO);
-			jo.put("username", username);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		// Log.i(Config.TAG, "发�?�单个点的请求为�?" + jo.toString());
-
-		out.println(jo.toString());
-	}*/
-
 	// 下载最新消息
 	public void handdownloadnewmessage() {
-		// //Log.i(Config.TAG, "传�?�从服务器端返回的消息的请求");
-		// System.out.println("传�?�从服务器端返回的消息的请求");
-		// JSOn
 		int result = 0;
 		try {
 			result = jsonObject.getInt("result");
@@ -439,9 +341,6 @@ public class NetWorker extends Thread {
 
 	// 获取和某人的最新消息
 	public void getnewmessage(String name) {
-
-		// System.out.println("发�?�下载Info的请�?");
-		// JSOn
 		JSONObject jo = new JSONObject();
 		try {
 			jo.put("requestType", Config.REQUEST_DOWNLOAD_INFO);
@@ -449,8 +348,6 @@ public class NetWorker extends Thread {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		// Log.i(Config.TAG, "发�?�单个点的请求为�?" + jo.toString());
-
 		out.println(jo.toString());
 	}
 
@@ -521,8 +418,63 @@ public class NetWorker extends Thread {
         msg.what = Config.REQUEST_DOWNLOAD_INFO;
         BaseActivity.sendMessage(msg);
     }
+    // 下载朋友圈
+    public void downloadMoments(String name) {
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("requestType", Config.REQUEST_DOWNLOAD_MOMENTS);
+            jo.put("name", name);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(jo.toString());
 
-	// 登录
+    }
+
+    // 下载朋友圈
+    public void handdownloadMoments() {
+
+        int result = 0;
+        try {
+            result = jsonObject.getInt(Config.RESULT);
+
+            // System.out.println(jsonObject.getJSONArray("list").gettoString());
+            if (result == Config.SUCCESS) {
+                List<Moments> list = new ArrayList<Moments>();
+                JSONArray json = jsonObject.getJSONArray("list");
+                for (int i = 0; i < json.length(); i++) {
+                    JSONObject a = new JSONObject();
+                    a = (JSONObject) json.get(i);
+                    System.out.println(a.toString());
+                    Moments moment = new Moments();
+                    moment.setSendUser(a.getString("send"));
+                    moment.setContent(a.getString("content"));
+                    moment.setTime(a.getString("time"));
+                    // System.out.println(moment.get);
+                    list.add(moment);
+                }
+
+                Message msg = new Message();
+                msg.arg1 = result;
+                msg.what = Config.REQUEST_DOWNLOAD_MOMENTS;
+                msg.obj = list;
+                BaseActivity.sendMessage(msg);
+                System.out.println("下载朋友圈的结果:" + list.toString());
+
+            } else {
+                Message msg = new Message();
+                msg.arg1 = result;
+                msg.what = Config.REQUEST_DOWNLOAD_MOMENTS;
+                BaseActivity.sendMessage(msg);
+                System.out.println("下载朋友圈的结果:" + result);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // 登录
 	public void login(String userName, String password) {
 
 		System.out.println("发�?�登录的请求ddd");

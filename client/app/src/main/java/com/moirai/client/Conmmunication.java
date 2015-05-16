@@ -41,20 +41,6 @@ public class Conmmunication {
 		netWorker.register(user);
 	}
 
-	/**
-	 * 下载消息 //这个应该是获取消息列�?
-	 */
-	/*public void downloadInfo(String userName) {
-		netWorker.downloadInfo(userName);
-	}*/
-
-	//
-	// // 获取和某人的最新消息
-	//
-	// public void requireFriend(String name) {
-	// netWorker.requireFriend(name);
-	// }
-
 	// 获取和某人的最新消息
 	public void getnewmessage(String name) {
 		netWorker.getnewmessage(name);
@@ -107,14 +93,14 @@ public class Conmmunication {
 	}
 
 	/**
-	 * 下载朋友�?
+	 * 下载朋友圈
 	 */
 	public void downloadMoments(String username) {
-
+        netWorker.downloadMoments(username);
 	}
 
 	/**
-	 * 刷新朋友�?
+	 * 刷新朋友圈
 	 */
 	public void queryMoments(String userName, String start, String end) {
 

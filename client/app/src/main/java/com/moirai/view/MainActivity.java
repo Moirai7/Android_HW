@@ -204,6 +204,10 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         Intent intent = new Intent();
                         intent.setClass(MainActivity.this, ShakeActivity.class);
                         startActivity(intent);
+                    }else if(theFragment == 2){
+                        Intent intent = new Intent();
+                        intent.setClass(MainActivity.this, SendMomentActivity.class);
+                        startActivity(intent);
                     }
                 }
                 break;
@@ -281,6 +285,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         //TODO 得到编辑框里的值
         //TODO 使用USER创建并调用downInfo();
        con.getnewmessage(Constant.USERNAME);
+       con.downloadFriend(Constant.USERNAME);
         //Fragment
         fragments.add(new MainFragment());
         fragments.add(new ContactFragment());
@@ -470,20 +475,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 //contact
     private List<Map<String, Object>> list2 = new ArrayList<Map<String, Object>>();
     private void getData2() {
-       /* Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact1));
-        map.put("img", R.mipmap.pic4);
-        list2.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact2));
-        map.put("img", R.mipmap.pic5);
-        list2.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact3));
-        map.put("img", R.mipmap.pic6);
-        list2.add(map);*/
+        System.out.println("getData2获取朋友列表");
         List<String > list_Friends= db.getAllFriend();
         for(int i=0;i<list_Friends.size();i++){
             Map<String, Object> map = new HashMap<String, Object>();
