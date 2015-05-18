@@ -89,7 +89,7 @@ public class InfoDao {
 		String sql2 = "update msglist set status = 1 where receivername = '"
 				+ userid + "'";
 		try {
-			ResultSet rs = stmt.executeQuery(sql);//、/////
+			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 //				Info history = new Info();
 //				history.setSendUser(rs.getString("sendid"));
@@ -106,7 +106,6 @@ public class InfoDao {
 				msgs.put(msg);
 
 			}
-			System.out.println("json的消息"+msgs.toString());
 			conn.setAutoCommit(false);
 			stmt.execute(sql2);
 			conn.commit();
@@ -117,16 +116,23 @@ public class InfoDao {
 		}
 		return msgs;
 	}
-    //****************************已测（贺明慧：下载新消息在聊天过程中，需要加上states的判断    按降序排列）
+    //****************************已测
     public JSONArray getfriendNews(String username, String sendername) {
 		// List<Info> msgss = new ArrayList<Info>();
 		JSONArray msgs = new JSONArray();
 		getConnection();
-		String sql = "select * from msglist where receivername = '" + username
+		/*String sql = "select * from msglist where receivername = '" + username
 				+ "' and sendername = '" + sendername
 				+ "' union select * from msglist where receivername = '" + sendername
 				+ "' and sendername = '" + username
-				+ "' order by sendtime DESC" ;
+				+ "' order by sendtime DESC" ;*/
+		/*String sql = "select * from msglist where receivername = '" + username
+				+ "' and sendername = '" + sendername
+				+ "' and status = 0 union select * from msglist where receivername = '" + sendername
+				+ "' and sendername = '" + username
+				+ "' and status = 0 order by sendtime DESC" ;*/
+		String sql = "select * from msglist where receivername = '" + username
+				+ "' and status = 0 order by sendtime DESC" ;
 		String sql2 = "update msglist set status = 1 where receivername = '"
 				+ username + "' and sendername = '" + sendername + "' ";
 		String sql3 = "update msglist set status = 1 where receivername = '"

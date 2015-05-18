@@ -24,7 +24,7 @@ public class FriendsService {
 			friendsDao.deleteFriend(history);
 		}else{
 			friendsDao.saveState(history);
-			new MomentsService().setReciver(history.getReciver());
+			//new MomentsService().setReciver(history.getReciver());
 		}
 		return true;
 	}
@@ -45,21 +45,21 @@ public class FriendsService {
 		}
 		return arr;
 	}
-	public JSONArray downloadAllFriends(String name){
-		JSONArray arr = new JSONArray();
-		List<Friends> infos = new FriendsDao().downloadAllFriends(name);
-		for (int i = 0; i < infos.size(); i++) {
-			JSONObject obj = new JSONObject();
-			Friends path = infos.get(i);
-			try {
-				obj.put("sendUser", path.getSend());
-				obj.put("reciver", path.getReciver());
-				obj.put("state", path.getState());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			arr.put(obj);
-		}
-		return arr;
-	}
+//	public JSONArray downloadAllFriends(String name){
+//		JSONArray arr = new JSONArray();
+//		JSONArray infos = new FriendsDao().downloadAllFriends(name);
+//		for (int i = 0; i < infos.length(); i++) {
+//			JSONObject obj = new JSONObject();
+//			JSONObject path = (JSONObject)infos.get(i);
+//			try {
+//				obj.put("sendUser", path.getSend());
+//				obj.put("reciver", path.getReciver());
+//				obj.put("state", path.getState());
+//			} catch (JSONException e) {
+//				e.printStackTrace();
+//			}
+//			arr.put(obj);
+//		}
+//		return arr;
+//	}
 }

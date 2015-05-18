@@ -16,13 +16,12 @@ import org.json.JSONObject;
 import com.navi.constant.Config;
 import com.navi.dao.FriendsDao;
 import com.navi.dao.InfoDao;
-import com.navi.model.Friends;
+import com.navi.dao.MomentsDao;
 import com.navi.model.Info;
 import com.navi.model.Moments;
 import com.navi.model.User;
-import com.navi.service.FriendsService;
 import com.navi.service.InfoService;
-import com.navi.service.MomentsService;
+//import com.navi.service.MomentsService;
 import com.navi.service.UserService;
 //import com.navi.dao.MessageDao;
 //import com.navi.service.InfoService;
@@ -128,7 +127,7 @@ public class ForwardTask extends Task {
 			break;
 		case Config.REQUEST_REQUIRE_FRIEND:
 			handSendRequestFriend();// OK
-	break;
+			break;
 		case Config.REQUEST_ADDFRIEND:
 			handAddFriend();// OK
 			break;
@@ -147,11 +146,13 @@ public class ForwardTask extends Task {
 			handSendMessage();
 			break;
 		case Config.REQUEST_GET_MESSAGE:
+
 			handGetMessage();
 			break;
 		case Config.RESULT_YAOYIYAO:
 			handSendRequestFriend();
 			break;
+
 		default:
 			/*
 			 * System.out.println("default"); onWork=false; socket.close();
@@ -176,7 +177,7 @@ public class ForwardTask extends Task {
 			String sender = message.getString("sender");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
 			String detail = message.getString("detail");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
 			Moments friends = new Moments(sender, detail);
-			new MomentsService().saveMoments(friends);
+//			new MomentsService().saveMoments(friends);
 			JSONObject obj = new JSONObject();
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
 			obj.put(Config.RESULT, Config.SUCCESS);
@@ -222,7 +223,7 @@ public class ForwardTask extends Task {
 			String senderid = message.getString("userid1");// 閸欐垿锟介惃鍕眽
 			String receiverid = message.getString("userid2");// 閸欐垿锟介惃鍕
 
-			System.out.println("********此处测试*****************下载和某个朋友的消息");
+			System.out.println("********此处测试*****************");
 			System.out.println(message.toString());
 
 			InfoDao dao = new InfoDao();
@@ -232,37 +233,41 @@ public class ForwardTask extends Task {
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_GET_MESSAGE);
 			obj.put(Config.RESULT, Config.SUCCESS);
 			obj.put("list", messagelist);
-			System.out.println("获取和某个人的新消息"+obj.toString());
 			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+//已测
 	private void handDownloadMoments() {
 		try {
-			String userid = message.getString("userid");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
-			String first = message.getString("first");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
-			String end = message.getString("end");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
-			JSONArray arr = new InfoDao().getNews(name);
-
+			String name = message.getString("name");
+			MomentsDao a=new MomentsDao();
+			JSONArray arr = a.getMoments(name);
+			System.out.println(arr.toString());
 			JSONObject obj = new JSONObject();
-
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_FRIEND);
+			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_MOMENTS);
+//			System.out.println(Config.REQUEST_DOWNLOAD_MOMENTS);
 			obj.put("list", arr);
+			obj.put(Config.RESULT, Config.SUCCESS);
 			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	// 获取朋友列表
 	private void handDownloadFriend() {
 		try {
-			String userid = message.getString("userid");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
-			JSONArray arr = new FriendsService().downloadFriends(userid);
+			String userid = message.getString("name");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
+
+			FriendsDao dao = new FriendsDao();
+			JSONArray arr = dao.downloadAllFriends(userid);
+			// JSONArray arr = new FriendsService().downloadFriends(userid);
 			JSONObject obj = new JSONObject();
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_FRIEND);
 			obj.put("list", arr);
+			obj.put(Config.RESULT, Config.SUCCESS);
 			out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -276,19 +281,19 @@ public class ForwardTask extends Task {
 			FriendsDao dao = new FriendsDao();
 			map.put(sender, socket);
 			dao.yaoyiyao(sender);
-		
+
 			System.out.println("handSendRequestFriend:" + sender);
-//			JSONObject obj = new JSONObject();
-//			obj.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
-//			obj.put("name", name);
-//			out.println(obj.toString());
+			// JSONObject obj = new JSONObject();
+			// obj.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
+			// obj.put("name", name);
+			// out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 	}
 
-	//摇一摇之后,是否添加好友的请求
+	// 摇一摇之后,是否添加好友的请求
 	private void handAddFriend() {
 		try {
 			String send = message.getString("send");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
@@ -300,15 +305,15 @@ public class ForwardTask extends Task {
 			//
 			// 这里接入
 			//
-//			Friends history = new Friends(send, reciver, answer);
-//			JSONObject obj = new JSONObject();
-//			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
-//			if (new FriendsService().setState(history)) {
-//				obj.put(Config.RESULT, Config.SUCCESS);
-//			} else {
-//				obj.put(Config.RESULT, Config.FAIl);
-//			}
-//			out.println(obj.toString());
+			// Friends history = new Friends(send, reciver, answer);
+			// JSONObject obj = new JSONObject();
+			// obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+			// if (new FriendsService().setState(history)) {
+			// obj.put(Config.RESULT, Config.SUCCESS);
+			// } else {
+			// obj.put(Config.RESULT, Config.FAIl);
+			// }
+			// out.println(obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
