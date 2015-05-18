@@ -4,7 +4,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.moirai.view.SendMomentActivity">
+    tools:context="com.moirai.view.SendMomentActivity"
+    android:background="#ffffff">
 
     <EditText
         android:layout_width="fill_parent"
@@ -12,9 +13,7 @@
         android:id="@+id/editMoment"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="163dp"
-        android:layout_marginEnd="163dp" />
+        android:layout_alignParentEnd="true" />
 
     <ImageView
         android:id="@+id/moment_zlimage"

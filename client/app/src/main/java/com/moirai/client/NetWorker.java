@@ -26,8 +26,8 @@ import com.moirai.view.BaseActivity;
 public class NetWorker extends Thread {
 	// Context context;
 	// private static final String IP = "59.65.171.333";
-	private static final String IP = "192.168.253.1";
-
+	//private static final String IP = "192.168.253.1";
+    private static final String IP = "172.31.10.178";
 	private static final int PORT = 6666;
 
 	private Socket socket = null;
@@ -123,9 +123,6 @@ public class NetWorker extends Thread {
 		case Config.REQUEST_DOWNLOAD_MOMENTS:
             handdownloadMoments();
 			break;
-		case Config.REQUEST_IPLOAD_MOMENTS:
-			// handGetHistory();
-			break;
 		case Config.CON_SUCCESS:
 			handCon();
 			break;
@@ -148,6 +145,10 @@ public class NetWorker extends Thread {
             // 传递获取朋友列表
         case Config.REQUEST_DOWNLOAD_FRIEND:
              handdownloadFriend();
+                break;
+            // 发布朋友圈的返回
+            case Config.REQUEST_UPLOAD_MOMENTS:
+                handuploadMoments();
                 break;
 		default:
 			/*
@@ -192,7 +193,7 @@ public class NetWorker extends Thread {
 				item.put("messageid", jo.getJSONObject(i).getInt("messageid"));
 				item.put("senderid", jo.getJSONObject(i).getString("senderid"));
 				item.put("receiverid", jo.getJSONObject(i)
-						.getString("senderid"));
+						.getString("receiverid"));
 				item.put("message", jo.getJSONObject(i).getString("message"));
 				item.put("time", jo.getJSONObject(i).getString("time"));
 				list.add(item);
@@ -468,6 +469,36 @@ public class NetWorker extends Thread {
                 BaseActivity.sendMessage(msg);
                 System.out.println("下载朋友圈的结果:" + result);
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+    // 发布朋友圈
+    public void uploadMoments(String name, String detail) {
+
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("requestType", Config.REQUEST_UPLOAD_MOMENTS);
+            jo.put("name", name);
+            jo.put("detail", detail);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(jo.toString());
+
+    }
+    // 发布朋友圈的结果
+    private void handuploadMoments() {
+        int result = 0;
+        try {
+            result = jsonObject.getInt("result");
+            Message msg = new Message();
+            msg.arg1 = result;
+            msg.what = Config.REQUEST_UPLOAD_MOMENTS;
+            BaseActivity.sendMessage(msg);
+
+            System.out.println("发布朋友圈结果:" + msg.arg1 + msg.what);
         } catch (JSONException e) {
             e.printStackTrace();
         }

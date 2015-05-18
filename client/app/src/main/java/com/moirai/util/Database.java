@@ -18,6 +18,7 @@ import org.json.JSONException;
 
 import com.moirai.client.Constant;
 import com.moirai.client.R;
+import com.moirai.model.Friend;
 import com.moirai.model.Info;
 import com.moirai.model.Moments;
 import com.moirai.model.User;
@@ -139,14 +140,14 @@ public class Database {
 		return true;
 	}
 
-    public boolean saveFriends(List<String> list){
+    public boolean saveFriends(List<Friend> list){
         Cursor rs = db.rawQuery("select * from FriendInfo", null);
         if (rs.getCount() != 0) {
             db.execSQL("DELETE FROM FriendInfo");
         }
         for (int i = 0; i < list.size(); i++) {
             ContentValues values = new ContentValues();
-            String path = list.get(i);
+            String path = list.get(i).getfriendname();
             values.put("name", path);
             db.insert("FriendInfo", null, values);
         }
@@ -167,6 +168,7 @@ public class Database {
                 } while (rs.moveToNext());
             }
         }
+        System.out.println("本地数据库moments"+list.toString());
         return list;
     }
 
@@ -195,13 +197,17 @@ public class Database {
     }
 
     public boolean saveAllMoments(List<Moments> list) {
+        Cursor rs = db.rawQuery("select * from MomentsInfo", null);
+        if (rs.getCount() != 0) {
+            db.execSQL("DELETE FROM MomentsInfo");
+        }
         for (int i = 0; i < list.size(); i++) {
             ContentValues values = new ContentValues();
             Moments path = list.get(i);
             values.put("sendid", path.getSendUser());
             values.put("content", path.getContent());
             values.put("time", path.getTime());
-            db.insert("HistoryInfo", null, values);
+            db.insert("MomentsInfo", null, values);
         }
         return true;
     }

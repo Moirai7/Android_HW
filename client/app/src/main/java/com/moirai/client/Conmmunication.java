@@ -99,17 +99,16 @@ public class Conmmunication {
         netWorker.downloadMoments(username);
 	}
 
+    // 发布朋友圈
+    public void uploadMoments(String name, String detail) {
+
+        netWorker.uploadMoments(name, detail);
+    }
+
 	/**
 	 * 刷新朋友圈
 	 */
 	public void queryMoments(String userName, String start, String end) {
-
-	}
-
-	/**
-	 * 上传朋友�?
-	 */
-	public void uploadMoments(String userName, String detail) {
 
 	}
 

@@ -9,7 +9,7 @@
     <item
         android:id="@+id/action_sending"
         android:title="@string/action_settings"
-        android:icon="@drawable/tabsettings"
+        android:icon="@drawable/send_moments"
         android:showAsAction="ifRoom"
         android:orderInCategory="100"
         android:layout_width="match_parent"

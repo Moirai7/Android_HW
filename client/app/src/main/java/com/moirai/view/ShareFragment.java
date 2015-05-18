@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.moirai.client.Constant;
 import com.moirai.client.R;
 
 /**
@@ -65,7 +66,15 @@ public class ShareFragment extends ListFragment{
      */
     public ShareFragment() {
     }
-
+    public void setmAdapter(SimpleAdapter tAdapter){
+        mAdapter = tAdapter;
+        mListView.setAdapter(mAdapter);
+    }
+    public boolean checkView(){
+        if(mListView!=null)
+            return true;
+        return false;
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,5 +149,10 @@ public class ShareFragment extends ListFragment{
     public interface OnFragmentInteractionListener {
         public void onShareFragmentInteraction(int position);
     }
-
+    @Override
+    public void onResume(){
+        System.out.println("fragement onResume");
+        MainActivity.getCon().downloadMoments(Constant.USERNAME);
+        super.onResume();
+    }
 }

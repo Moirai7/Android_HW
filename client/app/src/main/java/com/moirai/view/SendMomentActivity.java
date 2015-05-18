@@ -75,9 +75,11 @@ public class SendMomentActivity extends BaseActivity {
         Moments m = new Moments();
         m.setSendUser(Constant.USERNAME);
         m.setContent(et.getText().toString());
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         m.setTime(df.format(new Date()));
+        con.uploadMoments(Constant.USERNAME,et.getText().toString());
         db.saveMoments(m);
+        finish();
     }
 
     @Override
@@ -96,5 +98,23 @@ public class SendMomentActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //TODO ICON
+        getMenuInflater().inflate(R.menu.menu_send_moment, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        Constant.isSetting=false;
+        if (queue.contains(this)) {
+            queue.remove(this);
+            System.out.println("将" + this + "移出list"+"queue : " + queue.toString());
+        }
+        if(connection_voice!=null)
+            unbindService(connection_voice);
+        super.onDestroy();
     }
 }

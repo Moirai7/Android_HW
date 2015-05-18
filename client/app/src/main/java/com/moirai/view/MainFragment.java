@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.moirai.client.Constant;
 import com.moirai.client.R;
 
 /**
@@ -144,5 +145,10 @@ public class MainFragment extends ListFragment{
     public interface OnFragmentInteractionListener {
         public void onMainFragmentInteraction(int position);
     }
-
+    @Override
+    public void onResume(){
+        System.out.println("fragement onResume");
+        MainActivity.getCon().getnewmessage(Constant.USERNAME);
+        super.onResume();
+    }
 }

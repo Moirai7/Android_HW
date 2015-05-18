@@ -11,7 +11,7 @@ public interface Config {
 	public static final int REQUEST_DOWNLOAD_FRIEND = BASE + 7;
 	public static final int REQUEST_ADDFRIEND = BASE + 8;
 	public static final int REQUEST_DOWNLOAD_MOMENTS = BASE + 9;
-	public static final int REQUEST_IPLOAD_MOMENTS = BASE + 10;
+    public static final int REQUEST_UPLOAD_MOMENTS = BASE + 10;
 
 	// 4�?9日添�?
 	public static final int REQUEST_SEND_MESSAGE = BASE + 11;

@@ -82,8 +82,6 @@ public abstract class BaseActivity extends FragmentActivity  {
             startService(intent_voice_service);
             bindService(intent_voice_service, connection_voice, BIND_AUTO_CREATE);
         }
-
-
 	}
 
     protected void StopListen() {

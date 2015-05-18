@@ -29,6 +29,7 @@ import com.moirai.voice.VoiceService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class TalkActivity extends BaseActivity {
@@ -67,7 +68,9 @@ public class TalkActivity extends BaseActivity {
                 mInfoNews--;
                 if(mInfoNews<0) {
                     mInfoNews = 0;
-                    StartRead(mDataArrays.get(mInfoNews).getDetail(), Config.ACK_NONE);
+                    StartRead( (String) mDataArrays.get(mInfoNews).getSendUser()
+                            + getString(R.string.main_chats_tip)
+                            + (String) mDataArrays.get(mInfoNews).getDetail(),Config.ACK_NONE);
                     StartRead("没有更多消息记录了", Config.ACK_NONE);
                 }else{
                     StartRead(mDataArrays.get(mInfoNews).getDetail(), Config.ACK_NONE);
@@ -84,7 +87,7 @@ public class TalkActivity extends BaseActivity {
                 break;
             //服务器传来的更新消息
             case Config.REQUEST_GET_MESSAGE:
-                List<Info> list = (List<Info>)message.obj;
+                List<HashMap<String,Object>> list = (List<HashMap<String,Object>>)message.obj;
                 if(list.isEmpty()){
                     mInfoNews--;
                     StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
@@ -174,15 +177,21 @@ public class TalkActivity extends BaseActivity {
     /**
      * 盲人下滑更新数据（从服务器下载最新消息）
      */
-    public void updateData(List<Info> tempList){
+    public void updateData(List<HashMap<String,Object>> tempList){
         //先将从服务器下载的新消息保存到本地（下载朋友发送的新消息）
         for(int i=0;i<tempList.size();i++){
-            db.saveFriendHistory(tempList.get(i));
+            Info info = new Info();
+            info.setReceiver((String)tempList.get(i).get("receiverid"));
+            info.setSendUser((String) tempList.get(i).get("senderid"));
+            info.setDetail((String) tempList.get(i).get("message"));
+            info.setTime((String)tempList.get(i).get("time"));
+            db.saveFriendHistory(info);
         }
-         mDataArrays = null;
+         mDataArrays = new ArrayList<Info>();
         List<Info> list = db.getFriendHistory(currFriend);
         for(int i=0;i< list.size();i++){
-            mDataArrays.add(tempList.get(i));
+            mDataArrays.add(list.get(i));
+            System.out.println("个人聊天列表"+list.toString());
             mInfoNews=mDataArrays.size()-1;
         }
         mAdapter = new TalkMsgViewAdapter(this, mDataArrays);
@@ -205,7 +214,7 @@ public class TalkActivity extends BaseActivity {
 
             msgEdit.setText("");
             con.sendInfo(Constant.USERNAME,currFriend,contString);
-            //db.saveFriendHistory(entity);
+           // db.saveFriendHistory(entity);
 
             mListView.setSelection(mListView.getCount() - 1);
         }

@@ -70,26 +70,9 @@
     <string name="main_contactPage">欢迎进入联系人页面</string>
     <string name="main_sharePage">欢迎进入分享页面</string>
     <string name="main_welcome">欢迎进入首页</string>
-    <string name="main_chats_tip">发给你一条消息，消息内容是：</string>
-    <string name="main_content1">你好美</string>
-    <string name="main_content2">你吃过早餐了吗</string>
-    <string name="main_content3">你现在在干嘛呢？</string>
-    <string name="main_date1">2015-03-29 16:44</string>
-    <string name="main_date2">2015-03-29 16:44</string>
-    <string name="main_date3">2015-03-29 16:44</string>
-    <string name="main_title1">emma</string>
-    <string name="main_title2">fish</string>
-    <string name="main_title3">brian</string>
-
-    <string name="main_contact1">Bright</string>
-    <string name="main_contact2">Emma</string>
-    <string name="main_contact3">Fish</string>
+    <string name="main_chats_tip">发一条消息：</string>
 
     <string name="main_share_tip">发一条朋友圈 :</string>
-    <string name="main_share1">我要疯了</string>
-    <string name="main_share2">我好困</string>
-    <string name="main_share3">我很开心</string>
-
     <string name="talk_send_message">发送</string>
     <string name="talking_with">聊天，和</string>
     <string name="ack_talk_start">欢迎，你正在聊天</string>

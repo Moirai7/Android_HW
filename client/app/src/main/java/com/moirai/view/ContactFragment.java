@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.moirai.client.Constant;
 import com.moirai.client.R;
 
 /**
@@ -97,6 +98,11 @@ public class ContactFragment extends ListFragment{
             mListener.onContactFragmentInteraction(position);
         }
     }
+    public boolean checkView(){
+        if(mListView!=null)
+            return true;
+        return false;
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -141,4 +147,15 @@ public class ContactFragment extends ListFragment{
         public void onContactFragmentInteraction(int position);
     }
 
+    public void setmAdapter(SimpleAdapter tAdapter){
+        mAdapter = tAdapter;
+        mListView.setAdapter(mAdapter);
+    }
+    @Override
+    public void onResume(){
+
+        System.out.println("fragement onResume");
+        MainActivity.getCon().downloadFriend(Constant.USERNAME);
+        super.onResume();
+    }
 }

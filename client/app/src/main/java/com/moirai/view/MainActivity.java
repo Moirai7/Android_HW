@@ -30,7 +30,9 @@ import com.moirai.client.Config;
 import com.moirai.client.Conmmunication;
 import com.moirai.client.Constant;
 import com.moirai.client.R;
+import com.moirai.model.Friend;
 import com.moirai.model.Info;
+import com.moirai.model.Moments;
 import com.moirai.voice.VoiceService;
 
 import java.util.ArrayList;
@@ -82,8 +84,39 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         StartListRead();
                     }
                 break;
-            case Config.ACK_CON_SUCCESS:
-                StartRead(getResources().getString(R.string.main_welcome),Config.ACK_NONE);//欢迎
+            case Config.REQUEST_DOWNLOAD_FRIEND:
+                //从服务器下载新朋友
+                List<Friend> list_Friend = (List<Friend>)message.obj;
+                if(list_Friend!=null)
+                    db.saveFriends(list_Friend);
+                getData2();
+                if(((ContactFragment)fragments.get(1)).checkView()) {
+                    data = list2;
+                    SimpleAdapter adapter2 = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+                            new String[]{"title", "img", "date", "content"},
+                            new int[]{R.id.nameView, R.id.photoView, R.id.dateView, R.id.contentView});
+                    ((ContactFragment) fragments.get(1)).setmAdapter(adapter2);
+                    if (Constant.ID.equals("1")) {
+                        StartListRead();
+                    }
+                }
+                break;
+            case Config.REQUEST_DOWNLOAD_MOMENTS:
+                //下载最新的朋友圈消息
+                List<Moments> list_Moment = (List<Moments>)message.obj;
+                if(list_Moment!=null)
+                    db.saveAllMoments(list_Moment);
+                   getData3();
+                if(((ShareFragment)fragments.get(2)).checkView()) {
+                    data = list3;
+                    SimpleAdapter adapter3 = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+                            new String[]{"title", "img", "date", "content"},
+                            new int[]{R.id.nameView, R.id.photoView, R.id.dateView, R.id.contentView});
+                    ((ShareFragment) fragments.get(2)).setmAdapter(adapter3);
+                    if (Constant.ID.equals("1")) {
+                        StartListRead();
+                    }
+                }
                 break;
             case Config.ACK_DOWN:
                 if(rgs.getVisibility()!=View.GONE){
@@ -146,11 +179,11 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 if(rgs.getVisibility()!=View.GONE) {
                     if (theFragment == 0 || theFragment == 1) {
                         if(!data.isEmpty()){
-                        Intent intent = new Intent();
-                        //设置传递方向
-                        intent.setClass(MainActivity.this, TalkActivity.class);
-                        intent.putExtra("username", (String) data.get(theInfoId).get("title"));
-                        this.startActivity(intent);
+                            Intent intent = new Intent();
+                            //设置传递方向
+                            intent.setClass(MainActivity.this, TalkActivity.class);
+                            intent.putExtra("username", (String) data.get(theInfoId).get("title"));
+                            this.startActivity(intent);
                         }else{
                             StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
                         }
@@ -166,19 +199,18 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         if(!data.isEmpty()) {
                             //如果data里的这条消息发送人不是用户，则是新消息
                             if(!((String) data.get(theInfoId).get("title")).equals(Constant.USERNAME)){
-                            content =(String) data.get(theInfoId).get("time")
-                                    + (String) data.get(theInfoId).get("title")
-                                    + getString(R.string.main_chats_tip)
-                                    + (String) data.get(theInfoId).get("content");
-                                    StartRead(content,Config.ACK_NONE);
+                                content = (String) data.get(theInfoId).get("title")
+                                        + getString(R.string.main_chats_tip)
+                                        + (String) data.get(theInfoId).get("content");
+                                StartRead(content,Config.ACK_NONE);
                             }else{
                                 StartRead("你和朋友"+(String) data.get(theInfoId).get("title")+"的历史消息", Config.ACK_NONE);
                             }
                         }else{
                             StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
                         }
-                         break;
-                   case 1:
+                        break;
+                    case 1:
                         content = (String)data.get(theInfoId).get("title");
                         StartRead(content,Config.ACK_NONE);
                         break;
@@ -190,8 +222,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         break;
                     default:
                         break;
-
-                 }
+                }
                 break;
             case Config.ACK_DOUBLE_CLICK:
                 if(rgs.getVisibility()!=View.GONE) {
@@ -211,11 +242,8 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     }
                 }
                 break;
-            case Config.REQUEST_DOWNLOAD_FRIEND:
-                //从服务器下载新朋友
-                List<String> list_Friend = (List<String>)message.obj;
-                db.saveFriends(list_Friend);
-                getData2();
+            case Config.ACK_CON_SUCCESS:
+                StartRead(getResources().getString(R.string.main_welcome),Config.ACK_NONE);//欢迎
                 break;
             default:
                 break;
@@ -282,14 +310,15 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             });
         }
 
-        //TODO 得到编辑框里的值
-        //TODO 使用USER创建并调用downInfo();
-       con.getnewmessage(Constant.USERNAME);
-       con.downloadFriend(Constant.USERNAME);
         //Fragment
         fragments.add(new MainFragment());
         fragments.add(new ContactFragment());
         fragments.add(new ShareFragment());
+        //TODO 得到编辑框里的值
+        //TODO 使用USER创建并调用downInfo();
+        con.getnewmessage(Constant.USERNAME);
+        con.downloadFriend(Constant.USERNAME);
+        con.downloadMoments(Constant.USERNAME);
 
         rgs = (RadioGroup) findViewById(R.id.tabs_rg);
         rb[0] = (RadioButton)findViewById(R.id.tab_rb_a);
@@ -315,6 +344,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             actionBar.setIcon(null);
         }
         tabListener.OnRgsExtraCheckedChanged(rgs,0,0);
+        theFragment = 0;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -372,8 +402,21 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 iv.setVisibility(View.GONE);
             }
         }
-        if(flag_Resume!=0)
-       con.getnewmessage(Constant.USERNAME);
+        if(flag_Resume!=0)//TODO FRAGEMENT
+        {
+            switch (theFragment){
+                case 0:
+                    con.getnewmessage(Constant.USERNAME);
+                    break;
+                case 1:
+                    con.downloadFriend(Constant.USERNAME);
+                    break;
+                case 2:
+                    con.downloadMoments(Constant.USERNAME);
+                    break;
+            }
+        }
+
         System.out.println("back更新");
         flag_Resume++;
         super.onResume();
@@ -431,7 +474,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     private void getData() {
         //InfoList 是从服务器传来的全部消息
         List<Info> InfoList = db.getAllHistory();
-        list1 = new ArrayList<Map<String, Object>>();
+        list1.clear();
         for (int i = 0; i < InfoList.size(); i++) {
             String sendUser = InfoList.get(i).getSendUser();
             String receiver = InfoList.get(i).getReceiver();
@@ -477,6 +520,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     private void getData2() {
         System.out.println("getData2获取朋友列表");
         List<String > list_Friends= db.getAllFriend();
+        list2.clear();
         for(int i=0;i<list_Friends.size();i++){
             Map<String, Object> map = new HashMap<String, Object>();
             map = new HashMap<String, Object>();
@@ -488,68 +532,23 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
 //share
     private List<Map<String, Object>> list3 = new ArrayList<Map<String, Object>>();
     private void getData3() {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_title1));//String
+        System.out.println("getData3获取本地朋友圈列表");
+        List<Moments> list_Moments= db.getMoments();
+        list3.clear();
+        for(int i=0;i<list_Moments.size();i++){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map = new HashMap<String, Object>();
+            map.put("title",list_Moments.get(i).getSendUser());
+            map.put("img", R.mipmap.pic1);
+            map.put("date",list_Moments.get(i).getTime());
+            map.put("content",list_Moments.get(i).getContent());
+            list3.add(map);
+        }
+       /* map.put("title", getResources().getString(R.string.main_title1));//String
         map.put("img", R.mipmap.pic1);
         map.put("date",getResources().getString(R.string.main_date1));
         map.put("content",getResources().getString(R.string.main_share1));
-        list3.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_title2));//String
-        map.put("img", R.mipmap.pic2);
-        map.put("date",getResources().getString(R.string.main_date2));
-        map.put("content",getResources().getString(R.string.main_share2));
-        list3.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_title3));//String
-        map.put("img", R.mipmap.pic3);
-        map.put("date",getResources().getString(R.string.main_date3));
-        map.put("content",getResources().getString(R.string.main_share3));
-        list3.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact1));//String
-        map.put("img", R.mipmap.pic4);
-        map.put("date",getResources().getString(R.string.main_date3));
-        map.put("content",getResources().getString(R.string.main_share1));
-        list3.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact2));//String
-        map.put("img", R.mipmap.pic5);
-        map.put("date",getResources().getString(R.string.main_date1));
-        map.put("content",getResources().getString(R.string.main_share2));
-        list3.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact3));//String
-        map.put("img", R.mipmap.pic6);
-        map.put("date",getResources().getString(R.string.main_date1));
-        map.put("content",getResources().getString(R.string.main_share3));
-        list3.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact1));//String
-        map.put("img", R.mipmap.pic7);
-        map.put("date",getResources().getString(R.string.main_date3));
-        map.put("content",getResources().getString(R.string.main_share1));
-        list3.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact2));//String
-        map.put("img", R.mipmap.pic8);
-        map.put("date",getResources().getString(R.string.main_date3));
-        map.put("content",getResources().getString(R.string.main_share2));
-        list3.add(map);
-
-        map = new HashMap<String, Object>();
-        map.put("title", getResources().getString(R.string.main_contact3));//String
-        map.put("img", R.mipmap.pic9);
-        map.put("date",getResources().getString(R.string.main_date3));
-        map.put("content",getResources().getString(R.string.main_share1));
-        list3.add(map);
+        list3.add(map);*/
     }
 
     @Override
@@ -572,5 +571,9 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     public void onShareFragmentInteraction(int position) {
         rgs.setVisibility(View.GONE);
         getFragmentManager().beginTransaction().replace(R.id.tab_content,DetailFragment.newInstance((Integer)list3.get(position).get("img"),(String)list3.get(position).get("content"))).addToBackStack(null).commit();
+    }
+
+    public static Conmmunication getCon(){
+        return con;
     }
 }
