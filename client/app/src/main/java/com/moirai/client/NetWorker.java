@@ -27,7 +27,7 @@ public class NetWorker extends Thread {
 	// Context context;
 	// private static final String IP = "59.65.171.333";
 	//private static final String IP = "192.168.253.1";
-    private static final String IP = "172.31.10.178";
+    private static final String IP = "172.28.7.23";
 	private static final int PORT = 6666;
 
 	private Socket socket = null;
@@ -289,6 +289,7 @@ public class NetWorker extends Thread {
 			msg.arg1 = result;
             msg.obj = jsonObject.getString("name");
 			msg.what = Config.REQUEST_ADDFRIEND;
+            System.out.println("network添加好友处理"+result);
 			BaseActivity.sendMessage(msg);
 		} catch (JSONException e) {
 			e.printStackTrace();

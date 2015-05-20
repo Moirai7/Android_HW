@@ -542,7 +542,15 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             map.put("img", R.mipmap.pic1);
             map.put("date",list_Moments.get(i).getTime());
             map.put("content",list_Moments.get(i).getContent());
+            int count = 0;
+            for(int j=0;j<list3.size();j++){
+                if(!map.equals(list3.get(j))){
+                    count++;
+                }
+            }
+            if(count==list3.size()){
             list3.add(map);
+            }
         }
        /* map.put("title", getResources().getString(R.string.main_title1));//String
         map.put("img", R.mipmap.pic1);

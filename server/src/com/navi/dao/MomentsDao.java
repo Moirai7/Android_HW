@@ -24,10 +24,10 @@ public class MomentsDao {
     Connection conn = null;
     Statement stmt = null;
     ResultSet rs = null;
-    SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     //Modified
     final String driver = "com.mysql.jdbc.Driver";//Driver name
-    final String uri = "jdbc:mysql://localhost:3306/swt";//mysql DB
+    final String uri = "jdbc:mysql://localhost:3306/swt?useUnicode=true&amp;characterEncoding=UTF-8";//mysql DB
 
     //Modified
     private void getConnection() {
@@ -78,7 +78,7 @@ public boolean saveMoments(Moments history) {
 		JSONArray chengyus = new JSONArray();
 		getConnection();
 		String sql = "select * from momentsfriendview where friendname = '"
-					+ username+ "'";
+					+ username+ "' or sendname = '" + username+"'";
 		String sql2 = "update moments set status = 1 where sendname = '"
 				+ username + "'";
 		try {
@@ -126,7 +126,7 @@ public boolean saveMoments(Moments history) {
 	}
 	*/
     public void sendmoments(String sendname, String msg) {
-    	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	
 		getConnection();
 		String sql = "insert into moments (sendname,time,content,status)values('"

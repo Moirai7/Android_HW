@@ -46,7 +46,7 @@
     <string name="no_shake_confirm">No</string>
     <string name="no_shake_friend_tip">No friend</string>
     <string name="voice_shake_tip">Please shake your phone</string>
-    <string name="voice_shake_result_success">Successful add friend</string>
+    <string name="voice_shake_result_success">Confirm add friend</string>
     <string name="voice_shake_result_cancel">Cancel add friend</string>
 
     <string name="tip_gesture_textView">Click return</string>

@@ -29,8 +29,8 @@ public class FriendsDao {
 	Connection conn = null;
 	Statement stmt = null;
 	ResultSet rs = null;
-	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-	// 閿熸枻鎷烽敓鏂ゆ嫹
+	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     //Modified
     final String driver = "com.mysql.jdbc.Driver";//Driver name
     final String uri = "jdbc:mysql://localhost:3306/swt";//mysql DB
@@ -161,7 +161,7 @@ public class FriendsDao {
 		}
 	}
 	
-	//*********************已测
+/*	//*********************已测
 		public void yaoyiyao(String sendname){
 			Calendar rightNow = Calendar.getInstance();
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
@@ -290,23 +290,6 @@ public class FriendsDao {
 			}
 		}
 
-	/**
-	 * public String yaoyiyao(String sendname,String time){ String name2 = "";
-	 * String sql0 = "select * from requestFriends"; String sql =
-	 * "insert into requestFriends (name,sendtime,status)values('"
-	 * +sendname+"','"+time+"',0)"; getConnection(); try {
-	 * conn.setAutoCommit(false); ResultSet fs = stmt.executeQuery(sql0); while
-	 * (fs.next()) { String sql1 =
-	 * "delete from requestFriends where name = '"+fs.getString("sendname")+"'";
-	 * //锟斤拷锟斤拷fs.getString("sendtime")锟斤拷time锟斤拷时锟斤拷锟�if(小锟斤拷10锟斤拷){//小锟斤拷10锟斤拷 String sql2 =
-	 * "insert into matchFriends (name1,name2,status)values('"
-	 * +fs.getString("name")+"','"+sendname+"',0)"; stmt.execute(sql2); name2 =
-	 * fs.getString("name"); break; }else{ stmt.execute(sql1); } }
-	 * stmt.execute(sql); conn.commit(); } catch (SQLException e) {
-	 * e.printStackTrace(); if (conn != null) { try { conn.rollback(); } catch
-	 * (SQLException e1) { e1.printStackTrace(); } } } finally {
-	 * DaoUtil.closeConnection(conn, stmt, rs); } return name2; }
-	 */
 	// 锟斤拷锟杰伙拷芫锟斤拷锟斤拷
 	
 	//*********************已测
@@ -434,29 +417,306 @@ public class FriendsDao {
 		} finally {
 			DaoUtil.closeConnection(conn, stmt, rs);
 		}
+	}*/
+	
+	//*********************已测
+	public void yaoyiyao(String sendname){
+		Calendar rightNow = Calendar.getInstance();
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+		String time = fmt.format(rightNow.getTime());
+		
+		String name2 = null;
+		System.out.println(sendname+"发送摇一摇");
+
+		getConnection();
+		try {
+			String sqlsel = "select * from requestfriends";
+			String sqlins = "insert into requestFriends (name,sendtime,status)values('"
+					+ sendname + "','" + time + "',0)";
+		//	System.out.println(sqlins);
+			conn.setAutoCommit(false);
+			stmt.execute(sqlins);
+			conn.commit();
+			ResultSet fs;
+
+			fs = stmt.executeQuery(sqlsel);
+			while (fs.next()) {
+				if (!fs.getString("name").equals(sendname)) {
+					name2 = fs.getString("name");
+					String sqlmat = "insert into matchFriends (name1,name2,status)values('"
+							+ fs.getString("name") + "','" + sendname + "',0)";
+					stmt.execute(sqlmat);
+					conn.commit();
+					// *********锟斤拷sendname锟斤拷name2锟斤拷锟斤拷锟斤拷雍锟斤拷锟斤拷锟斤拷锟�*******
+					try {
+						PrintWriter out;
+
+						out = new PrintWriter(new BufferedWriter(
+								new OutputStreamWriter(ForwardTask.map.get(
+										sendname).getOutputStream(), "UTF-8")),
+								true);
+						
+						System.out.println(ForwardTask.map.get(
+										sendname.toString()));
+						
+						System.out.println(sendname+"succsess");
+						JSONObject obj = new JSONObject();
+						obj.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
+						
+						obj.put("name", name2);
+						obj.put(Config.RESULT, Config.SUCCESS);
+						out.println(obj);
+						
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}finally{
+						DaoUtil.closeConnection(conn, stmt, rs);
+					}
+					break;
+
+				}
+			}
+			if (name2 == null) {
+		//		System.out.println("nofriend");
+				Thread.currentThread().sleep(2000);
+		//		System.out.println("delete");
+				getConnection();
+				conn.setAutoCommit(false);
+				//System.out.println(sendname+"第二次搜索");
+				
+				String sqlstatus = "select * from requestfriends";
+				ResultSet sta;
+				sta = stmt.executeQuery(sqlstatus);
+				boolean b = sta.first();
+				if(b){   System.out.println(sta.getString("name"));}
+				while (sta.next()) {
+				//	System.out.println(sendname+"找到了一条数据"+sta.getString("name"));
+					if (!sta.getString("name").equals(sendname)) {
+						name2 = sta.getString("name");
+					//	System.out.println(sendname+"找到了"+name2);
+						String sqldel1 = "delete from requestfriends where name ='"
+								+ sendname + "'";
+						String sqldel2 = "delete from requestfriends where name ='"
+								+ name2 + "'";
+						stmt.execute(sqldel1);
+						stmt.execute(sqldel2);
+						conn.commit();
+						
+						try {
+							PrintWriter out2;
+							out2 = new PrintWriter(new BufferedWriter(
+									new OutputStreamWriter(ForwardTask.map.get(
+											sendname).getOutputStream(), "UTF-8")),
+										true);
+				//			System.out.println("123123555"+ForwardTask.map.get(name2));
+							JSONObject obj2 = new JSONObject();
+							obj2.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
+							obj2.put(Config.RESULT, Config.SUCCESS);
+							obj2.put("name", name2);
+							out2.println(obj2);
+						} catch (UnsupportedEncodingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
+					}
+				}
+				if(name2 == null){
+					System.out.println(sendname+"配对失败");
+					String sqldel1 = "delete from requestFriends where name ='"
+							+ sendname + "'";
+					
+					stmt.execute(sqldel1);
+					conn.commit();
+					
+					PrintWriter out3;
+					out3 = new PrintWriter(new BufferedWriter(
+							new OutputStreamWriter(ForwardTask.map.get(
+									sendname).getOutputStream(), "UTF-8")),
+							true);
+			//		System.out.println("123123555"+ForwardTask.map.get(name2));
+					JSONObject obj3 = new JSONObject();
+					obj3.put(Config.REQUEST_TYPE, Config.RESULT_YAOYIYAO);
+					obj3.put(Config.RESULT, Config.FAIl);
+					
+					out3.println(obj3);
+				}
+			}
+
+//			conn.commit();
+		} catch (SQLException | InterruptedException e) {
+			e.printStackTrace();
+			if (conn != null) {
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DaoUtil.closeConnection(conn, stmt, rs);
+		}
 	}
-	/**
-	 * public int aor(String name1,String name2,int toj){//0为未锟斤拷应锟斤拷1为同锟解，-1为锟杰撅拷 int
-	 * id=0; int status=0; try { getConnection(); conn.setAutoCommit(false);
-	 * ResultSet fs; String sql1 =
-	 * "select * from matchFriends where name1 = '"+name1
-	 * +"'and name2 = '"+name2+"'"; fs = stmt.executeQuery(sql1); while
-	 * (fs.next()) { id = fs.getInt("id"); status = fs.getInt("status"); }
-	 * if(id==0){ String sql2 =
-	 * "select * from matchFriends where name1 = '"+name2
-	 * +"'and name2 = '"+name1+"'"; fs = stmt.executeQuery(sql2); while
-	 * (fs.next()) { id = fs.getInt("id"); status = fs.getInt("status"); } }
-	 * if(id==0){ //锟斤拷锟斤拷 } if(toj==-1){ String sql3 =
-	 * "update matchFriends set status = -1 where id = '" + id + "'";
-	 * stmt.execute(sql3); return 锟窖拒撅拷;//锟杰撅拷锟斤拷应锟斤拷没锟斤拷锟斤拷应 }else if(toj==1){
-	 * if(status==0){ String sql4 =
-	 * "update matchFriends set status = 1 where id = '" + id + "'";
-	 * stmt.execute(sql4); return 锟饺达拷; }else if(status==1){ String sql5 =
-	 * "update matchFriends set status = 2 where id = '" + id + "'";
-	 * stmt.execute(sql5); //锟斤拷雍锟斤拷锟�return 锟斤拷映晒锟� }else if(status==-1){ return
-	 * 锟皆凤拷锟杰撅拷; } } } catch (SQLException e) { e.printStackTrace(); if (conn !=
-	 * null) { try { conn.rollback(); } catch (SQLException e1) {
-	 * e1.printStackTrace(); } } } finally { DaoUtil.closeConnection(conn, stmt,
-	 * rs); } return 0; }
-	 */
+	
+	//*********************已测
+	public void aor(String name1, String name2, int toj) {// 0为未锟斤拷应锟斤拷1为同锟解，-1为锟杰撅拷
+
+		try {
+			getConnection();
+			conn.setAutoCommit(false);
+			ResultSet fs;
+			int id = 0, status = 0;
+
+			String sql1 = "select * from matchFriends where name1 = '" + name1
+					+ "'and name2 = '" + name2 + "'";
+			fs = stmt.executeQuery(sql1);
+			while (fs.next()) {
+				id = fs.getInt("id");
+				status = fs.getInt("status");
+			}
+			if (id == 0) {
+				String sql2 = "select * from matchFriends where name1 = '"
+						+ name2 + "'and name2 = '" + name1 + "'";
+				fs = stmt.executeQuery(sql2);
+				while (fs.next()) {
+					id = fs.getInt("id");
+					status = fs.getInt("status");
+				}
+			}
+			if (toj == -1) {
+				if(status !=1 ){
+					String sqlreject = "update matchFriends set status=-1 where id = '"
+							+ id + "'";
+					stmt.execute(sqlreject);
+					conn.commit();
+					System.out.println(name1+"第一个人拒绝了,不返回消息");
+				}else{
+					System.out.println(name1+"第一个人同一个但是第二个拒绝了,给第一个人返回失败");
+					PrintWriter out0;
+					out0 = new PrintWriter(new BufferedWriter(
+							new OutputStreamWriter(ForwardTask.map.get(name2)
+									.getOutputStream(), "UTF-8")), true);
+					JSONObject obj0 = new JSONObject();
+					obj0.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+					obj0.put("name", name1);
+					obj0.put(Config.RESULT, Config.FAIl);
+					out0.println(obj0);
+				}
+			} else if (toj == 1) {
+				if (status == 0) {
+					String sqlagree = "update matchFriends set status=1 where id = '"
+							+ id + "'";
+					stmt.execute(sqlagree);
+					conn.commit();
+					System.out.println(name1+"第一个人同意了");
+				} else if (status == 1) {
+					String sqldel = "delete from matchFriends where id = '"
+							+ id + "'";
+					stmt.execute(sqldel);
+					String sqladfr1 = "insert into friendlist(username,friendname)values('"+name1+"','"+name2+"')";
+					String sqladfr2 = "insert into friendlist(username,friendname)values('"+name2+"','"+name1+"')";
+					stmt.execute(sqladfr1);
+					stmt.execute(sqladfr2);
+					conn.commit();
+					System.out.println("都同意了，添加好友");
+					// *****************name1,name2,success*********************
+					PrintWriter out, out2;
+
+					out = new PrintWriter(new BufferedWriter(
+							new OutputStreamWriter(ForwardTask.map.get(name1)
+									.getOutputStream(), "UTF-8")), true);
+					JSONObject obj = new JSONObject();
+					obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+					
+					obj.put("name", name2);
+					obj.put(Config.RESULT, Config.SUCCESS);
+					out.println(obj);
+					
+					out2 = new PrintWriter(new BufferedWriter(
+							new OutputStreamWriter(ForwardTask.map.get(name2)
+									.getOutputStream(), "UTF-8")), true);
+					JSONObject obj2 = new JSONObject();
+					obj2.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+					obj2.put("name", name1);
+					obj2.put(Config.RESULT, Config.SUCCESS);
+					out2.println(obj2);
+					
+					System.out.println("1111111"+name1+name2);
+					
+				} else if (status == -1) {
+					String sqldel = "delete from matchFriends where id = '"
+							+ id + "'";
+					stmt.execute(sqldel);
+					conn.commit();
+					System.out.println(name1+"的对方拒绝了，给"+name1+"返回失败");
+					// *****************锟皆凤拷锟窖撅拷锟杰撅拷锟斤拷锟轿拷锟斤拷锟�*****************
+					// 锟斤拷锟揭拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷母锟斤拷锟斤拷没锟斤拷锟街伙拷锟揭拷锟揭伙拷锟斤拷锟斤拷锟绞撅拷苑锟斤拷芫锟酵匡拷锟皆ｏ拷name1,name2锟斤拷锟侥革拷要锟斤拷锟酵伙拷锟斤拷锟斤拷么锟斤拷锟斤拷
+					PrintWriter out2;
+
+//					out = new PrintWriter(new BufferedWriter(
+//							new OutputStreamWriter(ForwardTask.map.get(name1)
+//									.getOutputStream(), "UTF-8")), true);
+//					JSONObject obj = new JSONObject();
+//					obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+//					
+//					obj.put("name", name2);
+//					obj.put(Config.RESULT, Config.FAIl);
+//					out.println(obj);
+
+					out2 = new PrintWriter(new BufferedWriter(
+							new OutputStreamWriter(ForwardTask.map.get(name1)
+									.getOutputStream(), "UTF-8")), true);
+					JSONObject obj2 = new JSONObject();
+					obj2.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+					obj2.put("name", name2);
+					obj2.put(Config.RESULT, Config.FAIl);
+					out2.println(obj2);
+					
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			if (conn != null) {
+				try {
+					conn.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			DaoUtil.closeConnection(conn, stmt, rs);
+		}
+	}
 }

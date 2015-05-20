@@ -137,9 +137,6 @@ public class ForwardTask extends Task {
 		case Config.REQUEST_DOWNLOAD_MOMENTS:
 			handDownloadMoments();
 			break;
-		case Config.REQUEST_UPLOAD_MOMENTS:
-			handUploadMoments();
-			break;
 
 		case Config.REQUEST_SEND_MESSAGE:
 
@@ -151,6 +148,10 @@ public class ForwardTask extends Task {
 			break;
 		case Config.RESULT_YAOYIYAO:
 			handSendRequestFriend();
+			break;
+
+		case Config.REQUEST_UPLOAD_MOMENTS:
+			handUploadMoments();
 			break;
 
 		default:
@@ -172,14 +173,18 @@ public class ForwardTask extends Task {
 		}
 	}
 
+	//发布朋友圈
 	private void handUploadMoments() {
 		try {
-			String sender = message.getString("sender");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
-			String detail = message.getString("detail");// 闁告瑦鍨块敓浠嬫儍閸曨亝鐪?
-			Moments friends = new Moments(sender, detail);
-//			new MomentsService().saveMoments(friends);
+			String sender = message.getString("name");
+			String detail = message.getString("detail");
+
+			MomentsDao moments = new MomentsDao();
+			moments.sendmoments(sender, detail);
+			// Moments friends = new Moments(sender, detail);
+			// new MomentsService().saveMoments(friends);
 			JSONObject obj = new JSONObject();
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_ADDFRIEND);
+			obj.put(Config.REQUEST_TYPE, Config.REQUEST_UPLOAD_MOMENTS);
 			obj.put(Config.RESULT, Config.SUCCESS);
 			out.println(obj.toString());
 		} catch (Exception e) {
@@ -238,19 +243,28 @@ public class ForwardTask extends Task {
 			e.printStackTrace();
 		}
 	}
-//已测
+
 	private void handDownloadMoments() {
 		try {
 			String name = message.getString("name");
-			MomentsDao a=new MomentsDao();
+			System.out.println(name);
+			MomentsDao a = new MomentsDao();
+			System.out.println("momentsdao");
 			JSONArray arr = a.getMoments(name);
-			System.out.println(arr.toString());
+			System.out.println("arr");
+
 			JSONObject obj = new JSONObject();
 			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_MOMENTS);
-//			System.out.println(Config.REQUEST_DOWNLOAD_MOMENTS);
-			obj.put("list", arr);
-			obj.put(Config.RESULT, Config.SUCCESS);
+			if(arr.length()>0){
+				obj.put("list", arr);
+				obj.put(Config.RESULT, Config.SUCCESS);
+			}else{
+				obj.put(Config.RESULT, Config.FAIl);
+			}
+			System.out.println(Config.REQUEST_DOWNLOAD_MOMENTS);
+			
 			out.println(obj.toString());
+			System.out.println("moment list" + obj.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

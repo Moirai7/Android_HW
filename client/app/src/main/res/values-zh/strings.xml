@@ -46,7 +46,7 @@
     <string name="no_shake_confirm">否</string>
     <string name="no_shake_friend_tip">没有好友</string>
     <string name="voice_shake_tip">请摇动你的手机</string>
-    <string name="voice_shake_result_success">添加朋友成功</string>
+    <string name="voice_shake_result_success">确认添加好友</string>
     <string name="voice_shake_result_cancel">取消添加朋友</string>
 
     <string name="tip_gesture_textView">点击返回</string>

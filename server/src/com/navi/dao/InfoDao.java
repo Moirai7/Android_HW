@@ -24,7 +24,7 @@ public class InfoDao {
 	Connection conn = null;
 	Statement stmt = null;
 	ResultSet rs = null;
-	SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	//Modified
 	final String driver = "com.mysql.jdbc.Driver";//Driver name
 	final String uri = "jdbc:mysql://localhost:3306/swt";//mysql DB
@@ -126,11 +126,6 @@ public class InfoDao {
 				+ "' union select * from msglist where receivername = '" + sendername
 				+ "' and sendername = '" + username
 				+ "' order by sendtime DESC" ;*/
-		/*String sql = "select * from msglist where receivername = '" + username
-				+ "' and sendername = '" + sendername
-				+ "' and status = 0 union select * from msglist where receivername = '" + sendername
-				+ "' and sendername = '" + username
-				+ "' and status = 0 order by sendtime DESC" ;*/
 		String sql = "select * from msglist where receivername = '" + username
 				+ "' and status = 0 order by sendtime DESC" ;
 		String sql2 = "update msglist set status = 1 where receivername = '"

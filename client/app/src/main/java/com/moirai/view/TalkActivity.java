@@ -187,7 +187,7 @@ public class TalkActivity extends BaseActivity {
             info.setTime((String)tempList.get(i).get("time"));
             db.saveFriendHistory(info);
         }
-         mDataArrays = new ArrayList<Info>();
+         mDataArrays.clear();
         List<Info> list = db.getFriendHistory(currFriend);
         for(int i=0;i< list.size();i++){
             mDataArrays.add(list.get(i));
@@ -214,8 +214,8 @@ public class TalkActivity extends BaseActivity {
 
             msgEdit.setText("");
             con.sendInfo(Constant.USERNAME,currFriend,contString);
-           // db.saveFriendHistory(entity);
-
+            db.saveFriendHistory(entity);
+            //entity = db.getFriendHistory(Constant.USERNAME);
             mListView.setSelection(mListView.getCount() - 1);
         }
     }

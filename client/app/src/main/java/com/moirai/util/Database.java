@@ -155,7 +155,7 @@ public class Database {
     }
 
     public List<Moments> getMoments() {
-        Cursor rs = db.rawQuery("select * from MomentsInfo order by time asc",null);
+        Cursor rs = db.rawQuery("select * from MomentsInfo order by time DESC",null);
         List<Moments> list = new ArrayList<Moments>();
         if (rs != null) {
             if (rs.moveToFirst()) {
@@ -198,7 +198,7 @@ public class Database {
 
     public boolean saveAllMoments(List<Moments> list) {
         Cursor rs = db.rawQuery("select * from MomentsInfo", null);
-        if (rs.getCount() != 0) {
+        if (rs.getCount() != 0 ) {
             db.execSQL("DELETE FROM MomentsInfo");
         }
         for (int i = 0; i < list.size(); i++) {
