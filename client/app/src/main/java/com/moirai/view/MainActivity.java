@@ -40,11 +40,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener,ContactFragment.OnFragmentInteractionListener,ShareFragment.OnFragmentInteractionListener {
+public class MainActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener,ContactFragment.OnFragmentInteractionListener,ShareFragment.OnFragmentInteractionListener,BookFragment.OnFragmentInteractionListener{
 
     private SimpleAdapter adapter; // binds tags to ListView
-    private int[][] position = new int[3][2];
-    private RadioButton[] rb = new RadioButton[3];
+    private int[][] position = new int[4][2];
+    private RadioButton[] rb = new RadioButton[4];
     /**
      * Called when the activity is first created.
      */
@@ -140,7 +140,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 break;
             case Config.ACK_LEFT://0是首页，1是contact，2是朋友圈
                 if(rgs.getVisibility()!=View.GONE) {
-                    int p = (theFragment + 2) % 3;
+                    int p = (theFragment + 3) % 4;
                     //theFragment=p;
                     setSimulateClick(rb[p], position[p][0], position[p][1]);
                     //tabListener.OnRgsExtraCheckedChanged(rgs,(theFragment+2)%3,(theFragment+2)%3);
@@ -154,12 +154,15 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         case 2:
                             StartRead(getResources().getString(R.string.main_sharePage), Config.ACK_NONE);
                             break;
+                        case 3:
+                            StartRead(getResources().getString(R.string.main_bookPage), Config.ACK_NONE);
+                            break;
                     }
                 }
                 break;
             case Config.ACK_RIGHT://0是首页，1是contact，2是朋友圈
                 if(rgs.getVisibility()!=View.GONE) {
-                    int q = (theFragment + 1) % 3;
+                    int q = (theFragment + 1) % 4;
                     //theFragment=q;
                     setSimulateClick(rb[q], position[q][0], position[q][1]);
                     switch (q) {
@@ -171,6 +174,9 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                             break;
                         case 2:
                             StartRead(getResources().getString(R.string.main_sharePage), Config.ACK_NONE);
+                            break;
+                        case 3:
+                            StartRead(getResources().getString(R.string.main_bookPage), Config.ACK_NONE);
                             break;
                     }
                 }
@@ -189,6 +195,8 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         }
                     } else if (theFragment == 2) {
                         onShareFragmentInteraction(theInfoId);
+                    } else if (theFragment == 3) {
+                        onBookFragmentInteraction(theInfoId);
                     }
                 }
                 break;
@@ -220,6 +228,13 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                                 + (String)data.get(theInfoId).get("content");
                         StartRead(content,Config.ACK_NONE);
                         break;
+                    case 3:
+                        //TODO LL
+//                        content = (String)data.get(theInfoId).get("title")
+//                                + getString(R.string.main_share_tip)
+//                                + (String)data.get(theInfoId).get("content");
+//                        StartRead(content,Config.ACK_NONE);
+                        break;
                     default:
                         break;
                 }
@@ -239,6 +254,8 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         Intent intent = new Intent();
                         intent.setClass(MainActivity.this, SendMomentActivity.class);
                         startActivity(intent);
+                    }else if(theFragment == 3) {
+                        //TODO LL
                     }
                 }
                 break;
@@ -268,16 +285,30 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 case 1:
                     theFragment = 1;
                     data = list2;
-                    adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
-                            new String[]{"title", "img","date","content"},
-                            new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
+                    if(!data.isEmpty()) {
+                        adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+                                new String[]{"title", "img", "date", "content"},
+                                new int[]{R.id.nameView, R.id.photoView, R.id.dateView, R.id.contentView});
+                    }
                     break;
                 case 2:
                     theFragment = 2;
                     data = list3;
-                    adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
-                            new String[]{"title", "img","date","content"},
-                            new int[]{R.id.nameView, R.id.photoView,R.id.dateView,R.id.contentView});
+                    if(!data.isEmpty()) {
+                        adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+                                new String[]{"title", "img", "date", "content"},
+                                new int[]{R.id.nameView, R.id.photoView, R.id.dateView, R.id.contentView});
+                    }
+                    break;
+                case 3:
+                    theFragment = 3;
+                    data = list4;
+                    //TODO LL
+//                    if(!data.isEmpty()) {
+//                        adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
+//                                new String[]{"title", "img", "date", "content"},
+//                                new int[]{R.id.nameView, R.id.photoView, R.id.dateView, R.id.contentView});
+//                    }
                     break;
             }
 
@@ -314,21 +345,23 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         fragments.add(new MainFragment());
         fragments.add(new ContactFragment());
         fragments.add(new ShareFragment());
-        //TODO 得到编辑框里的值
-        //TODO 使用USER创建并调用downInfo();
+        fragments.add(new BookFragment());
+
         con.getnewmessage(Constant.USERNAME);
         con.downloadFriend(Constant.USERNAME);
         con.downloadMoments(Constant.USERNAME);
+        //TODO 下载 LL
 
         rgs = (RadioGroup) findViewById(R.id.tabs_rg);
         rb[0] = (RadioButton)findViewById(R.id.tab_rb_a);
         rb[1] = (RadioButton)findViewById(R.id.tab_rb_b);
         rb[2] = (RadioButton)findViewById(R.id.tab_rb_c);
+        rb[3] = (RadioButton)findViewById(R.id.tab_rb_d);//TODO LL
         rb[0].getLocationInWindow(position[0]);
         rb[1].getLocationInWindow(position[1]);
         rb[2].getLocationInWindow(position[2]);
+        rb[3].getLocationInWindow(position[3]);
 
-        System.out.println("getLocationOnScreen:" + position[0] + "," + position[1]);
         FragmentTabAdapter tabAdapter = new FragmentTabAdapter(this, fragments, R.id.tab_content, rgs);
 
         tabAdapter.setOnRgsExtraCheckedChangedListener(tabListener);
@@ -346,12 +379,13 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         tabListener.OnRgsExtraCheckedChanged(rgs,0,0);
         theFragment = 0;
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //TODO ICON
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     private int flag_Resume=0;//用来标识第几次调用onResume
     @Override
     protected void onResume() {
@@ -414,6 +448,9 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 case 2:
                     con.downloadMoments(Constant.USERNAME);
                     break;
+                case 3:
+                    //TODO LL
+                    break;
             }
         }
 
@@ -442,6 +479,8 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         Intent intent = new Intent();
                         intent.setClass(queue.getLast(),SendMomentActivity.class);
                         startActivity(intent);
+                    }else if(theFragment==3) {
+                        //TODO LL
                     }
                 }
                 break;
@@ -559,6 +598,11 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         list3.add(map);*/
     }
 
+    private List<Map<String, Object>> list4 = new ArrayList<Map<String, Object>>();
+    private void getData4() {
+        //TODO LL
+    }
+
     @Override
     public void onMainFragmentInteraction(int position) {
         Message msg = Message.obtain();
@@ -579,6 +623,14 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     public void onShareFragmentInteraction(int position) {
         rgs.setVisibility(View.GONE);
         getFragmentManager().beginTransaction().replace(R.id.tab_content,DetailFragment.newInstance((Integer)list3.get(position).get("img"),(String)list3.get(position).get("content"))).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onBookFragmentInteraction(int position) {
+        Message msg = Message.obtain();
+        msg.what = Config.ACK_LONG_CLICK;
+        theInfoId=position;
+        BaseActivity.sendMessage(msg);
     }
 
     public static Conmmunication getCon(){

@@ -71,6 +71,19 @@
                 android:gravity="center"
                 android:singleLine="true"
                 />
+            <RadioButton
+                android:id="@+id/tab_rb_d"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/selector_tabshare"
+                android:button="@null"
+                android:text="@string/tab_book"
+                android:textColor="#000000"
+                android:textSize="13sp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:singleLine="true"
+                />
         </RadioGroup>
     </LinearLayout>
 
