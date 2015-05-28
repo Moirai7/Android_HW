@@ -50,7 +50,8 @@
     <string name="voice_shake_result_cancel">取消添加朋友</string>
 
     <string name="tip_gesture_textView">点击返回</string>
-
+    <string name="main_bookPage">欢迎来到书城</string>
+    <string name="tab_book">书城</string>
     <string name="reminder">选择语音提示吗？</string>
     <string name="choice1">是</string>
     <string name="choice2">否</string>

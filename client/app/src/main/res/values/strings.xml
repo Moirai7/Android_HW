@@ -69,6 +69,8 @@
     <string name="main_mainPage">Welcome to main Page</string>
     <string name="main_contactPage">Welcome to contact Page</string>
     <string name="main_sharePage">Welcome to share Page</string>
+    <string name="main_bookPage">Welcome to book Page</string>
+    <string name="tab_book">Book</string>
     <string name="main_welcome">Welcome to the home page</string>
     <string name="main_chats_tip">sends a message:</string>
     <string name="noNewMessage">There is no new message</string>
