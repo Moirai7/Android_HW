@@ -169,7 +169,7 @@ public class ShakeActivity extends BaseActivity
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //Todo 语音提示： 您已添加 userName 为好友
-                    con.addFriend(Constant.USERNAME,friendName,Config.SUCCESS);
+                    con.addFriend(Constant.USERNAME,friendName,1);
                  }
               })
         .setNegativeButton(getString(R.string.no_shake_confirm), new DialogInterface.OnClickListener() {
@@ -177,7 +177,7 @@ public class ShakeActivity extends BaseActivity
             public void onClick(DialogInterface dialog, int which) {
                 //Todo 语音提示： 取消添加好友请求
                 progressBar.setVisibility(View.INVISIBLE);
-                con.addFriend(Constant.USERNAME,friendName,Config.FAIl);
+                con.addFriend(Constant.USERNAME,friendName,-1);
                 state = true;
             }
         }).show();
