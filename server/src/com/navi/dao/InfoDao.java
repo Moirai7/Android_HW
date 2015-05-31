@@ -27,7 +27,7 @@ public class InfoDao {
 	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	//Modified
 	final String driver = "com.mysql.jdbc.Driver";//Driver name
-	final String uri = "jdbc:mysql://localhost:3306/swt";//mysql DB
+	final String uri = "jdbc:mysql://localhost:3306/swt?useUnicode=true&characterEncoding=utf8";//mysql DB
 
 	//Modified
 	private void getConnection() {

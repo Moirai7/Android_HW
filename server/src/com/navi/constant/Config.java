@@ -18,6 +18,7 @@ public interface Config {
     public static final int REQUEST_SEND_MESSAGE = BASE + 11;
     public static final int REQUEST_GET_MESSAGE = BASE + 12;
     public static final int REQUEST_DOWNLOAD_NEWINFO = BASE + 13;
+    public static final int REQUEST_DOWNLOAD_NEWS = BASE + 14;
     public static final int RESULT_YAOYIYAO = 401;
    // public static final int RESULT_ADDFRIEND = 402;
         

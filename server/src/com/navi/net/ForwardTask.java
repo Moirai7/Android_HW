@@ -17,6 +17,7 @@ import com.navi.constant.Config;
 import com.navi.dao.FriendsDao;
 import com.navi.dao.InfoDao;
 import com.navi.dao.MomentsDao;
+import com.navi.dao.RssNews;
 import com.navi.model.Info;
 import com.navi.model.Moments;
 import com.navi.model.User;
@@ -153,7 +154,9 @@ public class ForwardTask extends Task {
 		case Config.REQUEST_UPLOAD_MOMENTS:
 			handUploadMoments();
 			break;
-
+		case Config.REQUEST_DOWNLOAD_NEWS:
+			handdownloadnews();
+			break;
 		default:
 			/*
 			 * System.out.println("default"); onWork=false; socket.close();
@@ -173,24 +176,7 @@ public class ForwardTask extends Task {
 		}
 	}
 
-	//发布朋友圈
-	private void handUploadMoments() {
-		try {
-			String sender = message.getString("name");
-			String detail = message.getString("detail");
-
-			MomentsDao moments = new MomentsDao();
-			moments.sendmoments(sender, detail);
-			// Moments friends = new Moments(sender, detail);
-			// new MomentsService().saveMoments(friends);
-			JSONObject obj = new JSONObject();
-			obj.put(Config.REQUEST_TYPE, Config.REQUEST_UPLOAD_MOMENTS);
-			obj.put(Config.RESULT, Config.SUCCESS);
-			out.println(obj.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	// 鍙戦?娑堟伅
 	private void handSendMessage() {
@@ -243,6 +229,25 @@ public class ForwardTask extends Task {
 			e.printStackTrace();
 		}
 	}
+	
+	//发布朋友圈
+		private void handUploadMoments() {
+			try {
+				String sender = message.getString("name");
+				String detail = message.getString("detail");
+
+				MomentsDao moments = new MomentsDao();
+				moments.sendmoments(sender, detail);
+				// Moments friends = new Moments(sender, detail);
+				// new MomentsService().saveMoments(friends);
+				JSONObject obj = new JSONObject();
+				obj.put(Config.REQUEST_TYPE, Config.REQUEST_UPLOAD_MOMENTS);
+				obj.put(Config.RESULT, Config.SUCCESS);
+				out.println(obj.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 	private void handDownloadMoments() {
 		try {
@@ -333,6 +338,25 @@ public class ForwardTask extends Task {
 		}
 	}
 
+	private void handdownloadnews() {
+		try {
+			RssNews getnews = new RssNews();
+			JSONArray newslist = getnews.parseRss();
+
+			JSONObject obj = new JSONObject();
+			obj.put(Config.REQUEST_TYPE, Config.REQUEST_DOWNLOAD_NEWS);
+			obj.put(Config.RESULT, Config.SUCCESS);
+			// obj.put("title", title);
+			// obj.put("time", time);
+			// obj.put("content", content);
+			obj.put("newslist", newslist);
+			out.println(obj.toString());
+			System.out.println("下载新闻"+obj.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	//注册
 	private void handRegister() {
 		try {
 			System.out.println(ip + "check in");

@@ -3,5 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="E:/mysql-connector-java-5.1.20-bin.jar"/>
+	<classpathentry kind="lib" path="E:/大三下/软件工程综合实践/获取新闻5_28完成版/获取新闻5_28/所需jar包/rome-1.0.jar"/>
+	<classpathentry kind="lib" path="E:/大三下/软件工程综合实践/获取新闻5_28完成版/获取新闻5_28/所需jar包/jdom.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
