@@ -1,11 +1,8 @@
 package com.moirai.view;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.ComponentName;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -15,7 +12,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -24,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SimpleAdapter;
-import android.widget.Switch;
 
 import com.moirai.client.Config;
 import com.moirai.client.Conmmunication;
@@ -33,6 +28,7 @@ import com.moirai.client.R;
 import com.moirai.model.Friend;
 import com.moirai.model.Info;
 import com.moirai.model.Moments;
+import com.moirai.model.News;
 import com.moirai.voice.VoiceService;
 
 import java.util.ArrayList;
@@ -40,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener,ContactFragment.OnFragmentInteractionListener,ShareFragment.OnFragmentInteractionListener,BookFragment.OnFragmentInteractionListener{
+public class MainActivity extends BaseActivity implements MainFragment.OnFragmentInteractionListener,ContactFragment.OnFragmentInteractionListener,ShareFragment.OnFragmentInteractionListener,NewsFragment.OnFragmentInteractionListener{
 
     private SimpleAdapter adapter; // binds tags to ListView
     private int[][] position = new int[4][2];
@@ -118,13 +114,27 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     }
                 }
                 break;
+            case Config.REQUEST_DOWNLOAD_NEWS:
+                List<News> list_news = (List<News>)message.obj;
+                getData4(list_news);
+                if(((NewsFragment)fragments.get(3)).checkView()) {
+                    data = list4;
+                    SimpleAdapter adapter4 = new SimpleAdapter(getApplicationContext(), data, R.layout.newlist_item,
+                            new String[]{"title","date"},
+                            new int[]{R.id.nameView1, R.id.dateView1});
+                    ((NewsFragment) fragments.get(3)).setmAdapter(adapter4);
+                    if (Constant.ID.equals("1")) {
+                        StartListRead();
+                    }
+               }
             case Config.ACK_DOWN:
                 if(rgs.getVisibility()!=View.GONE){
                     if(!data.isEmpty()) {
                         theInfoId++;
                         if (theInfoId >= data.size())
                             theInfoId = 0;
-                        StartListRead();
+                        if(Constant.ID.equals("1"))
+                            StartListRead();
                     }else{
                         StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
                     }
@@ -135,7 +145,8 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                     theInfoId--;
                     if(theInfoId<0)
                         theInfoId=0;
-                    StartListRead();
+                    if(Constant.ID.equals("1"))
+                        StartListRead();
                 }
                 break;
             case Config.ACK_LEFT://0是首页，1是contact，2是朋友圈
@@ -155,7 +166,11 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                             StartRead(getResources().getString(R.string.main_sharePage), Config.ACK_NONE);
                             break;
                         case 3:
-                            StartRead(getResources().getString(R.string.main_bookPage), Config.ACK_NONE);
+                            StartRead(getResources().getString(R.string.main_newsPage), Config.ACK_NONE);
+//                           if(checkfirst) {
+//                               con.downloadnews();
+//                               checkfirst = false;
+//                           }
                             break;
                     }
                 }
@@ -176,7 +191,11 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                             StartRead(getResources().getString(R.string.main_sharePage), Config.ACK_NONE);
                             break;
                         case 3:
-                            StartRead(getResources().getString(R.string.main_bookPage), Config.ACK_NONE);
+                            StartRead(getResources().getString(R.string.main_newsPage), Config.ACK_NONE);
+//                            if(checkfirst) {
+//                                con.downloadnews();
+//                                checkfirst=false;
+//                            }
                             break;
                     }
                 }
@@ -202,6 +221,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 break;
             case Config.ACK_LIST_READ:
                 String content;
+                Log.i("lanlan",String.valueOf(theInfoId));
                 switch(theFragment){
                     case 0:
                         if(!data.isEmpty()) {
@@ -219,21 +239,36 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         }
                         break;
                     case 1:
-                        content = (String)data.get(theInfoId).get("title");
-                        StartRead(content,Config.ACK_NONE);
+                        if(!data.isEmpty()) {
+                            content = (String) data.get(theInfoId).get("title");
+                            StartRead(content, Config.ACK_NONE);
+                        }else{
+                            StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
+                        }
                         break;
                     case 2:
-                        content = (String)data.get(theInfoId).get("title")
-                                + getString(R.string.main_share_tip)
-                                + (String)data.get(theInfoId).get("content");
-                        StartRead(content,Config.ACK_NONE);
+                        if(!data.isEmpty()) {
+                            content = (String) data.get(theInfoId).get("title")
+                                    + getString(R.string.main_share_tip)
+                                    + (String) data.get(theInfoId).get("content");
+                            StartRead(content, Config.ACK_NONE);
+                        }else{
+                            StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
+                        }
                         break;
                     case 3:
-                        //TODO LL
-//                        content = (String)data.get(theInfoId).get("title")
-//                                + getString(R.string.main_share_tip)
-//                                + (String)data.get(theInfoId).get("content");
-//                        StartRead(content,Config.ACK_NONE);
+                        if(!data.isEmpty()) {
+                            Log.i("lanlan", "fragment 3: " + String.valueOf(theInfoId));
+                            content = getString(R.string.main_news_title)
+                                    + (String) data.get(theInfoId).get("title")
+                                    + getString(R.string.main_news_time)
+                                    + (String) data.get(theInfoId).get("date")
+                                    + getString(R.string.main_news_content)
+                                    + (String) data.get(theInfoId).get("content");
+                            StartRead(content, Config.ACK_NONE);
+                        }else{
+                            StartRead(getResources().getString(R.string.noNewMessage), Config.ACK_NONE);
+                        }
                         break;
                     default:
                         break;
@@ -255,7 +290,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         intent.setClass(MainActivity.this, SendMomentActivity.class);
                         startActivity(intent);
                     }else if(theFragment == 3) {
-                        //TODO LL
+                        con.downloadnews();
                     }
                 }
                 break;
@@ -266,6 +301,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 break;
         }
     }
+   // private boolean checkfirst = true;
     private List<Map<String, Object>> data=null;
     FragmentTabAdapter.OnRgsExtraCheckedChangedListener tabListener= new FragmentTabAdapter.OnRgsExtraCheckedChangedListener() {
         @Override
@@ -303,12 +339,13 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 case 3:
                     theFragment = 3;
                     data = list4;
-                    //TODO LL
-//                    if(!data.isEmpty()) {
-//                        adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.list_item,
-//                                new String[]{"title", "img", "date", "content"},
-//                                new int[]{R.id.nameView, R.id.photoView, R.id.dateView, R.id.contentView});
-//                    }
+                    theInfoId=-1;
+                    System.out.println("data:"+data.toString());
+                  if(!data.isEmpty()) {
+                       adapter = new SimpleAdapter(getApplicationContext(), data, R.layout.newlist_item,
+                               new String[]{"title", "date"},
+                               new int[]{R.id.nameView1, R.id.dateView1});
+                    }
                     break;
             }
 
@@ -345,12 +382,11 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
         fragments.add(new MainFragment());
         fragments.add(new ContactFragment());
         fragments.add(new ShareFragment());
-        fragments.add(new BookFragment());
-
+        fragments.add(new NewsFragment());
         con.getnewmessage(Constant.USERNAME);
         con.downloadFriend(Constant.USERNAME);
         con.downloadMoments(Constant.USERNAME);
-        //TODO 下载 LL
+        con.downloadnews();
 
         rgs = (RadioGroup) findViewById(R.id.tabs_rg);
         rb[0] = (RadioButton)findViewById(R.id.tab_rb_a);
@@ -391,8 +427,6 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     protected void onResume() {
         StartRead(getResources().getString(R.string.welcome_back),Config.ACK_NONE);
         if(!Constant.setBlind){
-            //设置事件监听，要修改ImageView的值
-            //removeActivity();
             final GestureDetectorCompat mGesturedetector;
             mGesture gesture = new mGesture();
             mGesturedetector = new GestureDetectorCompat (this,gesture);//这里要先设置监听的哦,不然的话会报空指针异常.
@@ -448,9 +482,6 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                 case 2:
                     con.downloadMoments(Constant.USERNAME);
                     break;
-                case 3:
-                    //TODO LL
-                    break;
             }
         }
 
@@ -480,7 +511,7 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
                         intent.setClass(queue.getLast(),SendMomentActivity.class);
                         startActivity(intent);
                     }else if(theFragment==3) {
-                        //TODO LL
+                      con.downloadnews();
                     }
                 }
                 break;
@@ -591,16 +622,29 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
             list3.add(map);
             }
         }
-       /* map.put("title", getResources().getString(R.string.main_title1));//String
-        map.put("img", R.mipmap.pic1);
-        map.put("date",getResources().getString(R.string.main_date1));
-        map.put("content",getResources().getString(R.string.main_share1));
-        list3.add(map);*/
     }
 
     private List<Map<String, Object>> list4 = new ArrayList<Map<String, Object>>();
-    private void getData4() {
-        //TODO LL
+    private void getData4(List<News> newsList) {
+        list4.clear();
+        System.out.println("mainActivity新闻列表");
+        if(newsList.size()>10){
+            for(int i=0;i<10;i++){
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("date",newsList.get(i).getTime());
+                map.put("title",newsList.get(i).getTitle().substring(8,20)+"...");
+                map.put("content", newsList.get(i).getContent());
+                list4.add(map);
+            }
+        }else{
+            for(int i=0;i<newsList.size();i++){
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("date",newsList.get(i).getTime());
+                map.put("title",newsList.get(i).getTitle());
+                map.put("content",newsList.get(i).getContent());
+                list4.add(map);
+            }
+        }
     }
 
     @Override
@@ -622,15 +666,15 @@ public class MainActivity extends BaseActivity implements MainFragment.OnFragmen
     @Override
     public void onShareFragmentInteraction(int position) {
         rgs.setVisibility(View.GONE);
-        getFragmentManager().beginTransaction().replace(R.id.tab_content,DetailFragment.newInstance((Integer)list3.get(position).get("img"),(String)list3.get(position).get("content"))).addToBackStack(null).commit();
+        getFragmentManager().beginTransaction().replace(R.id.tab_content,DetailFragment.newInstance((String)list3.get(position).get("content"))).addToBackStack(null).commit();
     }
 
     @Override
     public void onBookFragmentInteraction(int position) {
         Message msg = Message.obtain();
-        msg.what = Config.ACK_LONG_CLICK;
-        theInfoId=position;
-        BaseActivity.sendMessage(msg);
+        if(position==-1)
+            position=0;
+        getFragmentManager().beginTransaction().replace(R.id.tab_content,DetailFragment.newInstance((String)list4.get(position).get("content"))).addToBackStack(null).commit();
     }
 
     public static Conmmunication getCon(){

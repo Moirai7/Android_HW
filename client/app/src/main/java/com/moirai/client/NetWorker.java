@@ -16,8 +16,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Message;
+import android.util.Log;
 
 import com.moirai.model.Info;
+import com.moirai.model.News;
 import com.moirai.model.User;
 import com.moirai.model.Friend;
 import com.moirai.model.Moments;
@@ -27,7 +29,7 @@ public class NetWorker extends Thread {
 	// Context context;
 	// private static final String IP = "59.65.171.333";
 	//private static final String IP = "192.168.253.1";
-    private static final String IP = "172.28.17.118";
+    private static final String IP = "172.31.23.179";
 	private static final int PORT = 6666;
 
 	private Socket socket = null;
@@ -146,9 +148,12 @@ public class NetWorker extends Thread {
         case Config.REQUEST_DOWNLOAD_FRIEND:
              handdownloadFriend();
                 break;
-            // 发布朋友圈的返回
-            case Config.REQUEST_UPLOAD_MOMENTS:
+          // 发布朋友圈的返回
+        case Config.REQUEST_UPLOAD_MOMENTS:
                 handuploadMoments();
+                break;
+        case Config.REQUEST_DOWNLOAD_NEWS:
+                handdownloadnews();
                 break;
 		default:
 			/*
@@ -393,6 +398,7 @@ public class NetWorker extends Thread {
 
 	// //传�?�下�?
     public void handDownloadInfo() {
+        Log.i("lanlan", Constant.USERNAME);
         JSONArray jo = null;
         List<Info> list = new ArrayList<Info>();
         jo = jsonObject.optJSONArray("list");
@@ -504,6 +510,49 @@ public class NetWorker extends Thread {
             e.printStackTrace();
         }
 
+    }
+
+    // 下载新闻
+    public void downloadnews() {
+
+        JSONObject jo = new JSONObject();
+        try {
+            jo.put("requestType", Config.REQUEST_DOWNLOAD_NEWS);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        out.println(jo.toString());
+    }
+
+    // 处理下载新闻
+    private void handdownloadnews() {
+        int result = 0;
+        try {
+            result = jsonObject.getInt("result");
+            JSONArray newslists = jsonObject.getJSONArray("newslist");
+            List<News> newslist = new ArrayList<News>();
+
+            for (int i = 0; i < newslists.length(); i++) {
+                News news = new News();
+                JSONObject onenews = (JSONObject) newslists.get(i);
+                news.setTitle(onenews.getString("title"));
+                news.setTime(onenews.getString("time"));
+                news.setContent(onenews.getString("description"));
+                newslist.add(news);
+            }
+            Message msg = new Message();
+            msg.arg1 = result;
+            msg.obj = newslist;
+            msg.what = Config.REQUEST_DOWNLOAD_NEWS;
+            // System.out.println("新闻" +
+            // newslist.get(0).getContent().toString());
+            // System.out.println("新闻" + newslist.get(0).getTime().toString());
+            // System.out.println("新闻" + newslist.get(0).getTitle().toString());
+            BaseActivity.sendMessage(msg);
+            System.out.println("获取新闻的列表长度:" + newslist.size());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     // 登录

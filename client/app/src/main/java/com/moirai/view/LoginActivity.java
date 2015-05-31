@@ -39,7 +39,10 @@ public class LoginActivity extends BaseActivity {
                     //TODO 得到编辑框里的值
                     USERNAME = username_edit.getText().toString();
                     PASSWORD = password_edit.getText().toString();
-                    //db.setUserInfo(Constant.USERNAME,Constant.PASSWORD);
+                    Constant.USERNAME = USERNAME;
+                    Constant.PASSWORD = PASSWORD;
+                    Constant.ID = "1";
+                    db.setUserInfo(USERNAME,PASSWORD,"1");
                     //如果是看不见，就语音提示登录结果
                     if(Constant.ID.equals("1")) {
                         StartRead(getResources().getString(R.string.login_success), Config.ACK_LOGIN_SUCCESS_RETURN);
@@ -75,7 +78,8 @@ public class LoginActivity extends BaseActivity {
                 StartListen(Config.ACK_LISTEN_USERNAME);
                 break;
             case Config.ACK_LISTEN_USERNAME:
-                USERNAME = (String)message.obj;
+                USERNAME = ((String)message.obj);
+                USERNAME=USERNAME.substring(0,USERNAME.length()-1);
                 if(USERNAME.equals("LANLANERROR"))
                     StartRead(getResources().getString(R.string.username),Config.ACK_TALK_USERNAME);
                 username_edit.setText(USERNAME);
@@ -87,17 +91,18 @@ public class LoginActivity extends BaseActivity {
                 StartListen(Config.ACK_LISTEN_PASSWORD);
                 break;
             case Config.ACK_LISTEN_PASSWORD:
-                PASSWORD = (String)message.obj;
+                PASSWORD = ((String)message.obj);
+                PASSWORD=PASSWORD.substring(0,PASSWORD.length()-1);
                 password_edit.setText(PASSWORD);
 
                 Message msg = Message.obtain();
                 msg.what = Config.REQUEST_LOGIN;
                 msg.arg1 = Config.SUCCESS;
                 BaseActivity.sendMessage(msg);
-                //User user = new User();
-                //user.setUsername(username);
-                //user.setPassword(password);
-                //con.login(user);
+                User user = new User();
+                user.setUsername(USERNAME);
+                user.setPassword(PASSWORD);
+                con.login(user);
                 break;
             case Config.ACK_LOGIN_SUCCESS_RETURN:
                 StopRead();
@@ -144,6 +149,17 @@ public class LoginActivity extends BaseActivity {
         password_edit = (EditText)findViewById(R.id.password_edit);
         login_btn = (Button)findViewById(R.id.login_btn);
         retriveToRegister = (Button)findViewById(R.id.retrieveToRegister);
+
+        //TODO 自动登录方法
+        if(db.getUserInfo()) {
+            username_edit.setText(Constant.USERNAME);
+            password_edit.setText(Constant.PASSWORD);
+            User user = new User();
+            user.setUsername(Constant.USERNAME);
+            user.setPassword(Constant.PASSWORD);
+            con.login(user);
+        }
+
         //TODO 使用USER创建并调用login();
        login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,12 +178,7 @@ public class LoginActivity extends BaseActivity {
                     intent.setClass(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                    //TODO 自动登录方法
-                    /*db.getUserInfo();
-                    User user1 = new User();
-                    user.setUsername(Constant.USERNAME);
-                    user.setPassword(Constant.PASSWORD);
-                   con.login(user1);*/
+
                 }
             }
         });

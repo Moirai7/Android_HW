@@ -6,10 +6,7 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -25,7 +22,7 @@ import com.moirai.client.R;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class BookFragment extends ListFragment {
+public class NewsFragment extends ListFragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,8 +47,8 @@ public class BookFragment extends ListFragment {
     private SimpleAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static BookFragment newInstance(String param1, String param2) {
-        BookFragment fragment = new BookFragment();
+    public static NewsFragment newInstance(String param1, String param2) {
+        NewsFragment fragment = new NewsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,7 +60,7 @@ public class BookFragment extends ListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public BookFragment() {
+    public NewsFragment() {
     }
 
     @Override
@@ -130,6 +127,12 @@ public class BookFragment extends ListFragment {
             ((TextView) emptyView).setText(emptyText);
         }
     }
+    public boolean checkView(){
+        if(mListView!=null)
+            return true;
+        return false;
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -144,11 +147,4 @@ public class BookFragment extends ListFragment {
     public interface OnFragmentInteractionListener {
         public void onBookFragmentInteraction(int position);
     }
-    @Override
-    public void onResume(){
-        System.out.println("fragement onResume");
-        MainActivity.getCon().getnewmessage(Constant.USERNAME);
-        super.onResume();
-    }
-
 }

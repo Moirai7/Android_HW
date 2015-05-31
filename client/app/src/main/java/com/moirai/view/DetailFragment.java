@@ -38,11 +38,10 @@ public class DetailFragment extends Fragment {
      * @return A new instance of fragment DetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailFragment newInstance(int param2,String param1) {
+    public static DetailFragment newInstance(String param1) {
         DetailFragment fragment = new DetailFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putInt(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +54,6 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam2 = getArguments().getInt(ARG_PARAM2);
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
     }
@@ -67,8 +65,6 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         TextView tv = (TextView)view.findViewById(R.id.show_detail);
         tv.setText(mParam1);
-        ImageView iv = (ImageView)view.findViewById(R.id.show_image);
-        iv.setImageResource(mParam2);
         return view;
     }
 

@@ -50,8 +50,6 @@
     <string name="voice_shake_result_cancel">取消添加朋友</string>
 
     <string name="tip_gesture_textView">点击返回</string>
-    <string name="main_bookPage">欢迎来到书城</string>
-    <string name="tab_book">书城</string>
     <string name="reminder">选择语音提示吗？</string>
     <string name="choice1">是</string>
     <string name="choice2">否</string>
@@ -71,6 +69,10 @@
     <string name="main_contactPage">欢迎进入联系人页面</string>
     <string name="main_sharePage">欢迎进入分享页面</string>
     <string name="main_welcome">欢迎进入首页</string>
+    <string name="main_newsPage">欢迎进入新闻页面</string>
+    <string name="main_news_time">新闻发布时间为：</string>
+    <string name="main_news_title">新闻标题是：</string>
+    <string name="main_news_content">新闻内容是：</string>
     <string name="main_chats_tip">发一条消息：</string>
 
     <string name="main_share_tip">发一条朋友圈 :</string>

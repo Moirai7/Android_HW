@@ -39,6 +39,11 @@
             android:name="com.moirai.view.RegisterActivity"
             android:label="@string/title_activity_register"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
         <activity
             android:name="com.moirai.view.ShakeActivity"
@@ -49,15 +54,20 @@
             android:name="com.moirai.view.LoginActivity"
             android:label="@string/title_activity_login"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-        </activity>
-        <activity
-            android:name="com.moirai.view.MainActivity"
-            android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.moirai.view.MainActivity"
+            android:label="@string/title_activity_main" >
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
         </activity>
         <activity
             android:name="com.moirai.view.TalkActivity"

@@ -1,7 +1,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.moirai.view.DetailFragment"
-    android:background="@mipmap/login_background">
+    android:background="#ffffff">
     <LinearLayout
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
@@ -11,13 +11,6 @@
         android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/show_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:focusable="false"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"/>
         <TextView
             android:id="@+id/show_detail"
             android:layout_toRightOf="@id/iv_userhead"

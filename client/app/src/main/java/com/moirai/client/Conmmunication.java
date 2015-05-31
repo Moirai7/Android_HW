@@ -111,11 +111,11 @@ public class Conmmunication {
 	public void queryMoments(String userName, String start, String end) {
 
 	}
+    // 下载新闻
+    public void downloadnews() {
 
-	// 发�?��??出游戏请�?
-	public void exitGame() {
-		netWorker.exitGame();
-	}
+        netWorker.downloadnews();
+    }
 
 	/**
 	 * �?出连接后，清空资�?
