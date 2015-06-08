@@ -27,9 +27,7 @@ import com.moirai.view.BaseActivity;
 
 public class NetWorker extends Thread {
 	// Context context;
-	// private static final String IP = "59.65.171.333";
-	//private static final String IP = "192.168.253.1";
-    private static final String IP = "172.31.23.179";
+	private static final String IP = "172.31.1.158";
 	private static final int PORT = 6666;
 
 	private Socket socket = null;

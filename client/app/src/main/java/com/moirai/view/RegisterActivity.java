@@ -184,6 +184,17 @@ public class RegisterActivity extends BaseActivity {
             }
         });
     }
+    @Override
+    protected void onDestroy() {
+        Constant.isSetting=false;
+        if (queue.contains(this)) {
+            queue.remove(this);
+            System.out.println("将" + this + "移出list"+"queue : " + queue.toString());
+        }
+        if(connection_voice!=null)
+            unbindService(connection_voice);
+        super.onDestroy();
+    }
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             AlertDialog.Builder dialog = new AlertDialog.Builder(this)

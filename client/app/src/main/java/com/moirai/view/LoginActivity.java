@@ -124,6 +124,17 @@ public class LoginActivity extends BaseActivity {
         }
     }
     @Override
+    protected void onDestroy() {
+        Constant.isSetting=false;
+        if (queue.contains(this)) {
+            queue.remove(this);
+            System.out.println("将" + this + "移出list"+"queue : " + queue.toString());
+        }
+        if(connection_voice!=null)
+            unbindService(connection_voice);
+        super.onDestroy();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);

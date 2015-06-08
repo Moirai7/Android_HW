@@ -68,8 +68,8 @@ public class Database {
                 Constant.PASSWORD = rs.getString(rs
                         .getColumnIndex("password"));
                 Constant.ID = rs.getString(rs.getColumnIndex("type"));
+                return true;
             }
-            return true;
         }
         return false;
     }

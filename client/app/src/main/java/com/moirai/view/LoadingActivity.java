@@ -45,7 +45,17 @@ public class LoadingActivity extends BaseActivity {
             }
         });
     }
-
+    @Override
+    protected void onDestroy() {
+        Constant.isSetting=false;
+        if (queue.contains(this)) {
+            queue.remove(this);
+            System.out.println("将" + this + "移出list"+"queue : " + queue.toString());
+        }
+        if(connection_voice!=null)
+            unbindService(connection_voice);
+        super.onDestroy();
+    }
     @Override
     public void processMessage(Message message) {
         switch(message.what){
@@ -79,6 +89,7 @@ public class LoadingActivity extends BaseActivity {
         Intent intent = new Intent(LoadingActivity.this,RegisterActivity.class);
         //Intent intent = new Intent(LoadingActivity.this,LoginActivity.class);
         startActivity(intent);
+        //intent.removeCategory(Intent.category.LAUNCHER);
         finish();//结束这个activity
     }
 
